@@ -52,12 +52,13 @@
   "Setup evil mode leader key."
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
-    "f"  'find-file
-    "t"  'dired
-    "w"  'save-buffer
-    "ga" 'stage-current-buffer
-    "gs" 'magit-status
-    "gc" 'magit-commit-create
-    "gl" 'magit-log-all))
+    "f"   'find-file
+    "t"   'dired
+    "w"   'save-buffer
+    "ga"  'stage-current-buffer
+    "gs"  'magit-status
+    "gc"  'magit-commit-create
+    "gl"  'magit-log-all
+    "gps" 'magit-push-current-to-upstream))
 
 (provide 'core-package)
