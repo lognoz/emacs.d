@@ -17,7 +17,16 @@
 
 (defun core-base/init ()
   "Perform core base initialization."
-  (core-base/create-elpa-repository))
+  (core-base/create-elpa-repository)
+  (core-base/setup-ido))
+
+(defun core-base/setup-ido ()
+  "Setup ido mode and use vertical aligment."
+  (install (ido-vertical-mode))
+  (require 'ido-vertical-mode)
+  (setq ido-vertical-show-count t)
+  (ido-mode 1)
+  (ido-vertical-mode 1))
 
 (defun core-base/create-elpa-repository ()
   "Create an ELPA repository."
