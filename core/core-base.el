@@ -9,6 +9,7 @@
 
 (require 'package)
 (require 'core-ido)
+(require 'core-dired)
 (require 'core-evil)
 (require 'core-version-control)
 
@@ -24,6 +25,7 @@
   (core-base/setup-theme)
   (core-ido/init)
   (core-evil/init)
+  (core-dired/init)
   (core-version-control/init))
 
 (defun core-base/setup-theme ()
