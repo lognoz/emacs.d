@@ -8,8 +8,9 @@
 ;; This file is not part of GNU Emacs.
 
 (require 'package)
+(require 'core-package)
 
-(defmacro install (package-list)
+(defmacro add-package (package-list)
   "Install packages if not installed."
   (dolist (package package-list)
     (unless (package-installed-p package)
@@ -18,26 +19,8 @@
 (defun core-base/init ()
   "Perform core base initialization."
   (core-base/create-elpa-repository)
-  (core-base/setup-ido)
-  (core-base/setup-theme))
-
-(defun core-base/setup-theme ()
-  "Define Emacs theme."
-  (install (atom-one-dark-theme))
-  (load-theme 'atom-one-dark t))
-
-(defun core-base/setup-ido ()
-  "Setup ido mode."
-  (ido-mode 1)
-  (ido-everywhere 1)
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-case-fold nil
-        ido-separator "  "
-        ido-auto-merge-work-directories-length -1
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point nil
-        ido-max-prospects 10))
+  (core-package/setup-ido)
+  (core-package/setup-theme))
 
 (defun core-base/create-elpa-repository ()
   "Create an ELPA repository."
