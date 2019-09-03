@@ -8,7 +8,9 @@
 ;; This file is not part of GNU Emacs.
 
 (require 'package)
-(require 'core-package)
+(require 'core-ido)
+(require 'core-evil)
+(require 'core-version-control)
 
 (defmacro add-package (package-list)
   "Install packages if not installed."
@@ -19,8 +21,15 @@
 (defun core-base/init ()
   "Perform core base initialization."
   (core-base/create-elpa-repository)
-  (core-package/setup-ido)
-  (core-package/setup-theme))
+  (core-base/setup-theme)
+  (core-ido/init)
+  (core-evil/init)
+  (core-version-control/init))
+
+(defun core-base/setup-theme ()
+  "Setup Emacs theme."
+  (add-package (atom-one-dark-theme))
+  (load-theme 'atom-one-dark t))
 
 (defun core-base/create-elpa-repository ()
   "Create an ELPA repository."

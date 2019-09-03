@@ -7,11 +7,14 @@
 ;;
 ;; This file is not part of GNU Emacs.
 
+(require 'core-base)
+
 (defun core/init ()
   "Perform startup initialization."
   (core/disable-gui)
   (core/setup-encoding)
-  (core/setup-custom-file))
+  (core/setup-custom-file)
+  (core-base/init))
 
 (defun core/setup-custom-file ()
   "Place the variables created by Emacs in custom.el."
