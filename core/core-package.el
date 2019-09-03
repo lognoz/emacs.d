@@ -46,7 +46,8 @@
   (global-evil-leader-mode 1)
   (global-evil-surround-mode 1)
   (evil-mode 1)
-  (core-package/setup-evil-leader))
+  (core-package/setup-evil-leader)
+  (core-package/setup-evil-macros))
 
 (defun core-package/setup-evil-leader ()
   "Setup evil mode leader key."
@@ -60,5 +61,13 @@
     "gc"  'magit-commit-create
     "gl"  'magit-log-all
     "gps" 'magit-push-current-to-upstream))
+
+(defun core-package/setup-evil-macros ()
+  "Setup evil macros mapping to use it more quickly."
+  (evil-define-key 'normal 'global
+    "Q" "@q")
+  (evil-define-key 'visual 'global
+    "Q" (kbd ":norm @q RET")
+    "." (kbd ":norm . RET")))
 
 (provide 'core-package)
