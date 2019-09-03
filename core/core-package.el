@@ -16,8 +16,23 @@
     (message (if (not (string= output ""))
         output (concat "Added " buffile)))))
 
+(defun core-package/setup-version-control ()
+  "Setup version control."
+  (add-package (git-gutter
+                git-gutter+))
+  (global-git-gutter-mode t)
+  (setq git-gutter:update-interval 2
+        git-gutter:modified-sign "~"
+        git-gutter:added-sign "+"
+        git-gutter:deleted-sign "-"
+        git-gutter:hide-gutter t
+        git-gutter:ask-p nil
+        git-gutter:verbosity 0
+        git-gutter:handled-backends '(git hg bzr svn)
+        git-gutter:hide-gutter t))
+
 (defun core-package/setup-theme ()
-  "Define Emacs theme."
+  "Setup Emacs theme."
   (add-package (atom-one-dark-theme))
   (load-theme 'atom-one-dark t))
 
