@@ -1,9 +1,3 @@
-(defconst user-core-directory (concat user-emacs-directory "core/")
-  "The root directory of core files.")
-
-(defconst user-module-directory (concat user-emacs-directory "module/")
-  "The root directory for module files.")
-
 (defun core/init ()
   "Perform startup initialization."
   (core/disable-gui)
