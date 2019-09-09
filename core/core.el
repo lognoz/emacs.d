@@ -1,20 +1,54 @@
 ;;; core.el - Core Initialization File
-;;
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon & Contributors
-;;
-;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; URL: https://github.com/lognoz/emacs.d
-;;
+
+;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+
+;; Author: Marc-Antoine Loignon <developer@lognoz>
+;; Keywords: core init
+
 ;; This file is not part of GNU Emacs.
 
-(require 'core-base)
+;; This Emacs config is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the Free
+;; Software Foundation, either version 3 of the License, or (at your option)
+;; any later version.
+
+;; This Emacs config is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this Emacs config. If not, see <https://www.gnu.org/licenses/>.
+
+;;; Code:
+
+(defmacro add-package (package-list)
+  "Install packages if not installed."
+  (dolist (package package-list)
+    (unless (package-installed-p package)
+      (package-install package))))
 
 (defun core/init ()
   "Perform startup initialization."
   (core/disable-gui)
   (core/setup-encoding)
   (core/setup-custom-file)
-  (core-base/init))
+  (core/setup-elpa-repository)
+  (core/setup-theme))
+
+(defun core/setup-elpa-repository ()
+  "Create an ELPA repository."
+  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+                           ("org"   . "http://orgmode.org/elpa/")
+                           ("gnu"   . "http://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents)))
+
+(defun core/setup-theme ()
+  "Setup Emacs theme."
+  (add-package (atom-one-dark-theme))
+  (load-theme 'atom-one-dark t))
 
 (defun core/setup-custom-file ()
   "Place the variables created by Emacs in custom.el."
