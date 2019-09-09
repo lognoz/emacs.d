@@ -2,7 +2,7 @@
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
-;; Author: Marc-Antoine Loignon <developer@lognoz>
+;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: core init
 
 ;; This file is not part of GNU Emacs.
@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(require 'core-component)
+
 (defmacro add-package (package-list)
   "Install packages if not installed."
   (dolist (package package-list)
@@ -34,7 +36,13 @@
   (core/setup-encoding)
   (core/setup-custom-file)
   (core/setup-elpa-repository)
-  (core/setup-theme))
+  (core/setup-theme)
+  (core/load-component))
+
+(defun core/load-component ()
+  "Load files in component directory."
+  (require 'component-evil)
+  (require 'component-version-control))
 
 (defun core/setup-elpa-repository ()
   "Create an ELPA repository."
