@@ -1,9 +1,9 @@
-;;; core-component.el - Core Component Initialization File
+;;; component-version-control.el - Version Control Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz>
-;; Keywords: component init
+;; Keywords: version-control git
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,9 +22,23 @@
 
 ;;; Code:
 
-(defun core-component/init ()
-  "Perform component startup initialization."
-  (require 'component-evil)
-  (require 'component-version-control))
+(defun component-version-control/install ()
+  "Install version control requirements."
+  (add-package (git-gutter
+                git-gutter+)))
 
-(provide 'core-component)
+(defun component-version-control/setup-git-gutter ()
+  "Configure git gutter mode."
+  (global-git-gutter-mode t)
+  (setq git-gutter:update-interval 2
+        git-gutter:modified-sign "~"
+        git-gutter:added-sign "+"
+        git-gutter:deleted-sign "-"
+        git-gutter:hide-gutter t
+        git-gutter:ask-p nil
+        git-gutter:hide-gutter t))
+
+(component-version-control/install)
+(component-version-control/setup-git-gutter)
+
+(provide 'component-version-control)
