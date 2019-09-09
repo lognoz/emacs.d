@@ -45,14 +45,16 @@
     "f"   'find-file
     "d"   'kill-this-buffer
     "w"   'save-buffer
-    "t"   (lambda ()
-            (interactive)
-            (dired (expand-file-name ".")))
+    "t"   'open-current-directory
     "ga"  'stage-current-buffer
     "gs"  'magit-status
     "gc"  'magit-commit-create
     "gl"  'magit-log-all
     "gps" 'magit-push-current-to-upstream)
+
+  (defun open-current-directory ()
+    (interactive)
+    (dired (expand-file-name ".")))
 
   (defun stage-current-buffer ()
     "Stage changes of active buffer."
