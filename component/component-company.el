@@ -1,9 +1,9 @@
-;;; component-version-control.el - Version Control Component File
+;;; component-company.el - Company Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: version-control git
+;; Keywords: autocomplete company
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,23 +22,18 @@
 
 ;;; Code:
 
-(defun component-version-control/install ()
-  "Install version control requirements."
-  (add-package (git-gutter
-                git-gutter+)))
+(defun component-company/install ()
+  "Install compagny requirements."
+  (add-package (company))
+  (add-hook 'after-init-hook 'global-company-mode))
 
-(defun component-version-control/setup-git-gutter ()
-  "Configure git gutter mode."
-  (global-git-gutter-mode t)
-  (setq git-gutter:update-interval 2
-        git-gutter:modified-sign "~"
-        git-gutter:added-sign "+"
-        git-gutter:deleted-sign "-"
-        git-gutter:hide-gutter t
-        git-gutter:ask-p nil
-        git-gutter:hide-gutter t))
+(defun component-company/setup-configuration ()
+  "Set company mode configurations."
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 1)
+  (setq company-tooltip-align-annotations t))
 
-(component-version-control/install)
-(component-version-control/setup-git-gutter)
+(component-company/install)
+(component-company/setup-configuration)
 
-(provide 'component-version-control)
+(provide 'component-company)

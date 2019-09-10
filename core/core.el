@@ -22,13 +22,16 @@
 
 ;;; Code:
 
-(require 'core-component)
-
 (defmacro add-package (package-list)
   "Install packages if not installed."
   (dolist (package package-list)
     (unless (package-installed-p package)
       (package-install package))))
+
+(defun define-mode (mode &rest patterns)
+  "Add entries to auto-mode-alist."
+  (dolist (pattern patterns)
+    (add-to-list 'auto-mode-alist (cons pattern mode))))
 
 (defun core/init ()
   "Perform startup initialization."
@@ -42,6 +45,8 @@
 (defun core/load-component ()
   "Load files in component directory."
   (require 'component-evil)
+  (require 'component-company)
+  (require 'component-web)
   (require 'component-version-control))
 
 (defun core/setup-elpa-repository ()
