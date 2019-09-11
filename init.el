@@ -2,7 +2,7 @@
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
-;; Author: Marc-Antoine Loignon <developer@lognoz>
+;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: init
 
 ;; This file is not part of GNU Emacs.
@@ -34,6 +34,9 @@
 
 (defconst user-language-directory (concat user-emacs-directory "language/")
   "The root directory for language files.")
+
+(defconst user-temporary-directory (concat user-emacs-directory "tmp/")
+  "The root directory for temporary files.")
 
 ;; Load user directories.
 (load-dir user-core-directory)
