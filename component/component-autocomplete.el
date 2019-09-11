@@ -1,9 +1,9 @@
-;;; component-company.el - Company Component File
+;;; component-autocomplete.el - Autocomplete Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: autocomplete company
+;; Keywords: autocomplete company snippet
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,18 +22,18 @@
 
 ;;; Code:
 
-(defun component-company/install ()
+(defun component-autocomplete/install ()
   "Install compagny requirements."
   (add-package (company))
   (add-hook 'after-init-hook 'global-company-mode))
 
-(defun component-company/setup-configuration ()
+(defun component-autocomplete/setup-configuration ()
   "Set company mode configurations."
   (setq company-idle-delay 0)
   (setq company-minimum-prefix-length 1)
   (setq company-tooltip-align-annotations t))
 
-(component-company/install)
-(component-company/setup-configuration)
+(component-autocomplete/install)
+(component-autocomplete/setup-configuration)
 
-(provide 'component-company)
+(provide 'component-autocomplete)
