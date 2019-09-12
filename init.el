@@ -38,11 +38,22 @@
 (defconst user-temporary-directory (concat user-emacs-directory "tmp/")
   "The root directory for temporary files.")
 
-;; Load user directories.
+(defconst user-environment-directory (concat user-emacs-directory "environment/" user-login-name "/")
+  "The root directory for environment files. It use user login name to define it")
+
+(defconst user-init-file (concat user-environment-directory "init.el")
+  "The root file for custom init.el by user login name.")
+
+; Load user directories.
 (load-dir user-core-directory)
 (load-dir user-component-directory)
 (load-dir user-language-directory)
+(load-dir user-environment-directory)
 
 ;; Perform initialization.
 (require 'core)
 (core/init)
+
+;; Load custom initialization by user.
+(if (file-exists-p user-init-file)
+    (load user-init-file))
