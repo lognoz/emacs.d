@@ -30,4 +30,16 @@
 ;; Highlight the current line
 (global-hl-line-mode)
 
+;; Use pair mode
+(electric-pair-mode 1)
+
+;; Change yes or no questions
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;; Define better feedbacks configurations.
+(setq vc-follow-symlinks t
+      x-stretch-cursor nil
+      echo-keystrokes 0.25
+      auto-revert-verbose nil)
+
 (provide 'core-base)
