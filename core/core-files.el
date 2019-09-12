@@ -27,7 +27,7 @@
       (list (cons "." (expand-file-name "backup" user-temporary-directory))))
 
 ;; Bookmark file
-(setq bookmark-default-file (concat user-temporary-directory "bookmark"))
+(setq bookmark-default-file (concat user-environment-directory "bookmark"))
 
 ;; Undo files
 (setq undo-tree-auto-save-history t)
