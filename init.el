@@ -32,10 +32,7 @@
 (defconst user-component-directory (concat user-emacs-directory "component/")
   "The root directory for component files.")
 
-(defconst user-language-directory (concat user-emacs-directory "language/")
-  "The root directory for language files.")
-
-(defconst user-temporary-directory (concat user-emacs-directory "tmp/")
+(defconst user-temporary-directory (concat user-emacs-directory "temporary/")
   "The root directory for temporary files.")
 
 (defconst user-environment-directory (concat user-emacs-directory "environment/" user-login-name "/")
@@ -44,7 +41,7 @@
 (defconst user-init-file (concat user-environment-directory "init.el")
   "The root file for custom init.el by user login name.")
 
-; Load user directories.
+;; Load user directories.
 (load-dir user-core-directory)
 (load-dir user-component-directory)
 (load-dir user-language-directory)
@@ -52,7 +49,7 @@
 
 ;; Perform initialization.
 (require 'core)
-(core/init)
+(core-init)
 
 ;; Load custom initialization by user.
 (if (file-exists-p user-init-file)
