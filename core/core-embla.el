@@ -1,4 +1,4 @@
-;;; core.el - Core Initialization File
+;;; core-embla.el - Core Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
