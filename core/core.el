@@ -33,23 +33,30 @@
   (dolist (pattern patterns)
     (add-to-list 'auto-mode-alist (cons pattern mode))))
 
-(defun core/init ()
-  "Perform startup initialization."
-  (core/disable-gui)
-  (core/setup-encoding)
-  (core/setup-custom-file)
-  (core/setup-elpa-repository)
-  (core/setup-theme)
-  (core/load-component))
 
-(defun core/load-component ()
+(defun core-init ()
+  "Perform startup initialization."
+  (core-disable-gui)
+  (core-setup-encoding)
+  (core-setup-custom-file)
+  (core-setup-elpa-repository)
+  (core-setup-theme)
+  (core-load-core)
+  (core-load-component))
+
+(defun core-load-core ()
+  "Load files in core directory."
+  (require 'core-files)
+  (require 'core-base))
+
+(defun core-load-component ()
   "Load files in component directory."
   (require 'component-evil)
-  (require 'component-company)
+  (require 'component-autocomplete)
   (require 'component-web)
   (require 'component-version-control))
 
-(defun core/setup-elpa-repository ()
+(defun core-setup-elpa-repository ()
   "Create an ELPA repository."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
@@ -58,26 +65,26 @@
   (unless package-archive-contents
     (package-refresh-contents)))
 
-(defun core/setup-theme ()
+(defun core-setup-theme ()
   "Setup Emacs theme."
   (add-package (atom-one-dark-theme))
   (load-theme 'atom-one-dark t))
 
-(defun core/setup-custom-file ()
+(defun core-setup-custom-file ()
   "Place the variables created by Emacs in custom.el."
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file))
 
-(defun core/setup-encoding ()
+(defun core-setup-encoding ()
   "Define charset and UTF-8 encoding."
   (prefer-coding-system 'utf-8)
   (setq locale-coding-system 'utf-8)
   (when (fboundp 'set-charset-priority)
     (set-charset-priority 'unicode)))
 
-(defun core/disable-gui ()
+(defun core-disable-gui ()
   "Disable GUI components."
   (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
     (tool-bar-mode -1))
