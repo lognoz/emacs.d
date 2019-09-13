@@ -54,4 +54,13 @@
 (ido-mode 1)
 (ido-everywhere 1)
 
+;; Better scrolling experience
+(setq scroll-margin 0
+      scroll-conservatively 10000
+      scroll-preserve-screen-position t
+      auto-window-vscroll nil)
+
+;; Increase line space for better readability
+(setq-default line-spacing 3)
+
 (provide 'core-base)
