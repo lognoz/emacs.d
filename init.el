@@ -44,7 +44,6 @@
 ;; Load user directories.
 (load-dir user-core-directory)
 (load-dir user-component-directory)
-(load-dir user-language-directory)
 (load-dir user-environment-directory)
 
 ;; Perform initialization.
