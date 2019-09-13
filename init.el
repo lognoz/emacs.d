@@ -51,5 +51,5 @@
 (core-init)
 
 ;; Load custom initialization by user.
-(if (file-exists-p user-init-file)
+(when (file-exists-p user-init-file)
     (load user-init-file))
