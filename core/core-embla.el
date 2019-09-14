@@ -95,4 +95,4 @@
   (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
     (tooltip-mode -1)))
 
-(provide 'core)
+(provide 'core-embla)
