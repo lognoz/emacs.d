@@ -23,7 +23,7 @@
 ;;; Code:
 
 (defun load-dir (dir)
-  "This function help to load directories."
+  "This function load files in directories."
   (add-to-list 'load-path dir))
 
 (defconst user-core-directory (concat user-emacs-directory "core/")
@@ -38,8 +38,12 @@
 (defconst user-environment-directory (concat user-emacs-directory "environment/" user-login-name "/")
   "The root directory for environment files. It use user login name to define it")
 
-(defconst user-init-file (concat user-environment-directory "init.el")
-  "The root file for custom init.el by user login name.")
+;; Make sure Embla can be run in Emacs
+(defconst emacs-min-version "25")
+(if (not (version<= emacs-min-version emacs-version))
+    (error (concat "Your version of Emacs (%s) is too old for Embla."
+                   "Make sure to have version %s or above of Emacs.")
+           emacs-version emacs-min-version))
 
 ;; Load user directories.
 (load-dir user-core-directory)
@@ -47,9 +51,14 @@
 (load-dir user-environment-directory)
 
 ;; Perform initialization.
-(require 'core)
+(require 'core-embla)
 (core-init)
 
-;; Load custom initialization by user.
-(when (file-exists-p user-init-file)
-    (load user-init-file))
+;; Load custom initialization by user connected.
+(setq path (concat user-environment-directory "init.el"))
+(when (file-exists-p path)
+      (load path))
+
+;; Start Emacs server
+(require 'server)
+(unless (server-running-p) (server-start))
