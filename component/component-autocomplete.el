@@ -24,16 +24,38 @@
 
 (defun component-autocomplete/install ()
   "Install compagny requirements."
-  (add-package (company))
+  (add-package (company yasnippet))
   (add-hook 'after-init-hook 'global-company-mode))
 
 (defun component-autocomplete/setup-configuration ()
   "Set company mode configurations."
-  (setq company-idle-delay 0)
-  (setq company-minimum-prefix-length 1)
-  (setq company-tooltip-align-annotations t))
+  (setq company-minimum-prefix-length 1
+        company-idle-delay 0
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-frontends '(company-pseudo-tooltip-frontend
+                            company-echo-metadata-frontend)))
 
 (component-autocomplete/install)
 (component-autocomplete/setup-configuration)
+
+(require 'yasnippet)
+(require 'company)
+(setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+(yas-global-mode 1)
+
+(defun company-mode/backend-with-yas (backend)
+    (if (and (listp backend) (member 'company-yasnippet backend))
+        backend
+      (append (if (consp backend) backend (list backend))
+              '(:with company-yasnippet))))
+
+(setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
+
+(with-eval-after-load 'company
+    (define-key company-active-map [tab] 'company-complete-selection)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
 
 (provide 'component-autocomplete)
