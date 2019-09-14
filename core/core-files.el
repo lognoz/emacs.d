@@ -30,6 +30,7 @@
 (setq bookmark-default-file (concat user-environment-directory "bookmark"))
 
 ;; Undo files
+(add-package (undo-tree))
 (setq undo-tree-auto-save-history t)
 (setq undo-tree-history-directory-alist
       (list (cons "." (expand-file-name "undo" user-temporary-directory))))
