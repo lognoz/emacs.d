@@ -6,7 +6,6 @@
 ;; Keywords: autocomplete company snippet
 
 ;; This file is not part of GNU Emacs.
-
 ;; This Emacs config is free software: you can redistribute it and/or modify it
 ;; under the terms of the GNU General Public License as published by the Free
 ;; Software Foundation, either version 3 of the License, or (at your option)
@@ -24,7 +23,7 @@
 
 (defun component-autocomplete/install ()
   "Install compagny requirements."
-  (add-package (company yasnippet))
+  (add-package (company yasnippet helm))
   (add-hook 'after-init-hook 'global-company-mode))
 
 (defun component-autocomplete/setup-configuration ()
@@ -57,5 +56,54 @@
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
+(require 'helm-config)
+(global-set-key (kbd "M-x") #'helm-M-x)
+(global-set-key (kbd "C-x b") #'helm-buffers-list)
+(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
+(global-set-key (kbd "C-x K") #'ibuffer)
+
+(helm-mode 1)
+(helm-autoresize-mode 1)
+(define-key helm-find-files-map (kbd "<C-backspace>") 'backward-kill-word)
+
+(require 'cl-lib)
+
+(defvar no-dots-whitelist
+  '()
+  "List of helm buffers in which to show dots.")
+
+(defun no-dots/whitelistedp ()
+  (member (with-helm-buffer (buffer-name)) no-dots-whitelist))
+
+(defun no-dots/helm-ff-filter-candidate-one-by-one (fcn file)
+  (when (or (no-dots/whitelistedp)
+            (not (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)))
+    (funcall fcn file)))
+
+(defun no-dots/helm-file-completion-source-p (&rest args) t)
+
+(defun no-dots/helm-attrset (fcn attribute-name value &optional src)
+  (let ((src (or src (helm-get-current-source))))
+    (when src
+      (funcall fcn attribute-name value src))))
+
+(defun no-dots/helm-find-files-up-one-level (fcn &rest args)
+  (advice-add 'helm-file-completion-source-p
+              :around 'no-dots/helm-file-completion-source-p)
+  (advice-add 'helm-attrset
+              :around 'no-dots/helm-attrset)
+  (let ((res (apply fcn args)))
+    (advice-remove 'helm-file-completion-source-p
+                   'no-dots/helm-file-completion-source-p)
+    (advice-remove 'helm-attrset
+                   'no-dots/helm-attrset)
+    res))
+
+(with-eval-after-load 'helm-files
+  (advice-add 'helm-ff-filter-candidate-one-by-one
+              :around 'no-dots/helm-ff-filter-candidate-one-by-one)
+  (advice-add 'helm-find-files-up-one-level
+              :around 'no-dots/helm-find-files-up-one-level))
 
 (provide 'component-autocomplete)
