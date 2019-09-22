@@ -22,43 +22,16 @@
 
 ;;; Code:
 
-(defun load-dir (dir)
-  "This function load files in directories."
-  (add-to-list 'load-path dir))
+;; Change the frequency of garbage collection for better launch time.
+(setq gc-cons-threshold 100000000)
 
-(defconst user-core-directory (concat user-emacs-directory "core/")
-  "The root directory of core files.")
+;; Show warning when opening files bigger than 100MB.
+(setq large-file-warning-threshold 100000000)
 
-(defconst user-component-directory (concat user-emacs-directory "component/")
-  "The root directory for component files.")
-
-(defconst user-temporary-directory (concat user-emacs-directory "temporary/")
-  "The root directory for temporary files.")
-
-(defconst user-environment-directory (concat user-emacs-directory "environment/" user-login-name "/")
-  "The root directory for environment files. It use user login name to define it")
-
-;; Make sure Embla can be run in Emacs
-(defconst emacs-min-version "25")
-(if (not (version<= emacs-min-version emacs-version))
-    (error (concat "Your version of Emacs (%s) is too old for Embla."
-                   "Make sure to have version %s or above of Emacs.")
-           emacs-version emacs-min-version))
-
-;; Load user directories.
-(load-dir user-core-directory)
-(load-dir user-component-directory)
-(load-dir user-environment-directory)
-
-;; Perform initialization.
-(require 'core-embla)
-(core-init)
-
-;; Load custom initialization by user connected.
-(setq path (concat user-environment-directory "init.el"))
-(when (file-exists-p path)
-      (load path))
-
-;; Start Emacs server
-(require 'server)
-(unless (server-running-p) (server-start))
+(if (version< emacs-version "25.1")
+  (error "Embla requires GNU Emacs 25.1 or newer, but you're running %s"
+         emacs-version)
+  (setq user-emacs-directory (file-name-directory load-file-name))
+  (load (concat user-emacs-directory "core/core-embla")
+        nil 'nomessage)
+  (embla-initialize))
