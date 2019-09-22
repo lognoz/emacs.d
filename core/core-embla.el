@@ -22,77 +22,61 @@
 
 ;;; Code:
 
-(defmacro add-package (package-list)
-  "Install packages if not installed."
-  (dolist (package package-list)
-    (unless (package-installed-p package)
-      (package-install package))))
+(defconst embla-version "0.1.1"
+  "Current version of Embla.")
 
-(defun define-mode (mode &rest patterns)
-  "Add entries to auto-mode-alist."
-  (dolist (pattern patterns)
-    (add-to-list 'auto-mode-alist (cons pattern mode))))
+(defconst operating-system
+  (cond ((eq system-type 'gnu/linux) "linux")
+        ((eq system-type 'darwin) "mac")
+        ((eq system-type 'windows-nt) "windows")
+        ((eq system-type 'berkeley-unix) "bsd")))
 
+(defconst current-user
+  (getenv (if (eq operating-system "windows") "USERNAME" "USER")))
 
-(defun core-init ()
-  "Perform startup initialization."
-  (core-disable-gui)
-  (core-setup-encoding)
-  (core-setup-custom-file)
-  (core-setup-elpa-repository)
-  (core-setup-theme)
-  (core-load-core)
-  (core-load-component))
+(defconst embla-core-directory (concat user-emacs-directory "core/")
+  "The directory of core files.")
 
-(defun core-load-core ()
-  "Load files in core directory."
-  (require 'core-files)
-  (require 'core-base))
+(defconst embla-component-directory (concat user-emacs-directory "component/")
+  "The directory of component files.")
 
-(defun core-load-component ()
-  "Load files in component directory."
-  (require 'component-evil)
-  (require 'component-autocomplete)
-  (require 'component-web)
-  (require 'component-version-control))
+(defconst embla-temporary-directory (concat user-emacs-directory "temporary/")
+  "The directory of temporary files.")
 
-(defun core-setup-elpa-repository ()
-  "Create an ELPA repository."
-  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-                           ("org"   . "http://orgmode.org/elpa/")
-                           ("gnu"   . "http://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents)))
+;; Disable useless GUI components.
+(when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
+  (tool-bar-mode -1))
+(when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
+  (menu-bar-mode -1))
+(when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
+  (scroll-bar-mode -1))
+(when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
+  (tooltip-mode -1))
 
-(defun core-setup-theme ()
-  "Setup Emacs theme."
-  (add-package (atom-one-dark-theme))
-  (load-theme 'atom-one-dark t))
+;; Use UTF-8 as the default coding system.
+(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
+(when (fboundp 'set-charset-priority)
+  (set-charset-priority 'unicode))
 
-(defun core-setup-custom-file ()
-  "Place the variables created by Emacs in custom.el."
-  (setq custom-file (concat user-emacs-directory "custom.el"))
-  (unless (file-exists-p custom-file)
-    (write-region "" nil custom-file))
-  (load custom-file))
+;; Remove splash and startup screen.
+(setq inhibit-default-init t
+      inhibit-splash-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
 
-(defun core-setup-encoding ()
-  "Define charset and UTF-8 encoding."
-  (prefer-coding-system 'utf-8)
-  (setq locale-coding-system 'utf-8)
-  (when (fboundp 'set-charset-priority)
-    (set-charset-priority 'unicode)))
+;; Place the variables created by Emacs in custom file
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file)
 
-(defun core-disable-gui ()
-  "Disable GUI components."
-  (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
-    (tool-bar-mode -1))
-  (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
-    (menu-bar-mode -1))
-  (when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
-    (scroll-bar-mode -1))
-  (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
-    (tooltip-mode -1)))
+;; Fix Emacs confusion on Windows with HOME and APPDATA,
+;; causing `abbreviate-home-dir' to produce incorrect paths.
+(when (eq operating-system "windows")
+  (setq abbreviated-home-dir "\\`'"))
 
-(provide 'core-embla)
+(defun embla-initialize ()
+  "Bootstrap Embla, if it hasn't already been loaded."
+  (add-to-list 'load-path embla-core-directory)
+  (add-to-list 'load-path embla-component-directory))
