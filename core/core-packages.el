@@ -28,7 +28,9 @@
     (unless (package-installed-p package)
       (package-install package))))
 
-(defun embla--setup-elpa-repository ()
+;;; Internal core functions.
+
+(defun core-packages//setup-elpa-repository ()
   "Setup an ELPA repository."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
@@ -37,11 +39,12 @@
   (unless package-archive-contents
     (package-refresh-contents)))
 
-(add-hook
-  'embla-startup-hook
-  (defun embla-load-packages ()
-    (embla--setup-elpa-repository)
-    (require-package (atom-one-dark-theme
-                      editorconfig))
-    (load-theme 'atom-one-dark t)
-    (editorconfig-mode 1)))
+(defun core-packages//define-theme ()
+  (require-package (atom-one-dark-theme))
+  (load-theme 'atom-one-dark t))
+
+;;; External core functions.
+
+(defun core-packages/embla-startup-hook ()
+  (core-packages//setup-elpa-repository)
+  (core-packages//define-theme))
