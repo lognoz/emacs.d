@@ -65,18 +65,45 @@
       inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
-;; Place the variables created by Emacs in custom file
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file)
-
 ;; Fix Emacs confusion on Windows with HOME and APPDATA,
 ;; causing `abbreviate-home-dir' to produce incorrect paths.
 (when (eq operating-system "windows")
   (setq abbreviated-home-dir "\\`'"))
 
+(defun load-q (path)
+  "Load path without message output."
+  (unless (file-exists-p path)
+    (write-region "" nil path))
+  (load path nil 'nomessage))
+
+(defun embla--get-modules (base)
+  "Get all directories by a path."
+  (let ((modules (list)))
+    (dolist (f (directory-files base))
+      (when (and (file-directory-p (concat base f))
+                 (not (equal f "."))
+                 (not (equal f "..")))
+        (add-to-list 'modules f)))
+    modules))
+
+(defun embla--startup-hook ()
+  "Add post init processing."
+  (dolist (module (embla--get-modules embla-component-directory))
+    (message module)))
+
 (defun embla-initialize ()
   "Bootstrap Embla, if it hasn't already been loaded."
-  (add-to-list 'load-path embla-core-directory)
-  (add-to-list 'load-path embla-component-directory))
+  ;; Place the variables created by Emacs in custom file.
+  (load-q (concat user-emacs-directory "custom.el"))
+  ;; Load all core configurations and functions dynamically.
+  (dolist (f (directory-files embla-core-directory))
+    (let ((path (concat embla-core-directory f)))
+      (when (and (not (file-directory-p (concat embla-core-directory f)))
+                 (not (equal f "core-embla.el")))
+        (load-q path))))
+  ;; Load pre-init emacs dependencies.
+  (embla-setup-elpa-repository)
+  (require-package (atom-one-dark-theme))
+  (load-theme 'atom-one-dark t)
+  ;; Add post init processing to load embla components after emacs startup.
+  (add-hook 'emacs-startup-hook 'embla--startup-hook))
