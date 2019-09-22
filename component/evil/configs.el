@@ -22,16 +22,17 @@
 
 ;;; Code:
 
+(require-package (evil
+                  evil-collection
+                  evil-indent-plus
+                  evil-leader
+                  evil-magit
+                  evil-smartparens
+                  evil-surround))
+
 (defun evil-initialize ()
-  (require-package (evil
-                    evil-collection
-                    evil-indent-plus
-                    evil-leader
-                    evil-magit
-                    evil-smartparens
-                    evil-surround))
   (evil--setup-leader)
-  (evil-surround-mode 1)
+  (global-evil-surround-mode 1)
   (evil-mode 1))
 
 (defun evil--setup-leader ()
