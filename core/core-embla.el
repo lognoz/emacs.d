@@ -25,9 +25,6 @@
 (defconst embla-version "0.1.1"
   "Current version of Embla.")
 
-(defconst emacs-startup-time (current-time)
-  "The time reference that Emacs was startup.")
-
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
         ((eq system-type 'darwin) "mac")
@@ -45,6 +42,15 @@
 
 (defconst embla-temporary-directory (concat user-emacs-directory "temporary/")
   "The directory of temporary files.")
+
+(defvar embla-startup-hook nil
+  "Hook called before Emacs is started.")
+
+;; Place the variables created by Emacs in custom file.
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(unless (file-exists-p custom-file)
+  (write-region "" nil custom-file))
+(load custom-file nil 'nomessage)
 
 ;; Disable useless GUI components.
 (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
@@ -73,11 +79,13 @@
 (when (eq operating-system "windows")
   (setq abbreviated-home-dir "\\`'"))
 
-(defun load-q (path)
-  "Load path without message output."
-  (unless (file-exists-p path)
-    (write-region "" nil path))
-  (load path nil 'nomessage))
+(defun embla--setup-core ()
+  "Load core configurations and functions dynamically."
+  (dolist (f (directory-files embla-core-directory))
+    (let ((path (concat embla-core-directory f)))
+      (when (and (not (file-directory-p path))
+                 (not (equal f "core-embla.el")))
+        (load path nil 'nomessage)))))
 
 (defun embla--get-modules (base)
   "Get all directories by a path."
@@ -94,24 +102,12 @@
   (dolist (module (embla--get-modules embla-component-directory))
     (let ((path (concat embla-component-directory module "/configs.el")))
       (when (file-exists-p path)
-        (load-q path)
+        (load path nil 'no-message)
         (let ((init (concat module "-initialize")))
           (when (fboundp (intern init)))
             (funcall (intern init)))))))
 
 (defun embla-initialize ()
-  "Bootstrap Embla, if it hasn't already been loaded."
-  ;; Place the variables created by Emacs in custom file.
-  (load-q (concat user-emacs-directory "custom.el"))
-  ;; Load core configurations and functions dynamically.
-  (dolist (f (directory-files embla-core-directory))
-    (let ((path (concat embla-core-directory f)))
-      (when (and (not (file-directory-p (concat embla-core-directory f)))
-                 (not (equal f "core-embla.el")))
-        (load-q path))))
-  ;; Load pre-init emacs dependencies.
-  (embla-setup-elpa-repository)
-  (require-package (atom-one-dark-theme))
-  (load-theme 'atom-one-dark t)
-  ;; Add post init processing to load embla components after emacs startup.
+  (embla--setup-core)
+  (run-hooks 'embla-startup-hook)
   (add-hook 'emacs-startup-hook 'embla--startup-hook))
