@@ -28,7 +28,7 @@
     (unless (package-installed-p package)
       (package-install package))))
 
-(defun embla-setup-elpa-repository ()
+(defun embla--setup-elpa-repository ()
   "Setup an ELPA repository."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
@@ -36,3 +36,12 @@
   (package-initialize)
   (unless package-archive-contents
     (package-refresh-contents)))
+
+(add-hook
+  'embla-startup-hook
+  (defun embla-load-packages ()
+    (embla--setup-elpa-repository)
+    (require-package (atom-one-dark-theme
+                      editorconfig))
+    (load-theme 'atom-one-dark t)
+    (editorconfig-mode 1)))
