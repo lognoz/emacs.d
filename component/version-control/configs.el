@@ -1,4 +1,4 @@
-;;; component-version-control.el - Version Control Component File
+;;; configs.el - Version Control Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,13 +22,9 @@
 
 ;;; Code:
 
-(defun component-version-control/install ()
-  "Install version control requirements."
-  (add-package (git-gutter
-                git-gutter+)))
-
-(defun component-version-control/setup-git-gutter ()
-  "Configure git gutter mode."
+(defun version-control-initialize ()
+  (require-package (git-gutter
+                    git-gutter+))
   (global-git-gutter-mode t)
   (setq git-gutter:update-interval 2
         git-gutter:modified-sign "~"
@@ -37,8 +33,3 @@
         git-gutter:hide-gutter t
         git-gutter:ask-p nil
         git-gutter:hide-gutter t))
-
-(component-version-control/install)
-(component-version-control/setup-git-gutter)
-
-(provide 'component-version-control)
