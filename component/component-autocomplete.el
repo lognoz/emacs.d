@@ -56,16 +56,26 @@
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
+
+(require 'helm)
 (require 'helm-config)
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x b") #'helm-buffers-list)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(global-set-key (kbd "C-x K") #'ibuffer)
+
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
+(global-set-key (kbd "C-x r b") 'helm-filtered-bookmarks)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x B") 'ibuffer)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-c h o") 'helm-occur)
 
 (helm-mode 1)
 (helm-autoresize-mode 1)
-(define-key helm-find-files-map (kbd "<C-backspace>") 'backward-kill-word)
+
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(define-key helm-find-files-map (kbd "<C-backspace>") 'helm-find-files-up-one-level)
 
 (require 'cl-lib)
 
@@ -105,5 +115,12 @@
               :around 'no-dots/helm-ff-filter-candidate-one-by-one)
   (advice-add 'helm-find-files-up-one-level
               :around 'no-dots/helm-find-files-up-one-level))
+
+(defadvice helm-display-mode-line (after undisplay-header activate)
+  (setq header-line-format nil))
+
+(setq helm-find-files-doc-header "")
+
+(setq evil-emacs-state-modes (delq 'ibuffer-mode evil-emacs-state-modes))
 
 (provide 'component-autocomplete)

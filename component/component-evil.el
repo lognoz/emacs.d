@@ -34,6 +34,7 @@
 
 (defun component-evil/setup-evil ()
   "Configure evil mode."
+  (require 'evil-magit)
   (global-evil-leader-mode 1)
   (global-evil-surround-mode 1)
   (evil-mode 1))
