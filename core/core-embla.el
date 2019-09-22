@@ -25,6 +25,9 @@
 (defconst embla-version "0.1.1"
   "Current version of Embla.")
 
+(defconst emacs-startup-time (current-time)
+  "The time reference that Emacs was startup.")
+
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
         ((eq system-type 'darwin) "mac")
