@@ -22,9 +22,6 @@
 
 ;;; Code:
 
-(defconst embla-version "0.1.1"
-  "Current version of Embla.")
-
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
         ((eq system-type 'darwin) "mac")
@@ -79,35 +76,30 @@
 (when (eq operating-system "windows")
   (setq abbreviated-home-dir "\\`'"))
 
-(defun embla--setup-core ()
-  "Load core configurations and functions dynamically."
-  (dolist (f (directory-files embla-core-directory))
-    (let ((path (concat embla-core-directory f)))
-      (when (and (not (file-directory-p path))
-                 (not (equal f "core-embla.el")))
-        (load path nil 'nomessage)))))
+;;; External macro functions.
 
-(defun embla--get-modules (base)
-  "Get all directories by a path."
-  (let ((modules (list)))
-    (dolist (f (directory-files base))
-      (when (and (file-directory-p (concat base f))
-                 (not (equal f "."))
-                 (not (equal f "..")))
-        (add-to-list 'modules f)))
-    modules))
+(defmacro fetch-content (source &rest body)
+  `(dolist (f (directory-files ,source))
+     (let ((path (concat ,source f))
+           (module (file-name-sans-extension f)))
+       ,@body)))
 
-(defun embla--startup-hook ()
-  "Add post init processing."
-  (dolist (module (embla--get-modules embla-component-directory))
-    (let ((path (concat embla-component-directory module "/configs.el")))
-      (when (file-exists-p path)
-        (load path nil 'no-message)
-        (let ((init (concat module "-initialize")))
-          (when (fboundp (intern init)))
-            (funcall (intern init)))))))
+(defmacro when-function-exists (name &rest body)
+  `(let ((func (intern ,name)))
+     (when (fboundp func)
+       ,@body)))
 
-(defun embla-initialize ()
-  (embla--setup-core)
-  (run-hooks 'embla-startup-hook)
-  (add-hook 'emacs-startup-hook 'embla--startup-hook))
+;;; External core functions.
+
+(defun embla/initialize ()
+  ;; Use `embla-core-directory` path reference to fetch elisp files and load
+  ;; them dynamicly. If a startup hook is defined in the file, it will add it
+  ;; to embla to execute it after by it's own after this statement.
+  (fetch-content embla-core-directory
+    (when (and (not (file-directory-p path))
+               (not (equal f "core-embla.el")))
+      (load path nil 'nomessage)
+      (when-function-exists (concat module "/embla-startup-hook")
+        (add-hook 'embla-startup-hook func))))
+
+  (run-hooks 'embla-startup-hook))
