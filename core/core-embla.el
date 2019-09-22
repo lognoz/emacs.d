@@ -89,13 +89,18 @@
 (defun embla--startup-hook ()
   "Add post init processing."
   (dolist (module (embla--get-modules embla-component-directory))
-    (message module)))
+    (let ((path (concat embla-component-directory module "/configs.el")))
+      (when (file-exists-p path)
+        (load-q path)
+        (let ((init (concat module "-initialize")))
+          (when (fboundp (intern init)))
+            (funcall (intern init)))))))
 
 (defun embla-initialize ()
   "Bootstrap Embla, if it hasn't already been loaded."
   ;; Place the variables created by Emacs in custom file.
   (load-q (concat user-emacs-directory "custom.el"))
-  ;; Load all core configurations and functions dynamically.
+  ;; Load core configurations and functions dynamically.
   (dolist (f (directory-files embla-core-directory))
     (let ((path (concat embla-core-directory f)))
       (when (and (not (file-directory-p (concat embla-core-directory f)))
