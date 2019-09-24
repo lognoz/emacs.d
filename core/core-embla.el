@@ -43,6 +43,9 @@
 (defvar embla-startup-hook nil
   "Hook called before Emacs is started.")
 
+(defvar embla-after-component-installation nil
+  "Hook called after component packages has been install.")
+
 ;; Place the variables created by Emacs in custom file.
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (unless (file-exists-p custom-file)
@@ -89,6 +92,30 @@
      (when (fboundp func)
        ,@body)))
 
+;;; Internal core functions.
+
+(defun embla//after-emacs-startup-hook ()
+  (fetch-content embla-component-directory
+    (when (and (file-directory-p path)
+               (not (equal f "."))
+               (not (equal f "..")))
+      (let ((path (concat path "/configs.el")))
+        (load path nil 'nomessage)
+
+        ;; Install Embla dependencies
+        (let ((dependencies (intern-soft (concat module "-packages"))))
+          (when dependencies
+            (dolist (name (symbol-value dependencies))
+              (unless (package-installed-p name)
+                (package-install package)))))
+
+        ;; Add hook to set all configurations after dependencies installation
+        (when-function-exists (concat module "/initialize")
+          (add-hook 'embla-after-component-installation func)))))
+
+    ;; Execute hook to apply component configurations
+    (run-hooks 'embla-after-component-installation))
+
 ;;; External core functions.
 
 (defun embla/initialize ()
@@ -101,5 +128,5 @@
       (load path nil 'nomessage)
       (when-function-exists (concat module "/embla-startup-hook")
         (add-hook 'embla-startup-hook func))))
-
-  (run-hooks 'embla-startup-hook))
+  (run-hooks 'embla-startup-hook)
+  (add-hook 'emacs-startup-hook 'embla//after-emacs-startup-hook))
