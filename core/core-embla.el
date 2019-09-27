@@ -99,22 +99,23 @@
     (when (and (file-directory-p path)
                (not (equal f "."))
                (not (equal f "..")))
-      (let ((path (concat path "/configs.el")))
-        (load path nil 'nomessage)
 
-        ;; Install Embla dependencies
-        (let ((dependencies (intern-soft (concat module "-packages"))))
-          (when dependencies
-            (dolist (name (symbol-value dependencies))
-              (unless (package-installed-p name)
-                (package-install package)))))
+      (setq embla-component-scaned nil)
+      (setq embla-component-packages nil)
 
-        ;; Add hook to set all configurations after dependencies installation
-        (when-function-exists (concat module "/initialize")
-          (add-hook 'embla-after-component-installation func)))))
+      (dolist (f '("/config.el" "/packages.el"))
+        (when (file-exists-p (concat path f))
+          (setq embla-component-scaned module)
+          (load (concat path f) nil 'nomessage)))
 
-    ;; Execute hook to apply component configurations
-    (run-hooks 'embla-after-component-installation))
+      (when embla-component-packages
+        (dolist (dependency embla-component-packages)
+          ;; Add hook to set all configurations after dependencies installation
+          (when-function-exists (concat module "/init-" dependency)
+            (add-hook 'embla-after-component-installation func))))))
+
+  ; Execute hook to apply component configurations
+  (run-hooks 'embla-after-component-installation))
 
 ;;; External core functions.
 
