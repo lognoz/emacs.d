@@ -23,9 +23,18 @@
 ;;; Code:
 
 (defun sudo ()
-  "Use TRAMP to `sudo' the current buffer"
+  "Use TRAMP to `sudo` the current buffer"
   (interactive)
   (when buffer-file-name
     (find-alternate-file
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
+
+(defun stage-current-buffer ()
+  "Stage changes of active buffer."
+  (interactive)
+  (let* ((buffile (buffer-file-name))
+    (output (shell-command-to-string
+            (concat "git add " (buffer-file-name)))))
+    (message (if (not (string= output ""))
+        output (concat "Added " buffile)))))
