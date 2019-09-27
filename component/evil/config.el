@@ -1,4 +1,4 @@
-;;; configs.el - Evil Component File
+;;; config.el - Evil Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,21 +22,16 @@
 
 ;;; Code:
 
-(require-package (evil
-                  evil-collection
-                  evil-indent-plus
-                  evil-leader
-                  evil-magit
-                  evil-smartparens
-                  evil-surround))
-
-(defun evil-initialize ()
-  (evil--setup-leader)
+(defun evil/init-evil ()
+  (global-evil-leader-mode 1)
   (global-evil-surround-mode 1)
   (evil-mode 1))
 
-(defun evil--setup-leader ()
-  (global-evil-leader-mode 1)
+(defun evil/init-evil-magit ()
+  (with-eval-after-load 'magit
+    (require 'evil-magit)))
+
+(defun evil/init-evil-leader ()
   (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
     "f"   'find-file
@@ -46,13 +41,4 @@
     "gs"  'magit-status
     "gc"  'magit-commit-create
     "gl"  'magit-log-all
-    "gps" 'magit-push-current-to-upstream)
-
-  (defun stage-current-buffer ()
-    "Stage changes of active buffer."
-    (interactive)
-    (let* ((buffile (buffer-file-name))
-      (output (shell-command-to-string
-              (concat "git add " (buffer-file-name)))))
-      (message (if (not (string= output ""))
-          output (concat "Added " buffile))))))
+    "gps" 'magit-push-current-to-upstream))
