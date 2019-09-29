@@ -27,12 +27,16 @@
 
 ;;; External macro functions.
 
-(cl-defmacro packadd! (name &rest body &key config build-in)
+(cl-defmacro packadd! (name &rest args)
   ;; Install package if not installed.
   (unless (package-installed-p name) (package-install name))
   ;; Handle :config and execute it.
-  (when config (eval config))
-  ;; Push value into `embla-component-packages' variable.
+  (let ((current) (config))
+    (dolist (statement args)
+      (cond ((eq statement :config) (setq current 'config))
+            (t (when (eq current 'config)
+              (eval statement))))))
+  ; Push value into `embla-component-packages' variable.
   (macroexp-progn
     `((add-to-list 'embla-component-packages (format "%S" ',name)))))
 
