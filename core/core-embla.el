@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
         ((eq system-type 'darwin) "mac")
@@ -100,12 +102,9 @@
                (not (equal f "."))
                (not (equal f "..")))
 
-      (setq embla-component-scaned nil)
       (setq embla-component-packages nil)
-
       (dolist (f '("/config.el" "/packages.el"))
         (when (file-exists-p (concat path f))
-          (setq embla-component-scaned module)
           (load (concat path f) nil 'nomessage)))
 
       (when embla-component-packages
