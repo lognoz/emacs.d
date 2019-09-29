@@ -22,29 +22,26 @@
 
 ;;; Code:
 
-(defmacro require-package (package-list)
-  "Install packages if not installed."
-  (dolist (package package-list)
-    (unless (package-installed-p package)
-      (package-install package))))
+(defvar embla-component-packages nil
+  "List of packages required by component.")
 
-;;; Internal core functions.
+;;; External macro functions.
 
-(defun core-packages//setup-elpa-repository ()
-  "Setup an ELPA repository."
+(cl-defmacro packadd! (name &rest body &key config build-in)
+  ;; Install package if not installed.
+  (unless (package-installed-p name) (package-install name))
+  ;; Handle :config and execute it.
+  (when config (eval config))
+  ;; Push value into `embla-component-packages' variable.
+  (macroexp-progn
+    `((add-to-list 'embla-component-packages (format "%S" ',name)))))
+
+;;; External core functions.
+
+(defun core-packages/embla-startup-hook ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
   (package-initialize)
   (unless package-archive-contents
     (package-refresh-contents)))
-
-(defun core-packages//define-theme ()
-  (require-package (atom-one-dark-theme))
-  (load-theme 'atom-one-dark t))
-
-;;; External core functions.
-
-(defun core-packages/embla-startup-hook ()
-  (core-packages//setup-elpa-repository)
-  (core-packages//define-theme))
