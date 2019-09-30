@@ -1,4 +1,4 @@
-;;; core.el - Core Files Initialization File
+;;; core-files.el - Core Files Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,19 +22,17 @@
 
 ;;; Code:
 
-;; Backup files
-(setq backup-directory-alist
-      (list (cons "." (expand-file-name "backup" user-temporary-directory))))
+(defun core-files/embla-startup-hook ()
+  ;; Backup file
+  (setq backup-directory-alist
+        (list (cons "." (expand-file-name "backup" embla-temporary-directory))))
 
-;; Bookmark file
-(setq bookmark-default-file (concat user-environment-directory "bookmark"))
+  ;; Bookmark file
+  (setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
 
-;; Undo files
-(add-package (undo-tree))
-(setq undo-tree-auto-save-history t)
-(setq undo-tree-history-directory-alist
-      (list (cons "." (expand-file-name "undo" user-temporary-directory))))
-
-(global-undo-tree-mode 1)
-
-(provide 'core-files)
+  ;; Undo file
+  (packadd! undo-tree)
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist
+        (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
+  (global-undo-tree-mode 1))
