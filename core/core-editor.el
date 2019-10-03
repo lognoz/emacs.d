@@ -49,12 +49,36 @@
 ;; Display line numbers
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
+;;; Internal core variables.
+
+(defvar minor-blacklist '(abbrev-mode
+                          eldoc-mode
+                          company-mode
+                          editorconfig-mode
+                          undo-tree-mode
+                          helm-mode
+                          flycheck-mode
+                          flyspell-mode))
+
+;;; Internal core functions.
+
+(defun core-editor//purge-minor-modes ()
+  (interactive)
+  (dolist (x minor-blacklist nil)
+    (let ((trg (cdr (assoc x minor-mode-alist))))
+      (when trg
+        (setcar trg "")))))
+
 ;;; External core functions.
 
 (defun core-editor/embla-startup-hook ()
+  ;; Remove useless minor modes
+  (core-editor//purge-minor-modes)
+  (add-hook 'after-change-major-mode-hook 'core-editor//purge-minor-modes)
+
   ;; Setup Embla theme
   (packadd! atom-one-dark-theme
-            :config (load-theme 'atom-one-dark t))
+    :config (load-theme 'atom-one-dark t))
 
   (packadd! moody
     :config (setq x-underline-at-descent-line t)
@@ -63,4 +87,4 @@
 
   ;; Setup Editor config to maintain consistent coding styles
   (packadd! editorconfig
-            :config (editorconfig-mode 1)))
+    :config (editorconfig-mode 1)))
