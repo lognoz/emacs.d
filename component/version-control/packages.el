@@ -1,4 +1,4 @@
-;;; configs.el - Version Control Component File
+;;; packages.el - Version control Packages Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,14 +22,6 @@
 
 ;;; Code:
 
-(defun version-control-initialize ()
-  (require-package (git-gutter
-                    git-gutter+))
-  (global-git-gutter-mode t)
-  (setq git-gutter:update-interval 2
-        git-gutter:modified-sign "~"
-        git-gutter:added-sign "+"
-        git-gutter:deleted-sign "-"
-        git-gutter:hide-gutter t
-        git-gutter:ask-p nil
-        git-gutter:hide-gutter t))
+(packadd! evil)
+(packadd! git-gutter)
+(packadd! git-gutter+)
