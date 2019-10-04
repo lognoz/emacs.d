@@ -1,9 +1,9 @@
-;;; configs.el - Company Component File
+;;; config.el - Company Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: company autocomplete
+;; Keywords: autocomplete
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,29 +22,27 @@
 
 ;;; Code:
 
-(require-package (company yasnippet))
+(defun company/init-company ()
+  (require 'company)
+  (require 'yasnippet)
 
-(require 'company)
-(require 'yasnippet)
-
-(defun company-initialize ()
-  (company--setup-mapping)
+  (company//setup-keybindings)
   (setq company-minimum-prefix-length 1
         company-idle-delay 0
         company-selection-wrap-around t
         company-tooltip-align-annotations t
-        company-backends (mapcar #'company--load-backend-with-yas company-backends)
+        company-backends (mapcar #'company//load-backend-with-yas company-backends)
         company-frontends '(company-pseudo-tooltip-frontend
                             company-echo-metadata-frontend))
   (global-company-mode 1))
 
-(defun company--load-backend-with-yas (backend)
-    (if (and (listp backend) (member 'company-yasnippet backend))
-        backend
-      (append (if (consp backend) backend (list backend))
-              '(:with company-yasnippet))))
+(defun company//load-backend-with-yas (backend)
+  (if (and (listp backend) (member 'company-yasnippet backend))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
 
-(defun company--setup-mapping ()
+(defun company//setup-keybindings ()
   (with-eval-after-load 'company
     (define-key company-active-map [tab] 'company-complete-selection)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
