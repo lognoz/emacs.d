@@ -58,10 +58,15 @@
         ;; Disable special behavior for left/right, M-left/right keys.
         helm-ff-lynx-style-map nil)
 
+  ;; Remove '.' and '..' candidates
   (advice-add 'helm-ff-filter-candidate-one-by-one
     :around (lambda (fcn file)
               (unless (string-match "\\(?:/\\|\\`\\)\\.\\{1,2\\}\\'" file)
                 (funcall fcn file))))
+
+  ;; Don't use helm in dired
+  (add-to-list 'helm-completing-read-handlers-alist
+               '(dired . nil))
 
   (helm//setup-helm-files)
   (helm//setup-keybindings))
