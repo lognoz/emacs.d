@@ -30,6 +30,9 @@
         ((eq system-type 'windows-nt) "windows")
         ((eq system-type 'berkeley-unix) "bsd")))
 
+(defconst is-xorg
+  (eq window-system 'x))
+
 (defconst current-user
   (getenv (if (eq operating-system "windows") "USERNAME" "USER")))
 
