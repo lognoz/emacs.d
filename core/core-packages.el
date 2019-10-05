@@ -22,6 +22,9 @@
 
 ;;; Code:
 
+(defvar embla-package-refresh nil
+  "Package content has been refresh.")
+
 (defvar embla-component-packages nil
   "List of packages required by component.")
 
@@ -29,7 +32,11 @@
 
 (cl-defmacro packadd! (name &rest args)
   ;; Install package if not installed.
-  (unless (package-installed-p name) (package-install name))
+  (unless (package-installed-p name)
+    (when (not embla-package-refresh)
+      (setq embla-package-refresh t)
+      (package-refresh-contents))
+    (package-install name))
   ;; Handle :config and execute it.
   (let ((current) (config))
     (dolist (statement args)
@@ -46,6 +53,4 @@
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents)))
+  (package-initialize))
