@@ -42,6 +42,9 @@
 (defconst embla-component-directory (concat user-emacs-directory "component/")
   "The directory of component files.")
 
+(defconst embla-language-directory (concat user-emacs-directory "language/")
+  "The directory of language files.")
+
 (defconst embla-temporary-directory (concat user-emacs-directory "temporary/")
   "The directory of temporary files.")
 
@@ -92,6 +95,12 @@
            (module (file-name-sans-extension f)))
        ,@body)))
 
+(defmacro fetch-dependencies (&rest body)
+  `(when embla-component-packages
+    (dolist (dependency embla-component-packages)
+      (when-function-exists (concat module "/init-" dependency)
+        ,@body))))
+
 (defmacro when-function-exists (name &rest body)
   `(let ((func (intern ,name)))
      (when (fboundp func)
@@ -99,24 +108,36 @@
 
 ;;; Internal core functions.
 
+(defun embla//load-composant-files (path)
+  (setq embla-component-packages nil)
+  (dolist (f '("/config.el" "/packages.el"))
+    (when (file-exists-p (concat path f))
+      (load (concat path f) nil 'nomessage))))
+
 (defun embla//after-emacs-startup-hook ()
   (fetch-content embla-component-directory
     (when (and (file-directory-p path)
                (not (equal f "."))
                (not (equal f "..")))
+      ;; Load component files.
+      (embla//load-composant-files path)
+      ;; Add hook to set all configurations after dependencies installation.
+      (fetch-dependencies (add-hook 'embla-after-component-installation func))))
 
-      (setq embla-component-packages nil)
-      (dolist (f '("/config.el" "/packages.el"))
-        (when (file-exists-p (concat path f))
-          (load (concat path f) nil 'nomessage)))
-
-      (when embla-component-packages
-        (dolist (dependency embla-component-packages)
-          ;; Add hook to set all configurations after dependencies installation
-          (when-function-exists (concat module "/init-" dependency)
-            (add-hook 'embla-after-component-installation func))))))
-
-  ; Execute hook to apply component configurations
+  ;; Add language to auto mode to load what inside language directory
+  ;; dynamicly.
+  (mapc (lambda (entry)
+   (let ((language (car entry))
+         (extension (cadr entry)))
+     (dolist (name extension)
+       (add-to-list 'auto-mode-alist
+        `(,name . (lambda ()
+            ;; Load component files.
+            (embla//load-composant-files (concat embla-language-directory ,language))
+            ;; Call function
+            (fetch-dependencies (funcall func))))))))
+    embla-languages-alist)
+  ;; Execute hook to apply component configurations.
   (run-hooks 'embla-after-component-installation))
 
 ;;; External core functions.
