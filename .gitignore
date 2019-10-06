@@ -1,2 +1,4 @@
-temporary/backup/
-temporary/undo/
+elpa
+temporary
+transient
+tramp
