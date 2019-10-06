@@ -52,7 +52,7 @@
   "Hook called after component packages has been install.")
 
 ;; Place the variables created by Emacs in custom file.
-(setq custom-file (concat user-emacs-directory "custom.el"))
+(setq custom-file (concat embla-temporary-directory "custom.el"))
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load custom-file nil 'nomessage)
