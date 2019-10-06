@@ -127,15 +127,17 @@
   ;; Add language to auto mode to load what inside language directory
   ;; dynamicly.
   (mapc (lambda (entry)
-   (let ((language (car entry))
-         (extension (cadr entry)))
+   (let* ((language (car entry))
+          (extension (cadr entry))
+          (path (concat embla-language-directory language)))
      (dolist (name extension)
-       (add-to-list 'auto-mode-alist
-        `(,name . (lambda ()
-            ;; Load component files.
-            (embla//load-composant-files (concat embla-language-directory ,language))
-            ;; Call function
-            (fetch-dependencies (funcall func))))))))
+       (when (file-directory-p path)
+         (add-to-list 'auto-mode-alist
+          `(,name . (lambda ()
+              ;; Load component files.
+              (embla//load-composant-files ,path)
+              ;; Call function if it's defined in config file.
+              (fetch-dependencies (funcall func)))))))))
     embla-languages-alist)
   ;; Execute hook to apply component configurations.
   (run-hooks 'embla-after-component-installation))
