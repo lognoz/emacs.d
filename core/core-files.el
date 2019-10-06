@@ -33,6 +33,13 @@
 (setq savehist-file (concat embla-temporary-directory "savehist"))
 (setq history-length 100)
 
+;; Record history
+(recentf-mode 1)
+(setq recentf-save-file (concat embla-temporary-directory "recentf"))
+(setq recentf-max-menu-items 10)
+(setq recentf-max-saved-items 100)
+(setq recentf-show-file-shortcuts-flag nil)
+
 ;; Save cursor positions
 (save-place-mode 1)
 (setq save-place-file (concat embla-temporary-directory "saveplace"))
