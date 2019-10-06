@@ -25,38 +25,6 @@
 ;; Save every 20 characters typed
 (setq auto-save-interval 20)
 
-;; Bookmark file
-(setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
-
-;; Save minibuffer
-(savehist-mode 1)
-(setq savehist-file (concat embla-temporary-directory "savehist"))
-(setq history-length 100)
-
-;; Record history
-(recentf-mode 1)
-(setq recentf-save-file (concat embla-temporary-directory "recentf"))
-(setq recentf-max-menu-items 10)
-(setq recentf-max-saved-items 100)
-(setq recentf-show-file-shortcuts-flag nil)
-
-;; Save cursor positions
-(save-place-mode 1)
-(setq save-place-file (concat embla-temporary-directory "saveplace"))
-
-;; Backup file
-(setq version-control t       ; Use version numbers for backups.
-      kept-new-versions 8     ; Number of newest versions to keep.
-      kept-old-versions 0     ; Number of oldest versions to keep.
-      delete-old-versions t   ; Don't ask to delete excess backup versions.
-      backup-by-copying t     ; Copy all files, don't rename them.
-      vc-make-backup-files t) ; Backup also versioned files.
-;; Default and save backups go here
-(let ((path (concat embla-temporary-directory "backup/save")))
-  (setq backup-directory-alist `((".*" .  ,path))))
-;; Create backup on save
-(add-hook 'before-save-hook 'core-files//save-backup)
-
 ;;; Internal core functions.
 
 (defun core-files//save-backup ()
@@ -74,12 +42,48 @@
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
-;;; External core functions.
-
-(defun core-files/embla-startup-hook ()
-  ;; Undo file
+(defun core-files//undo-tree-init ()
   (packadd! undo-tree)
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
+
+(defun core-files//backup-init ()
+  ;; Backup file
+  (setq version-control t       ; Use version numbers for backups.
+        kept-new-versions 8     ; Number of newest versions to keep.
+        kept-old-versions 0     ; Number of oldest versions to keep.
+        delete-old-versions t   ; Don't ask to delete excess backup versions.
+        backup-by-copying t     ; Copy all files, don't rename them.
+        vc-make-backup-files t) ; Backup also versioned files.
+  ;; Default and save backups go here
+  (let ((path (concat embla-temporary-directory "backup/save")))
+    (setq backup-directory-alist `((".*" .  ,path))))
+  ;; Create backup on save
+  (add-hook 'before-save-hook 'core-files//save-backup))
+
+;;; External core functions.
+
+(defun core-files/embla-startup-hook ()
+  ;; Bookmark file
+  (setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
+
+  ;; Save minibuffer
+  (savehist-mode 1)
+  (setq savehist-file (concat embla-temporary-directory "savehist"))
+  (setq history-length 100)
+
+  ;; Record history
+  (recentf-mode 1)
+  (setq recentf-save-file (concat embla-temporary-directory "recentf"))
+  (setq recentf-max-menu-items 10)
+  (setq recentf-max-saved-items 100)
+  (setq recentf-show-file-shortcuts-flag nil)
+
+  ;; Save cursor positions
+  (save-place-mode 1)
+  (setq save-place-file (concat embla-temporary-directory "saveplace"))
+
+  (core-files//undo-tree-init)
+  (core-files//backup-init))
