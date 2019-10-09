@@ -95,10 +95,10 @@
            (module (file-name-sans-extension f)))
        ,@body)))
 
-(defmacro fetch-dependencies (&rest body)
+(defmacro fetch-dependencies (module &rest body)
   `(when embla-component-packages
     (dolist (dependency embla-component-packages)
-      (when-function-exists (concat module "/init-" dependency)
+      (when-function-exists (concat ,module "/init-" dependency)
         ,@body))))
 
 (defmacro when-function-exists (name &rest body)
@@ -119,26 +119,26 @@
     (when (and (file-directory-p path)
                (not (equal f "."))
                (not (equal f "..")))
-      ;; Load component files.
+      ;; Load composant files in component directory.
       (embla//load-composant-files path)
       ;; Add hook to set all configurations after dependencies installation.
-      (fetch-dependencies (add-hook 'embla-after-component-installation func))))
+      (fetch-dependencies module
+        (add-hook 'embla-after-component-installation func))))
 
   ;; Add language to auto mode to load what inside language directory
-  ;; dynamicly.
+  ;; dynamically.
   (mapc (lambda (entry)
    (let* ((language (car entry))
           (extension (cadr entry))
+          (mode (cadr (cdr entry)))
           (path (concat embla-language-directory language)))
-     (dolist (name extension)
-       (when (file-directory-p path)
-         (add-to-list 'auto-mode-alist
-          `(,name . (lambda ()
-              ;; Load component files.
-              (embla//load-composant-files ,path)
-              ;; Call function if it's defined in config file.
-              (fetch-dependencies (funcall func)))))))))
+      (add-to-list 'auto-mode-alist
+       `(,extension . (lambda ()
+           (embla//load-composant-files ,path)
+           (fetch-dependencies ,language (funcall func))
+           (,mode))))))
     embla-languages-alist)
+
   ;; Execute hook to apply component configurations.
   (run-hooks 'embla-after-component-installation))
 
