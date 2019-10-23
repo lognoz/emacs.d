@@ -78,13 +78,4 @@
 
   ;; Setup Embla theme
   (packadd! atom-one-dark-theme
-    :config (load-theme 'atom-one-dark t))
-
-  (packadd! moody
-    :config (setq x-underline-at-descent-line t)
-            (moody-replace-mode-line-buffer-identification)
-            (moody-replace-vc-mode))
-
-  ;; Setup Editor config to maintain consistent coding styles
-  (packadd! editorconfig
-    :config (editorconfig-mode 1)))
+    :config (load-theme 'atom-one-dark t)))
