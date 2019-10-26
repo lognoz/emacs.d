@@ -28,6 +28,10 @@
 (defvar embla-component-packages nil
   "List of packages required by component.")
 
+(defvar embla-languages-alist
+  '(("web" "\\.html.php\\'" web-mode))
+  '(("php" "\\.php\\'" php-mode)))
+
 ;;; External macro functions.
 
 (cl-defmacro packadd! (name &rest args)
