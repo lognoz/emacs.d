@@ -98,6 +98,8 @@
 (defmacro fetch-dependencies (module &rest body)
   `(when embla-component-packages
     (dolist (dependency embla-component-packages)
+      (when-function-exists (concat ,module "/hook-" dependency)
+        (add-hook (intern (concat dependency "-hook")) func))
       (when-function-exists (concat ,module "/init-" dependency)
         ,@body))))
 
