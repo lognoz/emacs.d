@@ -78,8 +78,8 @@
 
   ;; Setup Embla theme
   (packadd! atom-one-dark-theme
-    :config (load-theme 'atom-one-dark t)))
+    :config (load-theme 'atom-one-dark t))
 
   ;; Load Embla mode line
-  ;(core-mode-line/initialize))
+  (mode-line-initialize))
 
