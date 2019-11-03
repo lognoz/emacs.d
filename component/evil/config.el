@@ -27,17 +27,20 @@
   (global-evil-surround-mode 1)
   (evil-mode 1)
 
-  (define-key evil-normal-state-map (kbd "=") 'evil-indent-line)
-  (define-key evil-normal-state-map (kbd "<") 'evil-shift-left-line)
-  (define-key evil-normal-state-map (kbd ">") 'evil-shift-right-line)
-
-  (define-key evil-visual-state-map (kbd "=") 'visual-indent)
-  (define-key evil-visual-state-map (kbd "<") 'visual-shift-left)
-  (define-key evil-visual-state-map (kbd ">") 'visual-shift-right)
-
+  ;; Normal state
+  (define-key evil-normal-state-map "=" 'evil-indent-line)
+  (define-key evil-normal-state-map "<" 'evil-shift-left-line)
+  (define-key evil-normal-state-map ">" 'evil-shift-right-line)
+  (define-key evil-normal-state-map "Q" (kbd "@q"))
   (define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
   (define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
 
+  ;; Visual state
+  (define-key evil-visual-state-map "=" 'visual-indent)
+  (define-key evil-visual-state-map "<" 'visual-shift-left)
+  (define-key evil-visual-state-map ">" 'visual-shift-right)
+  (define-key evil-visual-state-map "Q" (kbd "@q"))
+  (define-key evil-visual-state-map "." (kbd ":normal ."))
   (define-key evil-visual-state-map (kbd "C-j") (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map (kbd "C-k") (concat ":m '<-2" (kbd "RET") "gv=gv"))
 
@@ -58,6 +61,11 @@
     (evil-shift-right (region-beginning) (region-end))
     (evil-normal-state)
     (evil-visual-restore)))
+
+(defun evil/init-evil-smartparens ()
+  (require 'smartparens-config)
+  (smartparens-mode)
+  (add-hook 'smartparens-enabled-hook #'evil-smartparens-mode))
 
 (defun evil/init-evil-magit ()
   (with-eval-after-load 'magit
