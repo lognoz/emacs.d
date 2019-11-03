@@ -71,7 +71,7 @@
 
 ;;; External core functions.
 
-(defun core-editor/embla-startup-hook ()
+(defun editor-startup-hook ()
   ;; Remove useless minor modes
   (core-editor//purge-minor-modes)
   (add-hook 'after-change-major-mode-hook 'core-editor//purge-minor-modes)
@@ -79,3 +79,7 @@
   ;; Setup Embla theme
   (packadd! atom-one-dark-theme
     :config (load-theme 'atom-one-dark t)))
+
+  ;; Load Embla mode line
+  ;(core-mode-line/initialize))
+

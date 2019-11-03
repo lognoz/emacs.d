@@ -53,7 +53,7 @@
 
 ;;; External core functions.
 
-(defun core-packages/embla-startup-hook ()
+(defun packages-startup-hook ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))

@@ -110,19 +110,19 @@
 
 ;;; Internal core functions.
 
-(defun embla//load-composant-files (path)
+(defun embla--load-composant-files (path)
   (setq embla-component-packages nil)
   (dolist (f '("/config.el" "/packages.el"))
     (when (file-exists-p (concat path f))
       (load (concat path f) nil 'nomessage))))
 
-(defun embla//after-emacs-startup-hook ()
+(defun embla--after-emacs-startup-hook ()
   (fetch-content embla-component-directory
     (when (and (file-directory-p path)
                (not (equal f "."))
                (not (equal f "..")))
       ;; Load composant files in component directory.
-      (embla//load-composant-files path)
+      (embla--load-composant-files path)
       ;; Add hook to set all configurations after dependencies installation.
       (fetch-dependencies module
         (add-hook 'embla-after-component-installation func))))
@@ -146,15 +146,16 @@
 
 ;;; External core functions.
 
-(defun embla/initialize ()
-  ;; Use `embla-core-directory` path reference to fetch elisp files and load
+(defun embla-initialize ()
+  ;; Use `embla-core-directory' path reference to fetch elisp files and load
   ;; them dynamicly. If a startup hook is defined in the file, it will add it
   ;; to embla to execute it after by it's own after this statement.
   (fetch-content embla-core-directory
     (when (and (not (file-directory-p path))
                (not (equal f "core-embla.el")))
       (load path nil 'nomessage)
-      (when-function-exists (concat module "/embla-startup-hook")
-        (add-hook 'embla-startup-hook func))))
+      (let ((module (replace-regexp-in-string "core-" "" module)))
+        (when-function-exists (concat module "-startup-hook")
+          (add-hook 'embla-startup-hook func)))))
   (run-hooks 'embla-startup-hook)
-  (add-hook 'emacs-startup-hook 'embla//after-emacs-startup-hook))
+  (add-hook 'emacs-startup-hook 'embla--after-emacs-startup-hook))

@@ -34,4 +34,4 @@
   (setq user-emacs-directory (file-name-directory load-file-name))
   (load (concat user-emacs-directory "core/core-embla")
         nil 'nomessage)
-  (embla/initialize))
+  (embla-initialize))
