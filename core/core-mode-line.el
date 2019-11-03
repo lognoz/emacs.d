@@ -47,9 +47,15 @@
 (defun mode-line--evil-state ()
   (cond
     ((eq evil-state 'insert) "Insert")
-    ((eq evil-state 'normal) "Normal")
     ((eq evil-state 'visual) "Visual")
-    ((eq evil-state 'replace) "Replace")))
+    ((eq evil-state 'replace) "Replace")
+    (t "Normal")))
+
+(defun mode-line--evil-macro ()
+  (when evil-this-macro
+     (propertize
+       (concat "Recording @" (string evil-this-macro))
+           'face '(:foreground "orange"))))
 
 (defun face (text)
   (when (not (= (length text) 0))
@@ -72,6 +78,7 @@
 
                       ;; Mode line at right position.
                       (right-content (concat
+                        (face (mode-line--evil-macro))
                         (face (mode-line--evil-state))
                         (face (format-mode-line mode-name))
                         (face (mode-line--version-control))))
