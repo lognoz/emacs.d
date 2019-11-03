@@ -136,7 +136,7 @@
           (path (concat embla-language-directory language)))
       (add-to-list 'auto-mode-alist
        `(,extension . (lambda ()
-           (embla//load-composant-files ,path)
+           (embla--load-composant-files ,path)
            (fetch-dependencies ,language (funcall func))
            (,mode))))))
     embla-languages-alist)
