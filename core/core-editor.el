@@ -49,6 +49,9 @@
 ;; Display line numbers
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
+;; Auto close insertion
+(electric-pair-mode 1)
+
 ;;; Internal core variables.
 
 (defvar minor-blacklist '(abbrev-mode
