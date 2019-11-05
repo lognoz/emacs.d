@@ -33,7 +33,7 @@
 
 (defun mode-line--buffer-name ()
   "Render a different buffer name if version control is active or not."
-  (let ((text (buffer-name)) (face 'bold))
+  (let ((text (buffer-name)) (face nil))
     (if buffer-file-name
       (when (and vc-mode buffer-file-name)
         (let* ((backend (vc-responsible-backend buffer-file-name))
@@ -57,6 +57,10 @@
        (concat "Recording @" (string evil-this-macro))
            'face '(:foreground "orange"))))
 
+(defun mode-line--mode-name ()
+  (propertize mode-name
+              'face 'bold))
+
 (defun face (text)
   (when (not (= (length text) 0))
     (concat " " text " ")))
@@ -74,13 +78,13 @@
                       ;; Mode line at left position.
                       (left-content (concat
                         (face (mode-line--buffer-name))
-                        (face (format-mode-line "%l:%c"))))
+                        (face (format-mode-line "%l,%c"))
+                        (face (mode-line--mode-name))))
 
                       ;; Mode line at right position.
                       (right-content (concat
                         (face (mode-line--evil-macro))
                         (face (mode-line--evil-state))
-                        (face (format-mode-line mode-name))
                         (face (mode-line--version-control))))
 
                       ;; Mode line at center position.
@@ -91,4 +95,4 @@
                       (concat left-content center-fill right-content)))))
 
   (setq-default mode-line-format
-    (cons (propertize "\u200b" 'display '((raise -0.5) (height 2))) mode-line-format)))
+    (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format)))
