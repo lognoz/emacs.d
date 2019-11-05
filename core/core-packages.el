@@ -29,14 +29,14 @@
   "List of packages required by component.")
 
 (defvar embla-languages-alist
-  '(("web" "\\.html.php\\'" web-mode))
-  '(("php" "\\.php\\'" php-mode)))
+  '(("php" "\\.php\\'" php-mode)
+    ("web" "\\.html.php\\'" web-mode)))
 
 ;;; External macro functions.
 
 (cl-defmacro packadd! (name &rest args)
   ;; Install package if not installed.
-  (unless (package-installed-p name)
+  (unless (or (not (fboundp #'name)) (package-installed-p name))
     (when (not embla-package-refresh)
       (setq embla-package-refresh t)
       (package-refresh-contents))
