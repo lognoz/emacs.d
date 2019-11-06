@@ -34,20 +34,21 @@
 
 ;;; External macro functions.
 
-(cl-defmacro packadd! (name &rest args)
+(cl-defmacro packadd! (name &rest plist)
   ;; Install package if not installed.
-  (unless (or (not (fboundp #'name)) (package-installed-p name))
+  (when (and (not (package-installed-p name))
+             (not (plist-get plist :built-in)))
     (when (not embla-package-refresh)
       (setq embla-package-refresh t)
       (package-refresh-contents))
     (package-install name))
   ;; Handle :config and execute it.
   (let ((current) (config))
-    (dolist (statement args)
+    (dolist (statement plist)
       (cond ((eq statement :config) (setq current 'config))
             (t (when (eq current 'config)
               (eval statement))))))
-  ; Push value into `embla-component-packages' variable.
+  ;; Push value into `embla-component-packages' variable.
   (macroexp-progn
     `((add-to-list 'embla-component-packages (format "%S" ',name)))))
 
