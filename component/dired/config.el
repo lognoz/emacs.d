@@ -34,6 +34,7 @@
 
   (with-eval-after-load 'dired
     (define-key dired-mode-map [mouse-2] 'dired-find-alternate-file)
+    (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
     (define-key dired-mode-map [tab] 'dired-toogle-dotfile)))
 
 (defun dired-toogle-dotfile ()
