@@ -29,8 +29,10 @@
   "List of packages required by component.")
 
 (defvar embla-languages-alist
-  '(("php" "\\.php\\'" php-mode)
-    ("web" "\\.html.php\\'" web-mode)))
+  ;; Language   Extension         Word syntax     Mode
+  '(("php"      "\\.php\\'"       '("-" "_" "$")  php-mode)
+    ("web"      "\\.html.php\\'"  '("-" "_")      web-mode)
+    ("yaml"     "\\.yml\\'"       '("-" "_")      yaml-mode)))
 
 ;;; External macro functions.
 
