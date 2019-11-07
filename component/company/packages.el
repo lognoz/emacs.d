@@ -23,4 +23,5 @@
 ;;; Code:
 
 (packadd! company)
+(packadd! company-ctags)
 (packadd! yasnippet)

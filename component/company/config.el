@@ -26,7 +26,9 @@
   (require 'company)
   (require 'yasnippet)
 
+  (company//setup-ctags)
   (company//setup-keybindings)
+
   (setq company-minimum-prefix-length 1
         company-idle-delay 0
         company-selection-wrap-around t
@@ -41,6 +43,10 @@
       backend
     (append (if (consp backend) backend (list backend))
             '(:with company-yasnippet))))
+
+(defun company//setup-ctags ()
+  (with-eval-after-load 'company
+    (company-ctags-auto-setup)))
 
 (defun company//setup-keybindings ()
   (with-eval-after-load 'company
