@@ -32,6 +32,7 @@
   (define-key evil-normal-state-map "<" 'evil-shift-left-line)
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
   (define-key evil-normal-state-map "Q" (kbd "@q"))
+  (define-key evil-normal-state-map (kbd "C-]") 'helm-etags-select)
   (define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
   (define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
 
