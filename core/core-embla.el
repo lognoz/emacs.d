@@ -132,13 +132,22 @@
   (mapc (lambda (entry)
    (let* ((language (car entry))
           (extension (cadr entry))
-          (mode (cadr (cdr entry)))
+          (word-syntax (cadr (cdr entry)))
+          (mode (cadr (cdr (cdr entry))))
           (path (concat embla-language-directory language)))
-      (add-to-list 'auto-mode-alist
+
+     (add-to-list 'auto-mode-alist
        `(,extension . (lambda ()
-           (embla--load-composant-files ,path)
-           (fetch-dependencies ,language (funcall func))
-           (,mode))))))
+         (add-hook (intern (concat (symbol-name ',mode) "-hook")) (lambda ()
+           (dolist (character ,word-syntax)
+             (cond ((string-equal character "_") (modify-syntax-entry ?_ "w"))
+                   ((string-equal character "-") (modify-syntax-entry ?- "w"))
+                   ((string-equal character "$") (modify-syntax-entry ?$ "w"))))))
+
+         (packadd! ,mode)
+         (embla--load-composant-files ,path)
+         (fetch-dependencies ,language (funcall func))
+         (,mode))))))
     embla-languages-alist)
 
   ;; Execute hook to apply component configurations.
