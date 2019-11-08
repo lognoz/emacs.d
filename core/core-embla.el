@@ -99,7 +99,7 @@
   `(when embla-component-packages
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat ,module "/hook-" dependency)
-        (add-hook (intern (concat dependency "-hook")) func))
+        (funcall func))
       (when-function-exists (concat ,module "/init-" dependency)
         ,@body))))
 
@@ -134,20 +134,24 @@
           (extension (cadr entry))
           (word-syntax (cadr (cdr entry)))
           (mode (cadr (cdr (cdr entry))))
+          (built-in (cadr (cdr (cdr (cdr entry)))))
           (path (concat embla-language-directory language)))
 
-     (add-to-list 'auto-mode-alist
-       `(,extension . (lambda ()
-         (add-hook (intern (concat (symbol-name ',mode) "-hook")) (lambda ()
-           (dolist (character ,word-syntax)
-             (cond ((string-equal character "_") (modify-syntax-entry ?_ "w"))
-                   ((string-equal character "-") (modify-syntax-entry ?- "w"))
-                   ((string-equal character "$") (modify-syntax-entry ?$ "w"))))))
+    (add-to-list 'auto-mode-alist
+      `(,extension . (lambda ()
+        (when (not ,built-in)
+          (packadd! ,mode))
+        (,mode))))
 
-         (packadd! ,mode)
-         (embla--load-composant-files ,path)
-         (fetch-dependencies ,language (funcall func))
-         (,mode))))))
+    (add-hook (intern (concat (symbol-name mode) "-hook")) `(lambda ()
+      (embla--load-composant-files ,path)
+      (fetch-dependencies ,language (funcall func))
+      (dolist (character ,word-syntax)
+        (modify-syntax-entry
+          (cond ((string-equal character "_") ?_)
+                ((string-equal character "-") ?-)
+                ((string-equal character "$") ?$)) "w"))))))
+
     embla-languages-alist)
 
   ;; Execute hook to apply component configurations.
