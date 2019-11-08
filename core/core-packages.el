@@ -33,6 +33,7 @@
   '(("php"           "\\.php\\'"            '("_" "$")       nil         php-mode)
     ("web"           "\\.html.php\\'"       '("-" "_" "$")   nil         web-mode)
     ("javascript"    "\\.js\\'"             '("-" "_")       nil         js2-mode)
+    ("scss"          "\\.scss\\'"           '("-" "_")       nil         scss-mode)
     ("yaml"          "\\.yml\\'"            '("-" "_")       nil         yaml-mode)
     ("latex"         "\\.tex\\'"            '("\\")          t           latex-mode)
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
