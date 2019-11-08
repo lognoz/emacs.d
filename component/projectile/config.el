@@ -1,9 +1,9 @@
-;;; packages.el - Helm Packages Component File
+;;; config.el - Projectile Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: helm
+;; Keywords: projectile
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,25 @@
 
 ;;; Code:
 
-(packadd! helm)
-(packadd! helm-make)
-(packadd! helm-projectile)
+(defun projectile/init-projectile ()
+  (require 'projectile)
+  (setq projectile-globally-ignored-directories
+    '(".idea"
+      ".ensime_cache"
+      ".eunit"
+      ".git"
+      ".hg"
+      ".fslckout"
+      "_FOSSIL_"
+      ".bzr"
+      "_darcs"
+      ".tox"
+      ".svn"
+      ".stack-work"
+      "node_modules"
+      "composer")))
+
+(defun projectile/init-helm-projectile ()
+  (require 'helm-projectile)
+  (helm-projectile-on)
+  (global-set-key (kbd "C-x g") 'helm-projectile-grep))
