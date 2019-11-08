@@ -133,8 +133,8 @@
     (let* ((language (car entry))
            (extension (cadr entry))
            (word-syntax (cadr (cdr entry)))
-           (mode (cadr (cdr (cdr entry))))
-           (built-in (cadr (cdr (cdr (cdr entry)))))
+           (built-in (cadr (cdr (cdr entry))))
+           (mode (cadr (cdr (cdr (cdr entry)))))
            (hook (concat (symbol-name mode) "-hook"))
            (path (concat embla-language-directory language)))
 
