@@ -22,6 +22,11 @@
 
 ;;; Code:
 
+;; System requirements:
+;;
+;; If you are on Archlinux, you will need to execute this command:
+;; sudo pacman -S ispell aspell-en
+
 (defun text/init-text-mode ()
   (add-hook 'text-mode-hook (lambda ()
     (flyspell-mode 1))))
