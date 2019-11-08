@@ -29,7 +29,7 @@
     (format "%s%s"
       (char-to-string #xe0a0)
       (replace-regexp-in-string
-        (format "^ %s-" (vc-backend buffer-file-name)) " " vc-mode))))
+        (format "^ %s[:-]" (vc-backend buffer-file-name)) " " vc-mode))))
 
 (defun mode-line--buffer-name ()
   "Render a different buffer name if version control is active or not."
@@ -69,7 +69,6 @@
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))))
 
-;; https://emacs.stackexchange.com/questions/3244/how-to-make-mode-line-text-look-like-a-link-button-on-hover
 (defun mode-line-initialize ()
   (setq-default mode-line-format
                 '("%e"
