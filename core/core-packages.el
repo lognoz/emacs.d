@@ -35,6 +35,7 @@
     ("javascript"    "\\.js\\'"             '("-" "_")       nil         js2-mode)
     ("scss"          "\\.scss\\'"           '("-" "_")       nil         scss-mode)
     ("yaml"          "\\.yml\\'"            '("-" "_")       nil         yaml-mode)
+    ("puppet"        "\\.pp\\'"             '("-" "_")       nil         puppet-mode)
     ("latex"         "\\.tex\\'"            '("\\")          t           latex-mode)
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
     ("python"        "\\.py[iw]?\\'"        '("_")           t           python-mode)))
