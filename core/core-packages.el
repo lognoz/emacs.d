@@ -29,10 +29,11 @@
   "List of packages required by component.")
 
 (defvar embla-languages-alist
-  ;; Language   Extension         Word syntax     Mode
-  '(("php"      "\\.php\\'"       '("-" "_" "$")  php-mode)
-    ("web"      "\\.html.php\\'"  '("-" "_")      web-mode)
-    ("yaml"     "\\.yml\\'"       '("-" "_")      yaml-mode)))
+  ;; Language   Extension         Word syntax     Mode          Built-in
+  '(("php"      "\\.php\\'"       '("_" "$")      php-mode      nil)
+    ("web"      "\\.html.php\\'"  '("-" "_" "$")  web-mode      nil)
+    ("python"   "\\.py[iw]?\\'"   '("_")          python-mode   t)
+    ("yaml"     "\\.yml\\'"       '("-" "_")      yaml-mode     nil)))
 
 ;;; External macro functions.
 
