@@ -52,6 +52,9 @@
 ;; Auto close insertion
 (electric-pair-mode 1)
 
+;; Define tab width
+(setq-default tab-width 3)
+
 ;;; Internal core variables.
 
 (defvar minor-blacklist '(abbrev-mode
