@@ -55,37 +55,12 @@
 ;; Define tab width
 (setq-default tab-width 3)
 
-;;; Internal core variables.
-
-(defvar minor-blacklist '(abbrev-mode
-                          eldoc-mode
-                          company-mode
-                          editorconfig-mode
-                          undo-tree-mode
-                          helm-mode
-                          flycheck-mode
-                          flyspell-mode))
-
-;;; Internal core functions.
-
-(defun core-editor//purge-minor-modes ()
-  (interactive)
-  (dolist (x minor-blacklist nil)
-    (let ((trg (cdr (assoc x minor-mode-alist))))
-      (when trg
-        (setcar trg "")))))
-
 ;;; External core functions.
 
 (defun editor-startup-hook ()
-  ;; Remove useless minor modes
-  (core-editor//purge-minor-modes)
-  (add-hook 'after-change-major-mode-hook 'core-editor//purge-minor-modes)
-
   ;; Setup Embla theme
   (packadd! atom-one-dark-theme
     :config (load-theme 'atom-one-dark t))
 
   ;; Load Embla mode line
   (mode-line-initialize))
-
