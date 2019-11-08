@@ -22,6 +22,8 @@
 
 ;;; Code:
 
-(packadd! php-mode)
 (packadd! ac-php)
 (packadd! company-php)
+(packadd! company-phpactor)
+(packadd! php-mode)
+(packadd! phpactor)

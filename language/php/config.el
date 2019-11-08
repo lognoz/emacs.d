@@ -30,8 +30,8 @@
   (ac-php-core-eldoc-setup)
 
   (set (make-local-variable 'company-backends)
-       '((company-ac-php-backend company-dabbrev-code)
-          company-capf company-files))
+       '((company-ac-php-backend)
+          company-phpactor company-files))
 
   ;; Jump to definition
   (define-key php-mode-map (kbd "M-]")
