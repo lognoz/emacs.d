@@ -130,26 +130,34 @@
   ;; Add language to auto mode to load what inside language directory
   ;; dynamically.
   (mapc (lambda (entry)
-   (let* ((language (car entry))
-          (extension (cadr entry))
-          (word-syntax (cadr (cdr entry)))
-          (mode (cadr (cdr (cdr entry))))
-          (built-in (cadr (cdr (cdr (cdr entry)))))
-          (path (concat embla-language-directory language)))
+    (let* ((language (car entry))
+           (extension (cadr entry))
+           (word-syntax (cadr (cdr entry)))
+           (mode (cadr (cdr (cdr entry))))
+           (built-in (cadr (cdr (cdr (cdr entry)))))
+           (hook (concat (symbol-name mode) "-hook"))
+           (path (concat embla-language-directory language)))
 
+    ;; Add langauge to auto-mode-alist and install package if it's not
+    ;; included by default in Emacs.
     (add-to-list 'auto-mode-alist
       `(,extension . (lambda ()
         (when (not ,built-in)
           (packadd! ,mode))
         (,mode))))
 
-    (add-hook (intern (concat (symbol-name mode) "-hook")) `(lambda ()
+    ;; Display line number.
+    (add-hook (intern hook) 'display-line-numbers-mode)
+
+    ;; Load module in language directory and define word syntax.
+    (add-hook (intern hook) `(lambda ()
       (embla--load-composant-files ,path)
       (fetch-dependencies ,language (funcall func))
       (dolist (character ,word-syntax)
         (modify-syntax-entry
           (cond ((string-equal character "_") ?_)
                 ((string-equal character "-") ?-)
+                ((string-equal character "\\") ?\\)
                 ((string-equal character "$") ?$)) "w"))))))
 
     embla-languages-alist)
