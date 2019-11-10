@@ -35,11 +35,10 @@
   "Render a different buffer name if version control is active or not."
   (let ((text (buffer-name)) (face nil))
     (if buffer-file-name
-      (when (and vc-mode buffer-file-name)
-        (let* ((backend (vc-responsible-backend buffer-file-name))
-               (vc-path (file-truename (vc-call-backend backend 'root buffer-file-name))))
+      (let ((project-root (projectile-project-root)))
+        (when project-root
           ;; Define text variable with buffer path with the version control location.
-          (setq text (substring buffer-file-name (length vc-path)))))
+          (setq text (substring buffer-file-name (length project-root)))))
       ;; If it's an Emacs system buffer change font style to italic.
       (setq face 'italic))
     (propertize (concat " " text) 'face face)))
