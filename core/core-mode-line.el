@@ -60,6 +60,10 @@
   (propertize mode-name
               'face 'bold))
 
+(defun mode-line--column-line ()
+  (when (derived-mode-p 'prog-mode)
+    (face (format-mode-line "%l,%c"))))
+
 (defun face (text)
   (when (not (= (length text) 0))
     (concat " " text " ")))
@@ -76,7 +80,7 @@
                       ;; Mode line at left position.
                       (left-content (concat
                         (face (mode-line--buffer-name))
-                        (face (format-mode-line "%l,%c"))
+                        (face (mode-line--column-line))
                         (face (mode-line--mode-name))))
 
                       ;; Mode line at right position.
