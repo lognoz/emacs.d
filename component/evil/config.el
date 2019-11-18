@@ -23,6 +23,13 @@
 ;;; Code:
 
 (defun evil/init-evil ()
+  ;; Remap toggle key
+  (global-unset-key (kbd "C-z"))
+  (setq evil-toggle-key "C-`")
+  (require 'evil)
+
+  ;; Enable Evil
+  (global-evil-leader-mode 1)
   (global-evil-leader-mode 1)
   (global-evil-surround-mode 1)
   (evil-mode 1)
@@ -32,9 +39,12 @@
   (define-key evil-normal-state-map "<" 'evil-shift-left-line)
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
   (define-key evil-normal-state-map "Q" (kbd "@q"))
+  (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
+  (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-normal-state-map (kbd "C-]") 'helm-etags-select)
   (define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
   (define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
+  (define-key evil-normal-state-map (kbd "C-z") nil)
 
   ;; Visual state
   (define-key evil-visual-state-map "=" 'visual-indent)
