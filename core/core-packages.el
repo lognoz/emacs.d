@@ -38,6 +38,8 @@
     ("puppet"        "\\.pp\\'"             '("-" "_")       nil         puppet-mode)
     ("pkgbuild"      "PKGBUILD\\'"          '("-" "_")       nil         pkgbuild-mode)
     ("dockerfile"    "Dockerfile\\'"        '("-" "_")       nil         dockerfile-mode)
+    ("json"          "\\.json\\'"           '("-" "_")       nil         json-mode)
+    ("org"           "\\.org\\'"            '("-" "_")       t           org-mode)
     ("latex"         "\\.tex\\'"            '("\\")          t           latex-mode)
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
     ("python"        "\\.py[iw]?\\'"        '("_")           t           python-mode)))
