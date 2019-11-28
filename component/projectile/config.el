@@ -22,6 +22,14 @@
 
 ;;; Code:
 
+(defun delete-grep-header ()
+  (save-excursion
+    (with-current-buffer grep-last-buffer
+      (goto-line 5)
+      (narrow-to-region (point) (point-max)))))
+
+(defadvice projectile-grep (after delete-grep-header activate) (delete-grep-header))
+
 (defun projectile/init-projectile ()
   (require 'projectile)
   (setq projectile-globally-ignored-directories
@@ -43,4 +51,4 @@
 (defun projectile/init-helm-projectile ()
   (require 'helm-projectile)
   (helm-projectile-on)
-  (global-set-key (kbd "C-x g") 'helm-projectile-grep))
+  (global-set-key (kbd "C-x g") 'projectile-grep))
