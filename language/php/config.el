@@ -33,6 +33,9 @@
        '((company-ac-php-backend)
           company-phpactor company-files))
 
+  ;; Add yasnippet to company backend
+  (setq company-backends (mapcar #'company//load-backend-with-yas company-backends))
+
   ;; Jump to definition
   (define-key php-mode-map (kbd "M-]")
    'ac-php-find-symbol-at-point)
