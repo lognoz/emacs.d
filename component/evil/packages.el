@@ -29,4 +29,5 @@
 (packadd! evil-magit)
 (packadd! evil-smartparens)
 (packadd! evil-surround)
+(packadd! evil-numbers)
 (packadd! helm)

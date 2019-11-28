@@ -38,6 +38,8 @@
   (define-key evil-normal-state-map "=" 'evil-indent-line)
   (define-key evil-normal-state-map "<" 'evil-shift-left-line)
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
+  (define-key evil-normal-state-map "+" 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map "-" 'evil-numbers/dec-at-pt)
   (define-key evil-normal-state-map "Q" (kbd "@q"))
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
