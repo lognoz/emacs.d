@@ -51,6 +51,9 @@
 (defconst embla-snippet-directory (concat embla-private-directory "snippet/")
   "The directory of snippets files.")
 
+(defconst embla-project-directory (concat embla-private-directory "project/")
+  "The directory of project files.")
+
 (defconst embla-temporary-directory (concat embla-private-directory "temporary/")
   "The directory of temporary files.")
 
