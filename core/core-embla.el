@@ -57,6 +57,9 @@
 (defconst embla-temporary-directory (concat embla-private-directory "temporary/")
   "The directory of temporary files.")
 
+(defconst embla-private-init-file (concat embla-private-directory "init.el")
+  "The private initialization file.")
+
 (defvar embla-startup-hook nil
   "Hook called before Emacs is started.")
 
@@ -172,7 +175,11 @@
     embla-languages-alist)
 
   ;; Execute hook to apply component configurations.
-  (run-hooks 'embla-after-component-installation))
+  (run-hooks 'embla-after-component-installation)
+
+  ;; Call private initialization file.
+  (when (file-exists-p embla-private-init-file)
+    (load embla-private-init-file nil 'nomessage)))
 
 ;;; External core functions.
 
