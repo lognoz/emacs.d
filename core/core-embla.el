@@ -45,7 +45,13 @@
 (defconst embla-language-directory (concat user-emacs-directory "language/")
   "The directory of language files.")
 
-(defconst embla-temporary-directory (concat user-emacs-directory "temporary/")
+(defconst embla-private-directory (concat user-emacs-directory "private/")
+  "The directory of private files.")
+
+(defconst embla-snippets-directory (concat embla-private-directory "snippets/")
+  "The directory of snippets files.")
+
+(defconst embla-temporary-directory (concat embla-private-directory "temporary/")
   "The directory of temporary files.")
 
 (defvar embla-startup-hook nil
