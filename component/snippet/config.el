@@ -24,5 +24,5 @@
 
 (defun snippet/init-yasnippet ()
   (require 'yasnippet)
-  (setq yas-snippet-dirs '(embla-snippets-directory))
+  (setq yas-snippet-dirs '(embla-snippet-directory))
   (yas-global-mode 1))

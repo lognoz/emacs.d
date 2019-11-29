@@ -48,7 +48,7 @@
 (defconst embla-private-directory (concat user-emacs-directory "private/")
   "The directory of private files.")
 
-(defconst embla-snippets-directory (concat embla-private-directory "snippets/")
+(defconst embla-snippet-directory (concat embla-private-directory "snippet/")
   "The directory of snippets files.")
 
 (defconst embla-temporary-directory (concat embla-private-directory "temporary/")
