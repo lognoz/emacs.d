@@ -28,8 +28,6 @@
 
 (defvar etags-last-build nil)
 
-(add-hook 'after-save-hook 'etags/after-save-hook)
-
 (add-to-list 'display-buffer-alist
   (cons "\\*ctags\\*.*" (cons #'display-buffer-no-window nil)))
 
