@@ -1,4 +1,4 @@
-;;; core-packages.el - Core Packages File
+;;; core-package.el - Core Package File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -67,7 +67,7 @@
 
 ;;; External core functions.
 
-(defun packages-startup-hook ()
+(defun package-startup-hook ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))

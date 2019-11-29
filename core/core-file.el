@@ -1,4 +1,4 @@
-;;; core-files.el - Core Files Initialization File
+;;; core-file.el - Core File Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -27,7 +27,7 @@
 
 ;;; Internal core functions.
 
-(defun files--save-backup ()
+(defun file--save-backup ()
   ;; Make a special "per session" backup at the first save of each
   ;; emacs session.
   (when (not buffer-backed-up)
@@ -42,14 +42,14 @@
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
-(defun files--undo-tree ()
+(defun file--undo-tree ()
   (packadd! undo-tree)
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
 
-(defun files--backup ()
+(defun file--backup ()
   ;; Backup file
   (setq version-control t       ; Use version numbers for backups.
         kept-new-versions 8     ; Number of newest versions to keep.
@@ -61,11 +61,11 @@
   (let ((path (concat embla-temporary-directory "backup/save")))
     (setq backup-directory-alist `((".*" .  ,path))))
   ;; Create backup on save
-  (add-hook 'before-save-hook 'files--save-backup))
+  (add-hook 'before-save-hook 'file--save-backup))
 
 ;;; External core functions.
 
-(defun files-startup-hook ()
+(defun file-startup-hook ()
   ;; Bookmark file
   (setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
 
@@ -85,5 +85,5 @@
   (save-place-mode 1)
   (setq save-place-file (concat embla-temporary-directory "saveplace"))
 
-  (files--undo-tree)
-  (files--backup))
+  (file--undo-tree)
+  (file--backup))

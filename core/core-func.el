@@ -1,4 +1,4 @@
-;;; core-funcs.el - Core Functions File
+;;; core-func.el - Core Function File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
