@@ -1,8 +1,11 @@
+.litable-lists.el
+.lsp-session-*
 .python-environments
 TAGS
 auto-save-list
 elpa
 eshell
+lsp-cache
 projectile-bookmarks.eld
 projectile.cache
 temporary
