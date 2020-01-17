@@ -1,9 +1,9 @@
-;;; packages.el - Tools Component File
+;;; packages.el - Tool Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: tools
+;; Keywords: tool
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,9 +22,9 @@
 
 ;;; Code:
 
-(defun tools/init-editorconfig ()
+(defun tool/init-editorconfig ()
   (editorconfig-mode 1))
 
-(defun tools/init-which-key ()
+(defun tool/init-which-key ()
   (which-key-mode)
   (which-key-setup-minibuffer))

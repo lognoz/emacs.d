@@ -1,9 +1,9 @@
-;;; packages.el - Tools Packages Component File
+;;; packages.el - Tool Packages Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: tools
+;; Keywords: tool
 
 ;; This file is not part of GNU Emacs.
 
