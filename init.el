@@ -1,4 +1,4 @@
-;;; init.el --- Initialization File
+ ;;; init.el --- Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
