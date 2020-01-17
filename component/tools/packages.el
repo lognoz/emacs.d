@@ -22,4 +22,5 @@
 
 ;;; Code:
 
+(packadd! which-key)
 (packadd! editorconfig)

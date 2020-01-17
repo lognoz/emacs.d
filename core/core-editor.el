@@ -59,8 +59,8 @@
 
 (defun editor-startup-hook ()
   ;; Setup Embla theme
-  (packadd! atom-one-dark-theme
-    :config (load-theme 'atom-one-dark t))
+  (packadd! atom-one-dark-theme)
+  (load-theme 'atom-one-dark t)
 
   ;; Load Embla mode line
   (mode-line-initialize))

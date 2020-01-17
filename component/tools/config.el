@@ -24,3 +24,7 @@
 
 (defun tools/init-editorconfig ()
   (editorconfig-mode 1))
+
+(defun tools/init-which-key ()
+  (which-key-mode)
+  (which-key-setup-minibuffer))
