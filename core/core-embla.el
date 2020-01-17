@@ -36,6 +36,9 @@
 (defconst current-user
   (getenv (if (eq operating-system "windows") "USERNAME" "USER")))
 
+(defconst embla-core-init (concat user-emacs-directory "init.el")
+  "The Embla file reference.")
+
 (defconst embla-core-directory (concat user-emacs-directory "core/")
   "The directory of core files.")
 
