@@ -31,9 +31,10 @@
       (let* ((project (car entry))
              (path (cadr entry))
              (mode (cadr (cdr entry))))
-        (when (string= (projectile-project-root) path)
-          (load (concat embla-project-directory project "/project.el") nil 'nomessage)
+        (when (string-equal (projectile-project-root) path)
+          (load (concat embla-project-directory project ".el") nil 'nomessage)
           (funcall mode))))
       private-project-alist)))
 
 (add-hook 'find-file-hook 'project--enable-minor-mode)
+(project--enable-minor-mode)
