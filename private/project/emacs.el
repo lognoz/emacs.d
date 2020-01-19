@@ -24,7 +24,7 @@
 
 (defvar emacs--last-selection nil)
 
-(defconst emacs--source-directory (concat embla-project-directory "emacs/template/")
+(defconst emacs--source-directory (concat embla-project-directory "template/")
   "The directory of template files.")
 
 (defvar emacs-mode-map
@@ -35,10 +35,9 @@
 
 ;;; Internal project functions.
 
-(defun emacs--copy-and-replace (src dest replacements)
-  (copy-file src dest)
-  (with-temp-file dest
-    (insert-file-contents-literally dest)
+(defun emacs--replace-variables (file replacements)
+  (with-temp-file file
+    (insert-file-contents-literally file)
     (mapc (lambda (entry)
       (setq entry (eval entry))
       (goto-char 0)
@@ -46,11 +45,20 @@
         (replace-match (cdr entry))))
       replacements)))
 
-(defun emacs--create-component (component-name keyword)
+(defun emacs--form-core (name keyword)
+  (interactive "sCore name: \nsKeywords: ")
+  (emacs--create-action
+    "core" name keyword))
+
+(defun emacs--form-component (name keyword)
   (interactive "sComponent name: \nsKeywords: ")
-  ;; Trim anwser value and check if `component-name' and `keyword'
+  (emacs--create-action
+    "component" name keyword))
+
+(defun emacs--create-action (type name keyword)
+  ;; Trim anwser value and check if `name' and `keyword'
   ;; variable is empty.
-  (dolist (element '(component-name keyword))
+  (dolist (element '(name keyword))
     (let ((value (string-trim (symbol-value element))))
       ;; To update a symbol value, you need to use set instead of setq.
       ;; Reference: https://bit.ly/2RpmVpb
@@ -58,29 +66,64 @@
       (when (string-equal value "")
         (error (concat "Error: " (symbol-name element) " can't be empty.")))))
 
-  (let ((component (replace-regexp-in-string " " "-" (downcase component-name)))
-        (capitalize-name (capitalize component-name)))
-    ;; Check if there is already a component directory with that name.
-    (dolist (f (directory-files embla-component-directory))
-      (when (string-equal component f)
-        (error "Error: There is already a component directory with that name.")))
+  (let* ((slugify-name (replace-regexp-in-string " " "-" (downcase name)))
+         (slug slugify-name)
+         (capitalize-name (capitalize name))
+         (path-destination nil)
+         (path-validation nil)
+         (references nil)
+         (content ""))
+
+    (cond
+      ;; Define configuration for core.
+      ((string-equal type "core")
+        (setq slug (concat "core-" slug ".el")
+              content (get-file-content (expand-file-name "core-hook.el" emacs--source-directory))
+              path-validation embla-core-directory
+              path-destination embla-core-directory)
+        (add-to-list 'references slug))
+
+      ;; Define configuration for component.
+      ((string-equal type "component")
+        (setq path-validation embla-component-directory
+              path-destination (concat embla-component-directory slug)
+              references '("config.el" "packages.el"))))
+
+    ;; Check if there is already a composite with that name.
+    (dolist (f (directory-files path-validation))
+      (when (string-equal slug f)
+        (error (concat "Error: There is already a " type " directory with that name."))))
 
     ;; Create component directory.
-    (make-directory
-      (expand-file-name component embla-component-directory))
+    (when (string-equal type "component")
+      (make-directory path-destination))
 
     ;; Copy and replace varaibles.
-    (dolist (file '("config.el" "packages.el"))
-      (emacs--copy-and-replace
-        (expand-file-name "header.el" emacs--source-directory)
-        (expand-file-name file (concat embla-component-directory component))
-        '((cons "__title__"
-            (cond ((string-equal file "config.el")
-                    (concat capitalize-name " Component"))
-                    (t (concat capitalize-name " Packages Component"))))
-          (cons "__file__" file)
-          (cons "__keyword__" (downcase keyword))
-          (cons "__year__" (format-time-string "%Y")))))))
+    (dolist (f references)
+      (let ((path (expand-file-name f path-destination)))
+        (copy-file
+          (expand-file-name "header.el" emacs--source-directory) path)
+
+        ;; Inject content in file.
+        (emacs--replace-variables path
+          '((cons "__content__" content)))
+
+        ;; Inject variables in file.
+        (emacs--replace-variables path
+          '((cons "__title__"
+              (concat capitalize-name
+                      (cond ((string-equal f "config.el") " Component")
+                            ((string-equal f "packages.el") " Packages Component")
+                            (t " Initialization"))))
+            (cons "__file__" f)
+            (cons "__hook__" slugify-name)
+            (cons "__name__" capitalize-name)
+            (cons "__keyword__" (downcase keyword))
+            (cons "__year__" (format-time-string "%Y"))))
+
+        (when (string-equal f (car (last references)))
+          (find-file path)
+          (end-of-buffer))))))
 
 ;;; External project functions.
 
@@ -91,7 +134,8 @@
                                :candidates '(component core)
                                :fuzzy-match t)
                       :preselect emacs--last-selection)))
-    (when-function-exists (concat "emacs--create-" target)
+    (setq emacs--last-selection target)
+    (when-function-exists (concat "emacs--form-" target)
       (setq emacs--last-selection target)
       (call-interactively func))))
 
