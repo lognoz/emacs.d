@@ -35,25 +35,13 @@
 
 ;;; Internal project functions.
 
-(defun emacs--replace-variables (file replacements)
-  (with-temp-file file
-    (insert-file-contents-literally file)
-    (mapc (lambda (entry)
-      (setq entry (eval entry))
-      (goto-char 0)
-      (while (search-forward (car entry) nil t)
-        (replace-match (cdr entry))))
-      replacements)))
-
 (defun emacs--form-core (name keyword)
   (interactive "sCore name: \nsKeywords: ")
-  (emacs--create-action
-    "core" name keyword))
+  (emacs--create-action "core" name keyword))
 
 (defun emacs--form-component (name keyword)
   (interactive "sComponent name: \nsKeywords: ")
-  (emacs--create-action
-    "component" name keyword))
+  (emacs--create-action "component" name keyword))
 
 (defun emacs--create-action (type name keyword)
   ;; Trim anwser value and check if `name' and `keyword'
@@ -104,12 +92,12 @@
         (copy-file
           (expand-file-name "header.el" emacs--source-directory) path)
 
-        ;; Inject content in file.
-        (emacs--replace-variables path
+        ;; Replace content in destination file.
+        (replace-in-file path
           '((cons "__content__" content)))
 
-        ;; Inject variables in file.
-        (emacs--replace-variables path
+        ;; Replace somes variables in destination file.
+        (replace-in-file path
           '((cons "__title__"
               (concat capitalize-name
                       (cond ((string-equal f "config.el") " Component")
@@ -142,7 +130,8 @@
 (defun emacs-reload ()
   "Reload init configuration."
   (interactive)
-  (load-file embla-core-init))
+  (load-file embla-core-init)
+  (project-enable-minor-mode))
 
 ;;; Define minor mode.
 

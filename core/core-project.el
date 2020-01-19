@@ -25,7 +25,7 @@
 (defvar private-project-alist nil
   "List of projects and its minor mode.")
 
-(defun project--enable-minor-mode ()
+(defun project-enable-minor-mode ()
   (when private-project-alist
     (mapc (lambda (entry)
       (let* ((project (car entry))
@@ -36,5 +36,5 @@
           (funcall mode))))
       private-project-alist)))
 
-(add-hook 'find-file-hook 'project--enable-minor-mode)
-(project--enable-minor-mode)
+(add-hook 'find-file-hook 'project-enable-minor-mode)
+(add-hook 'dired-mode-hook 'project-enable-minor-mode)

@@ -45,3 +45,14 @@
     (with-temp-buffer
       (insert-file-contents path)
       (buffer-string))))
+
+(defun replace-in-file (path replacements)
+  "Replace variables in file."
+  (with-temp-file path
+    (insert-file-contents-literally path)
+    (mapc (lambda (entry)
+      (setq entry (eval entry))
+      (goto-char 0)
+      (while (search-forward (car entry) nil t)
+        (replace-match (cdr entry))))
+      replacements)))
