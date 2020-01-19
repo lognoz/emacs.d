@@ -24,8 +24,8 @@
 
 (defvar emacs--last-selection nil)
 
-(defconst emacs--source-directory (concat embla-project-directory "emacs/src/")
-  "The directory of sources files.")
+(defconst emacs--source-directory (concat embla-project-directory "emacs/template/")
+  "The directory of template files.")
 
 (defvar emacs-mode-map
   (let ((keymap (make-sparse-keymap)))
