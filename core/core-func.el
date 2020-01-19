@@ -38,3 +38,10 @@
             (concat "git add " (buffer-file-name)))))
     (message (if (not (string= output ""))
         output (concat "Added " buffile)))))
+
+(defun get-file-content (path)
+  "Return the contents of filename."
+  (string-trim
+    (with-temp-buffer
+      (insert-file-contents path)
+      (buffer-string))))
