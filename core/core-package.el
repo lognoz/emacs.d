@@ -46,27 +46,37 @@
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
     ("python"        "\\.py[iw]?\\'"        '("_")           t           python-mode)))
 
-;;; External macro functions.
+;;; Internal core functions.
 
-(cl-defmacro packadd! (name &rest plist)
-  ;; Install package if not installed.
-  (when (and (not (package-installed-p name))
-             (not (plist-get plist :built-in)))
-    (when (not embla-package-refresh)
-      (setq embla-package-refresh t)
-      (package-refresh-contents))
-    (package-install name))
-  ;; Handle :config and execute it.
-  (let ((current) (config))
-    (dolist (statement plist)
-      (cond ((eq statement :config) (setq current 'config))
-            (t (when (eq current 'config)
-              (eval statement))))))
-  ;; Push value into `embla-component-packages' variable.
-  (macroexp-progn
-    `((add-to-list 'embla-component-packages (format "%S" ',name)))))
+(defun package--get-candidates ()
+ (let ((packages (mapcar 'car package-archive-contents)))
+   (mapcar (lambda (package)
+      (let* ((desc (cadr (assq package package-archive-contents)))
+             (summary (if desc (package-desc-summary desc) "")))
+        (cons (format "%-30s %s" package summary) (symbol-name package))))
+    packages)))
+
+(defun package--helm-install-package()
+  (let ((target (helm :sources (helm-build-sync-source "Install Package"
+                               :candidates #'package--get-candidates
+                               :candidate-number-limit 100))))
+    (if (not target)
+      (error "No package file was found.")
+      target)))
 
 ;;; External core functions.
+
+(defun require-package (package)
+  (interactive
+    (progn
+      (list (intern (package--helm-install-package)))))
+  (unless package-archive-contents
+     (package-refresh-contents))
+  ;; Install package if not installed.
+  (when (not (package-installed-p package))
+    (package-install package))
+  ;; Push value into `embla-component-packages' variable.
+  (add-to-list 'embla-component-packages (format "%s" package)))
 
 (defun package-startup-hook ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
