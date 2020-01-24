@@ -22,4 +22,4 @@
 
 ;;; Code:
 
-(packadd! yasnippet)
+(require-package 'yasnippet)

@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-(packadd! company)
-(packadd! company-ctags)
-(packadd! yasnippet)
+(require-package 'company)
+(require-package 'company-ctags)
+(require-package 'yasnippet)

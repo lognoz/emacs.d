@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(packadd! which-key)
-(packadd! editorconfig)
+(require-package 'which-key)
+(require-package 'editorconfig)

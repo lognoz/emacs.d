@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-(packadd! evil)
-(packadd! git-gutter)
-(packadd! git-gutter+)
+(require-package 'evil)
+(require-package 'git-gutter)
+(require-package 'git-gutter+)

@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-(packadd! helm)
-(packadd! helm-projectile)
-(packadd! projectile)
+(require-package 'helm)
+(require-package 'helm-projectile)
+(require-package 'projectile)

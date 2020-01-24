@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-(packadd! text-mode :built-in t)
-(packadd! evil)
-(packadd! helm-flyspell)
+;;(require-package text-mode :built-in t)
+(require-package 'evil)
+(require-package 'helm-flyspell)

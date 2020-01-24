@@ -22,12 +22,11 @@
 
 ;;; Code:
 
-(packadd! evil)
-(packadd! evil-collection)
-(packadd! evil-indent-plus)
-(packadd! evil-leader)
-(packadd! evil-magit)
-(packadd! evil-smartparens)
-(packadd! evil-surround)
-(packadd! evil-numbers)
-(packadd! helm)
+(require-package 'evil)
+(require-package 'evil-collection)
+(require-package 'evil-indent-plus)
+(require-package 'evil-leader)
+(require-package 'evil-magit)
+(require-package 'evil-smartparens)
+(require-package 'evil-surround)
+(require-package 'helm)
