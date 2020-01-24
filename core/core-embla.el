@@ -158,7 +158,7 @@
     (add-to-list 'auto-mode-alist
       `(,extension . (lambda ()
         (when (not ,built-in)
-          (packadd! ,mode))
+          (require-package ',mode))
         (,mode))))
 
     ;; Display line number.

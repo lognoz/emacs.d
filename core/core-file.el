@@ -43,7 +43,7 @@
     (backup-buffer)))
 
 (defun file--undo-tree ()
-  (packadd! undo-tree)
+  (require-package 'undo-tree)
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
