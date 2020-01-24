@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(packadd! python-mode :built-in t)
-(packadd! company-jedi)
+;;(require-package python-mode :built-in t)
+(require-package 'company-jedi)

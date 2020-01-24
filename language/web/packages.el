@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-(packadd! web-mode)
-(packadd! emmet-mode)
-(packadd! company-web)
+(require-package 'web-mode)
+(require-package 'emmet-mode)
+(require-package 'company-web)

@@ -22,8 +22,8 @@
 
 ;;; Code:
 
-(packadd! ac-php)
-(packadd! company-php)
-(packadd! company-phpactor)
-(packadd! php-mode)
-(packadd! phpactor)
+(require-package 'ac-php)
+(require-package 'company-php)
+(require-package 'company-phpactor)
+(require-package 'php-mode)
+(require-package 'phpactor)

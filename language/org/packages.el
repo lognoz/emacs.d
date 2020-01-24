@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(packadd! ob-http)
-(packadd! ob-async)
+(require-package 'ob-http)
+(require-package 'ob-async)
