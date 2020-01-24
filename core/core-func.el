@@ -56,3 +56,10 @@
       (while (search-forward (car entry) nil t)
         (replace-match (cdr entry))))
       replacements)))
+
+(defun recompile-elpa ()
+  "Recompile packages in elpa directory."
+  (interactive)
+  (if (fboundp 'async-byte-recompile-directory)
+      (async-byte-recompile-directory package-user-dir)
+    (byte-recompile-directory package-user-dir 0 t)))
