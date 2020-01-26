@@ -1,4 +1,4 @@
-;;; emacs.el - Emacs Project File
+;;; emacs-mode.el --- Emacs Project File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -193,11 +193,13 @@
 (defun emacs-reload ()
   "Reload init configuration."
   (interactive)
-  (load-file embla-core-init)
-  (project-enable-minor-mode))
+  (load-file embla-core-init))
 
 ;;; Define minor mode.
 
+;;;###autoload
 (define-minor-mode emacs-mode
   "A minor-mode to help to manage Emacs configuration."
   nil " emacs" emacs-mode-map)
+
+(provide 'emacs-mode)

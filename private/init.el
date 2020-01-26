@@ -22,6 +22,7 @@
 
 ;;; Code:
 
-(setq private-project-alist
-  ;; Project   Path                     Mode
-  '(("emacs"   "/home/mark/.emacs.d/"   emacs-mode)))
+(add-to-list 'load-path embla-project-directory)
+
+;; A minor-mode to help to manage Emacs configuration.
+(autoload 'emacs-mode "emacs-mode" nil t)
