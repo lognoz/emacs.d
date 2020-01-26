@@ -1,4 +1,4 @@
- ;;; project.el --- Emacs Project File
+;;; emacs.el - Emacs Project File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -24,13 +24,14 @@
 
 (defvar emacs--last-selection nil)
 
-(defconst emacs--source-directory (concat embla-project-directory "template/")
+(defvar emacs--source-directory (concat embla-project-directory "template/")
   "The directory of template files.")
 
 (defvar emacs-mode-map
   (let ((keymap (make-sparse-keymap)))
-    (define-key keymap "\C-c\p\c" 'emacs-create)
-    (define-key keymap "\C-c\p\l" 'emacs-reload)
+    (define-key keymap "\C-c\pc" 'emacs-create)
+    (define-key keymap "\C-c\pl" 'emacs-reload)
+    (define-key keymap "\C-c\pd" 'emacs-goto-definition)
     keymap))
 
 ;;; Internal project functions.
@@ -42,6 +43,39 @@
 (defun emacs--form-component (name keyword)
   (interactive "sComponent name: \nsKeywords: ")
   (emacs--create-action "component" name keyword))
+
+(defun emacs--get-components ()
+  (let ((components nil))
+    (fetch-content embla-component-directory
+      (when (and (file-directory-p path)
+                (not (equal f "."))
+                (not (equal f "..")))
+        (add-to-list 'components f)))
+    components))
+
+(defun emacs--get-package-under-cursor ()
+  (kill-new
+    (save-mark-and-excursion
+      (when (and (not (or (> (nth 0 (syntax-ppss)) 0)
+                          (nth 3 (syntax-ppss))))
+                 (not (equal (char-after) ?\()))
+        (error "This function only works on 'require-package' statement."))
+      (let ((start) (text))
+        ;; Go back to '(' character if it's not already on it.
+        (when (not (equal (char-after) ?\())
+          (backward-up-list))
+
+        (forward-char)
+        (setq start (point))
+        (skip-chars-forward "^\)")
+        (setq text (buffer-substring-no-properties start (point)))
+
+        (if (not (string-match "^require-package " text))
+          (error "This function only works on 'require-package' statement.")
+          (setq text (replace-regexp-in-string "require-package " "" text))
+          (save-match-data
+            (and (string-match "[A-Za-z0-9\-]+" text)
+              (match-string 0 text))))))))
 
 (defun emacs--create-action (type name keyword)
   ;; Trim anwser value and check if `name' and `keyword'
@@ -126,6 +160,35 @@
     (when-function-exists (concat "emacs--form-" target)
       (setq emacs--last-selection target)
       (call-interactively func))))
+
+(defun emacs-goto-definition ()
+  "Go to package definition in component directory."
+  (interactive)
+  (let ((type-definition) (current-path) (config-path) (module) (package) (line))
+    ;; Define type of definition and current module by its buffer path.
+    ;; Expected all subdirectories in 'component' and 'language'.
+    (setq current-path (substring buffer-file-name (length (projectile-project-root))))
+    (let* ((parts (split-string current-path "\/"))
+           (directory (nth 0 parts)))
+      (if (and (string-equal (nth 0 parts) "component")
+               (string-equal (nth 2 parts) "packages.el"))
+        (setq type-definition (nth 0 parts)
+              module (nth 1 parts)
+              config-path (concat (projectile-project-root)
+                                  type-definition "/" module "/config.el"))
+        (error "This function only works in 'language' and 'component' directories.")))
+
+    (setq package (emacs--get-package-under-cursor))
+    (with-temp-buffer
+      (insert-file-contents config-path)
+      (let ((func (concat "defun " module "/init-" package)))
+        (if (not (string-match func (buffer-string)))
+          (error "This package doesn't have any configuration function.")
+          (search-forward (concat "defun " module "/init-" package))
+          (setq line (line-number-at-pos)))))
+
+    (find-file config-path)
+    (goto-line line)))
 
 (defun emacs-reload ()
   "Reload init configuration."
