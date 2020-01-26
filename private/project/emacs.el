@@ -45,7 +45,7 @@
   (emacs--create-action "component" name keyword))
 
 (defun emacs--get-components ()
-  (let ((components nil))
+  (let ((components))
     (fetch-content embla-component-directory
       (when (and (file-directory-p path)
                 (not (equal f "."))
@@ -91,9 +91,9 @@
   (let* ((slugify-name (replace-regexp-in-string " " "-" (downcase name)))
          (slug slugify-name)
          (capitalize-name (capitalize name))
-         (path-destination nil)
-         (path-validation nil)
-         (references nil)
+         (path-destination)
+         (path-validation)
+         (references)
          (content ""))
 
     (cond
@@ -150,16 +150,16 @@
 ;;; External project functions.
 
 (defun emacs-create ()
-  "Create files into core and component directories and add package rapidly."
   (interactive)
-  (let ((target (helm :sources (helm-build-sync-source "Create Template"
-                               :candidates '(component core)
-                               :fuzzy-match t)
-                      :preselect emacs--last-selection)))
-    (setq emacs--last-selection target)
-    (when-function-exists (concat "emacs--form-" target)
+  (ivy-read "Create Template: "
+    '("component" "core")
+    :require-match t
+    :preselect emacs--last-selection
+    :action (lambda (target)
       (setq emacs--last-selection target)
-      (call-interactively func))))
+      (when-function-exists (concat "emacs--form-" target)
+        (setq emacs--last-selection target)
+        (call-interactively func)))))
 
 (defun emacs-goto-definition ()
   "Go to package definition in component directory."
@@ -176,7 +176,7 @@
               module (nth 1 parts)
               config-path (concat (projectile-project-root)
                                   type-definition "/" module "/config.el"))
-        (error "This function only works in 'language' and 'component' directories.")))
+        (error "This function only works in 'component' directory.")))
 
     (setq package (emacs--get-package-under-cursor))
     (with-temp-buffer
