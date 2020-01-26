@@ -1,6 +1,6 @@
 ;;; config.el - Evil Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: evil
@@ -34,13 +34,25 @@
   (global-evil-surround-mode 1)
   (evil-mode 1)
 
+  (define-key evil-motion-state-map "1" nil)
+  (define-key evil-motion-state-map "2" nil)
+  (define-key evil-motion-state-map "3" nil)
+  (define-key evil-motion-state-map "4" nil)
+  (define-key evil-motion-state-map "5" nil)
+  (define-key evil-motion-state-map "6" nil)
+  (define-key evil-motion-state-map "7" nil)
+  (define-key evil-motion-state-map "8" nil)
+  (define-key evil-motion-state-map "9" nil)
+
+  ;(define-key evil-normal-state-map "Q" (kbd "@q"))
+  ;(define-key evil-visual-state-map "Q" (kbd "@q"))
+
   ;; Normal state
   (define-key evil-normal-state-map "=" 'evil-indent-line)
   (define-key evil-normal-state-map "<" 'evil-shift-left-line)
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
   (define-key evil-normal-state-map "+" 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map "-" 'evil-numbers/dec-at-pt)
-  (define-key evil-normal-state-map "Q" (kbd "@q"))
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-normal-state-map (kbd "C-]") 'helm-etags-select)
@@ -52,10 +64,47 @@
   (define-key evil-visual-state-map "=" 'visual-indent)
   (define-key evil-visual-state-map "<" 'visual-shift-left)
   (define-key evil-visual-state-map ">" 'visual-shift-right)
-  (define-key evil-visual-state-map "Q" (kbd "@q"))
   (define-key evil-visual-state-map "." (kbd ":normal ."))
   (define-key evil-visual-state-map (kbd "C-j") (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map (kbd "C-k") (concat ":m '<-2" (kbd "RET") "gv=gv"))
+
+  (evil-define-command evil-record-macro (register)
+    :keep-visual t
+    :suppress-operator t
+    (interactive
+     (list (unless (and evil-this-macro defining-kbd-macro)
+             (or evil-this-register (evil-read-key)))))
+    (cond
+     ((eq register ?\C-g)
+      (keyboard-quit))
+     ((and evil-this-macro defining-kbd-macro)
+      (setq evil-macro-buffer nil)
+      (condition-case nil
+          (end-kbd-macro)
+        (error nil))
+      (when last-kbd-macro
+        (when (member last-kbd-macro '("" []))
+          (setq last-kbd-macro nil))
+        (evil-set-register evil-this-macro last-kbd-macro))
+      (setq evil-this-macro nil))
+     ((eq register ?:)
+      (evil-command-window-ex))
+     ((eq register ?/)
+      (evil-command-window-search-forward))
+     ((eq register ??)
+      (evil-command-window-search-backward))
+     ((eq register ?1)
+      (call-interactively 'name-last-kbd-macro))
+     ((eq register ?2)
+      (call-interactively 'insert-kbd-macro))
+     ((or (and (>= register ?a) (<= register ?z))
+          (and (>= register ?A) (<= register ?Z)))
+      (when defining-kbd-macro (end-kbd-macro))
+      (setq evil-this-macro register)
+      (evil-set-register evil-this-macro nil)
+      (start-kbd-macro nil)
+      (setq evil-macro-buffer (current-buffer)))
+     (t (error "Invalid register"))))
 
   (defun visual-shift-left ()
     (interactive)

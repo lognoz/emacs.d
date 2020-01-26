@@ -22,6 +22,6 @@
 
 ;;; Code:
 
-;;(require-package text-mode :built-in t)
+;;(require-package 'text-mode t)
 (require-package 'evil)
 (require-package 'helm-flyspell)

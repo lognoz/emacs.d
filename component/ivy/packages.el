@@ -1,9 +1,9 @@
-;;; packages.el - Helm Packages Component File
+;;; packages.el - Ivy Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) 2019-2020 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: helm
+;; Keywords: ivy counsel
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,10 +22,5 @@
 
 ;;; Code:
 
-;(require-package 'helm)
-;(require-package 'helm-make)
-;(require-package 'helm-projectile)
-
 (require-package 'ivy)
 (require-package 'counsel)
-(require-package 'counsel-projectile)

@@ -22,4 +22,4 @@
 
 ;;; Code:
 
-(packadd! dired :built-in t)
+;;(require-package 'dired t)
