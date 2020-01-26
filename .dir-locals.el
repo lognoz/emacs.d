@@ -1,4 +1,4 @@
 ;;; Directory Local Variables
 ;;; For more information see (info "(emacs) Directory Variables")
 
-((nil . ((emacs-mode t))))
+((nil . ((mode . emacs))))
