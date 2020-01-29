@@ -1,9 +1,9 @@
-;;; config.el - Python Language File
+;;; packages.el --- PHP Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: python
+;; Keywords: php
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,8 @@
 
 ;;; Code:
 
-(defun python/hook-python-mode ()
-  (add-to-list 'company-backends 'company-jedi))
+(require-package 'ac-php)
+(require-package 'company-php)
+(require-package 'company-phpactor)
+(require-package 'php-mode)
+(require-package 'phpactor)

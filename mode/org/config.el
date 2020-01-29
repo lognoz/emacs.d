@@ -1,9 +1,9 @@
-;;; packages.el - Web Language File
+;;; config.el --- Org Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: web html css
+;; Keywords: org
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,8 @@
 
 ;;; Code:
 
-(require-package 'web-mode)
-(require-package 'emmet-mode)
-(require-package 'company-web)
+(org-babel-do-load-languages 'org-babel-load-languages
+  '((shell . t)
+    (http . t)
+    (emacs-lisp . t)
+    (python . t)))

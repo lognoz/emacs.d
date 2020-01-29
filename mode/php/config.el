@@ -1,9 +1,9 @@
-;;; config.el - Web Language File
+;;; config.el --- PHP Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: web html css
+;; Keywords: php
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,13 +22,24 @@
 
 ;;; Code:
 
-(defun web/hook-web-mode ()
-  (require 'company)
-  (require 'company-web-html)
-  (require 'emmet-mode)
+(defun php/hook-php-mode ()
+  ;; Enable company-mode
+  (require 'company-php)
+
+  ;; Enable ElDoc support
+  (ac-php-core-eldoc-setup)
 
   (set (make-local-variable 'company-backends)
-       '(company-css company-web-html company-yasnippet company-files))
+       '((company-ac-php-backend)
+          company-phpactor company-files))
 
-  (company-mode t)
-  (emmet-mode))
+  ;; Add yasnippet to company backend
+  (setq company-backends (mapcar #'company//load-backend-with-yas company-backends))
+
+  ;; Jump to definition
+  (define-key php-mode-map (kbd "M-]")
+   'ac-php-find-symbol-at-point)
+
+  ;; Return back
+  (define-key php-mode-map (kbd "M-[")
+   'ac-php-location-stack-back))

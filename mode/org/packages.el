@@ -1,4 +1,4 @@
-;;; config.el - Org Language File
+;;; packages.el --- Org Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,8 +22,5 @@
 
 ;;; Code:
 
-(org-babel-do-load-languages 'org-babel-load-languages
-  '((shell . t)
-    (http . t)
-    (emacs-lisp . t)
-    (python . t)))
+(require-package 'ob-http)
+(require-package 'ob-async)

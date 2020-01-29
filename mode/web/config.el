@@ -1,9 +1,9 @@
-;;; packages.el - Python Language File
+;;; config.el --- Web Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: python
+;; Keywords: web html css
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,13 @@
 
 ;;; Code:
 
-;;(require-package python-mode :built-in t)
-(require-package 'company-jedi)
+(defun web/hook-web-mode ()
+  (require 'company)
+  (require 'company-web-html)
+  (require 'emmet-mode)
+
+  (set (make-local-variable 'company-backends)
+       '(company-css company-web-html company-yasnippet company-files))
+
+  (company-mode t)
+  (emmet-mode))

@@ -1,9 +1,9 @@
-;;; packages.el - PHP Language File
+;;; packages.el --- Python Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: php
+;; Keywords: python
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,5 @@
 
 ;;; Code:
 
-(require-package 'ac-php)
-(require-package 'company-php)
-(require-package 'company-phpactor)
-(require-package 'php-mode)
-(require-package 'phpactor)
+;;(require-package python-mode :built-in t)
+(require-package 'company-jedi)

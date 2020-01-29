@@ -1,9 +1,9 @@
-;;; packages.el - Org Language File
+;;; config.el --- Python Mode File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: python
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(require-package 'ob-http)
-(require-package 'ob-async)
+(defun python/hook-python-mode ()
+  (add-to-list 'company-backends 'company-jedi))
