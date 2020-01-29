@@ -100,6 +100,9 @@
       inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
+;; Remove mode line for loading.
+(setq-default mode-line-format nil)
+
 ;; Fix Emacs confusion on Windows with HOME and APPDATA,
 ;; causing `abbreviate-home-dir' to produce incorrect paths.
 (when (eq operating-system "windows")
