@@ -60,9 +60,7 @@
 (defun editor-startup-hook ()
   ;; Setup Embla theme
   (require-package 'atom-one-dark-theme)
-  (load-theme 'atom-one-dark t)
+  (load-theme 'atom-one-dark t))
 
-  ;; Load Embla mode line
-  (mode-line-initialize))
 
 (provide 'core-editor)

@@ -22,8 +22,6 @@
 
 ;;; Code:
 
-(require 'vc)
-
 (defun mode-line--version-control ()
   (when (stringp vc-mode)
     (format "%s%s"

@@ -22,8 +22,10 @@
 
 ;;; Code:
 
-(defvar embla-package-refresh nil
-  "Package content has been refresh.")
+(require 'package)
+
+(defvar embla-package-initialized nil
+  "Package content has been initialized.")
 
 (defvar embla-component-packages nil
   "List of packages required by component.")
@@ -46,22 +48,29 @@
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
     ("python"        "\\.py[iw]?\\'"        '("_")           t           python-mode)))
 
+;;; Internal core functions.
+
+(defun package--initialize ()
+  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+                           ("org"   . "http://orgmode.org/elpa/")
+                           ("gnu"   . "http://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (setq embla-package-initialized t))
+
 ;;; External core functions.
 
 (defun require-package (package)
   (interactive)
-  (unless package-archive-contents
-     (package-refresh-contents))
+  ;; Add archive and initialize package.
+  (unless embla-package-initialized
+    (package--initialize))
   ;; Install package if not installed.
   (when (not (package-installed-p package))
+    (unless package-archive-contents
+      (package-refresh-contents))
     (package-install package))
   ;; Push value into `embla-component-packages' variable.
   (add-to-list 'embla-component-packages (format "%s" package)))
 
-(defun package-startup-hook ()
-  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-                           ("org"   . "http://orgmode.org/elpa/")
-                           ("gnu"   . "http://elpa.gnu.org/packages/")))
-  (package-initialize))
 
 (provide 'core-package)

@@ -198,16 +198,19 @@
 ;;; External core functions.
 
 (defun embla-initialize ()
+  ;; Create autoload for optimization and performance.
   (embla--create-autoload)
   (require 'embla-autoload embla-autoload-file)
+
   ;; Use `embla-core-directory' path reference to fetch elisp files and load
   ;; them dynamicly. If a startup hook is defined in the file, it will add it
   ;; to embla to execute it after by it's own after this statement.
-  (dolist (target '(core-package core-file core-editor core-mode-line))
+  (dolist (target '(core-package core-file core-editor))
     (require target)
     (let ((module (replace-regexp-in-string "core-" "" (symbol-name target))))
       (when-function-exists (concat module "-startup-hook")
         (add-hook 'embla-startup-hook func))))
+
   (run-hooks 'embla-startup-hook)
   (add-hook 'emacs-startup-hook 'embla--after-emacs-startup-hook))
 
