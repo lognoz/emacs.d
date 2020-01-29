@@ -1,4 +1,4 @@
-;;; packages.el - Ivy Packages Component File
+;;; packages.el --- Ivy Packages Component File
 
 ;; Copyright (c) 2019-2020 Marc-Antoine Loignon
 
@@ -24,3 +24,5 @@
 
 (require-package 'ivy)
 (require-package 'counsel)
+(require-package 'ivy-prescient)
+(require-package 'prescient)

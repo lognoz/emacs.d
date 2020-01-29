@@ -1,4 +1,4 @@
-;;; config.el - Ivy Component File
+;;; config.el --- Ivy Component File
 
 ;; Copyright (c) 2019-2020 Marc-Antoine Loignon
 
@@ -24,10 +24,8 @@
 
 (defun ivy/init-ivy ()
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t
-        enable-recursive-minibuffers t
+  (setq enable-recursive-minibuffers t
         ivy-count-format "(%d/%d) "
-        ivy-use-virtual-buffers t
         ivy-wrap nil
         ivy-display-style 'fancy
         ivy-use-selectable-prompt t
@@ -40,15 +38,36 @@
   (ivy//setup-keybindings)
   (add-hook 'minibuffer-setup-hook 'ivy//resize-minibuffer-setup-hook))
 
+;;(defun ivy/init-smex ()
+;;  (smex-initialize))
+
+(defun ivy/init-ivy-prescient ()
+  (setq ivy-prescient-retain-classic-highlighting t)
+  (setq ivy-prescient-enable-filtering nil)
+  (setq ivy-prescient-enable-sorting t)
+  (setq ivy-prescient-sort-commands
+        '(:not counsel-grep
+               counsel-rg
+               counsel-find-file
+               ivy-switch-buffer))
+  (ivy-prescient-mode 1))
+
+(defun ivy/init-prescient ()
+  (require 'prescient)
+  (setq prescient-history-length 200)
+  (setq prescient-save-file (concat embla-temporary-directory "prescient-items"))
+  (setq prescient-filter-method '(literal regexp))
+  (prescient-persist-mode))
+
 (defun ivy//setup-keybindings ()
   (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-c C-r") 'counsel-recentf)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "C-x d") 'counsel-dired)
-  (global-set-key (kbd "C-c g") 'counsel-git)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-c k") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate))
+  (global-set-key (kbd "C-x C-r") 'counsel-recentf)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-c C-j") 'counsel-imenu)
+  (global-set-key (kbd "C-x r l") 'counsel-bookmark)
+
+  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))
 
 (defun ivy//resize-minibuffer-setup-hook ()
   "Minibuffer setup hook."
