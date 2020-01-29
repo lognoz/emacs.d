@@ -1,9 +1,9 @@
-;;; packages.el - Tool Packages Component File
+;;; packages.el - Embla Packages Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: tool
+;; Keywords: embla
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,6 @@
 
 ;;; Code:
 
+(require-package 'projectile)
 (require-package 'which-key)
 (require-package 'editorconfig)

@@ -1,9 +1,9 @@
-;;; packages.el - Tool Component File
+;;; packages.el - Embla Component File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: tool
+;; Keywords: embla
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,9 +22,12 @@
 
 ;;; Code:
 
-(defun tool/init-editorconfig ()
+;; Load Embla mode line
+(mode-line-initialize)
+
+(defun embla/init-editorconfig ()
   (editorconfig-mode 1))
 
-(defun tool/init-which-key ()
+(defun embla/init-which-key ()
   (which-key-mode)
   (which-key-setup-minibuffer))
