@@ -22,24 +22,23 @@
 
 ;;; Code:
 
-(defun php/hook-php-mode ()
-  ;; Enable company-mode
-  (require 'company-php)
+;; Enable company-mode
+(require 'company-php)
 
-  ;; Enable ElDoc support
-  (ac-php-core-eldoc-setup)
+;; Enable ElDoc support
+(ac-php-core-eldoc-setup)
 
-  (set (make-local-variable 'company-backends)
-       '((company-ac-php-backend)
-          company-phpactor company-files))
+(set (make-local-variable 'company-backends)
+     '((company-ac-php-backend)
+        company-phpactor company-files))
 
-  ;; Add yasnippet to company backend
-  (setq company-backends (mapcar #'company//load-backend-with-yas company-backends))
+;; Add yasnippet to company backend
+(setq company-backends (mapcar #'company//load-backend-with-yas company-backends))
 
-  ;; Jump to definition
-  (define-key php-mode-map (kbd "M-]")
-   'ac-php-find-symbol-at-point)
+;; Jump to definition
+(define-key php-mode-map (kbd "M-]")
+ 'ac-php-find-symbol-at-point)
 
-  ;; Return back
-  (define-key php-mode-map (kbd "M-[")
-   'ac-php-location-stack-back))
+;; Return back
+(define-key php-mode-map (kbd "M-[")
+ 'ac-php-location-stack-back))

@@ -22,5 +22,4 @@
 
 ;;; Code:
 
-(defun python/hook-python-mode ()
-  (add-to-list 'company-backends 'company-jedi))
+(add-to-list 'company-backends 'company-jedi)

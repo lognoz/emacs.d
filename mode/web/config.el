@@ -22,13 +22,12 @@
 
 ;;; Code:
 
-(defun web/hook-web-mode ()
-  (require 'company)
-  (require 'company-web-html)
-  (require 'emmet-mode)
+(require 'company)
+(require 'company-web-html)
+(require 'emmet-mode)
 
-  (set (make-local-variable 'company-backends)
-       '(company-css company-web-html company-yasnippet company-files))
+(set (make-local-variable 'company-backends)
+     '(company-css company-web-html company-yasnippet company-files))
 
-  (company-mode t)
-  (emmet-mode))
+(company-mode t)
+(emmet-mode)

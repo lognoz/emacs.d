@@ -22,5 +22,4 @@
 
 ;;; Code:
 
-;;(require-package python-mode :built-in t)
 (require-package 'company-jedi)
