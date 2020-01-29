@@ -22,6 +22,7 @@
 
 ;;; Code:
 
+(require-package 'evil)
 (require-package 'projectile)
 (require-package 'which-key)
 (require-package 'editorconfig)

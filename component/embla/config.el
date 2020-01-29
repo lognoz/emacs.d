@@ -22,8 +22,8 @@
 
 ;;; Code:
 
-;; Load Embla mode line
-(mode-line-initialize)
+(with-eval-after-load "evil"
+  (mode-line-initialize))
 
 (defun embla/init-editorconfig ()
   (editorconfig-mode 1))
