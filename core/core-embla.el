@@ -45,8 +45,8 @@
 (defconst embla-component-directory (concat user-emacs-directory "component/")
   "The directory of component files.")
 
-(defconst embla-language-directory (concat user-emacs-directory "language/")
-  "The directory of language files.")
+(defconst embla-mode-directory (concat user-emacs-directory "mode/")
+  "The directory of mode files.")
 
 (defconst embla-private-directory (concat user-emacs-directory "private/")
   "The directory of private files.")
@@ -141,7 +141,8 @@
 
 (defun embla--load-composant-files (path)
   (setq embla-component-packages nil)
-  (dolist (f '("/config.el" "/packages.el"))
+  (dolist (f '("/packages.el" "/config.el"))
+    (message (concat path f))
     (when (file-exists-p (concat path f))
       (load (concat path f) nil 'nomessage))))
 
@@ -159,37 +160,37 @@
   ;; Add language to auto mode to load what inside language directory
   ;; dynamically.
   (mapc (lambda (entry)
-    (let* ((language (car entry))
+    (let* ((mode-name (car entry))
            (extension (cadr entry))
            (word-syntax (cadr (cdr entry)))
-           (built-in (cadr (cdr (cdr entry))))
-           (mode (cadr (cdr (cdr (cdr entry)))))
+           (mode (cadr (cdr (cdr entry))))
            (hook (concat (symbol-name mode) "-hook"))
-           (path (concat embla-language-directory language)))
+           (path (concat embla-mode-directory mode-name)))
 
-    ;; Add langauge to auto-mode-alist and install package if it's not
-    ;; included by default in Emacs.
-    (add-to-list 'auto-mode-alist
-      `(,extension . (lambda ()
-        (when (not ,built-in)
-          (require-package ',mode))
-        (,mode))))
+      (when extension
+        ;; Add mode to auto-mode-alist and install package if it's not
+        ;; included by default in Emacs.
+        (add-to-list 'auto-mode-alist
+          `(,extension . (lambda ()
+            (when (not (fboundp ',mode))
+              (require-package ',mode))
+            (,mode))))
 
-    ;; Display line number.
-    (add-hook (intern hook) 'display-line-numbers-mode)
+        ;; Display line number.
+        (add-hook (intern hook) 'display-line-numbers-mode))
 
-    ;; Load module in language directory and define word syntax.
-    (add-hook (intern hook) `(lambda ()
-      (embla--load-composant-files ,path)
-      (fetch-dependencies ,language (funcall func))
-      (dolist (character ,word-syntax)
-        (modify-syntax-entry
-          (cond ((string-equal character "_") ?_)
-                ((string-equal character "-") ?-)
-                ((string-equal character "\\") ?\\)
-                ((string-equal character "$") ?$)) "w"))))))
+      ;; Load module in mode directory and define word syntax.
+      (add-hook (intern hook) `(lambda ()
+        (embla--load-composant-files ,path)
+        (when ,word-syntax
+          (dolist (character ,word-syntax)
+            (modify-syntax-entry
+              (cond ((string-equal character "_") ?_)
+                    ((string-equal character "-") ?-)
+                    ((string-equal character "\\") ?\\)
+                    ((string-equal character "$") ?$)) "w")))))))
 
-    embla-languages-alist)
+    embla-mode-alist)
 
   ;; Execute hook to apply component configurations.
   (run-hooks 'embla-after-component-installation)

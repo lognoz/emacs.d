@@ -30,23 +30,24 @@
 (defvar embla-component-packages nil
   "List of packages required by component.")
 
-(defvar embla-languages-alist
-  ;; Language        Extension              Word syntax      Built-in    Mode
-  '(("php"           "\\.php\\'"            '("_" "$")       nil         php-mode)
-    ("web"           "\\.html.php\\'"       '("-" "_" "$")   nil         web-mode)
-    ("web"           "\\.html\\'"           '("-" "_")       nil         web-mode)
-    ("javascript"    "\\.js\\'"             '("-" "_")       nil         js2-mode)
-    ("scss"          "\\.scss\\'"           '("-" "_")       nil         scss-mode)
-    ("yaml"          "\\.yml\\'"            '("-" "_")       nil         yaml-mode)
-    ("puppet"        "\\.pp\\'"             '("-" "_")       nil         puppet-mode)
-    ("pkgbuild"      "PKGBUILD\\'"          '("-" "_")       nil         pkgbuild-mode)
-    ("dockerfile"    "Dockerfile\\'"        '("-" "_")       nil         dockerfile-mode)
-    ("json"          "\\.json\\'"           '("-" "_")       nil         json-mode)
-    ("emacs"         "\\.el\\'"             '("-" "_")       t           emacs-lisp-mode)
-    ("org"           "\\.org\\'"            '("-" "_")       t           org-mode)
-    ("latex"         "\\.tex\\'"            '("\\")          t           latex-mode)
-    ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")       t           editorconfig-conf-mode)
-    ("python"        "\\.py[iw]?\\'"        '("_")           t           python-mode)))
+(defvar embla-mode-alist
+  ;; Language        Extension              Word syntax       Mode
+  '(("dired"         nil                    nil               dired-mode)
+    ("ibuffer"       nil                    nil               ibuffer-mode)
+    ("php"           "\\.php\\'"            '("_" "$")        php-mode)
+    ("web"           "\\.html.php\\'"       '("-" "_" "$")    web-mode)
+    ("javascript"    "\\.js\\'"             '("-" "_")        js2-mode)
+    ("scss"          "\\.scss\\'"           '("-" "_")        scss-mode)
+    ("yaml"          "\\.yml\\'"            '("-" "_")        yaml-mode)
+    ("puppet"        "\\.pp\\'"             '("-" "_")        puppet-mode)
+    ("pkgbuild"      "PKGBUILD\\'"          '("-" "_")        pkgbuild-mode)
+    ("dockerfile"    "Dockerfile\\'"        '("-" "_")        dockerfile-mode)
+    ("json"          "\\.json\\'"           '("-" "_")        json-mode)
+    ("emacs"         "\\.el\\'"             '("-" "_")        emacs-lisp-mode)
+    ("org"           "\\.org\\'"            '("-" "_")        org-mode)
+    ("latex"         "\\.tex\\'"            '("\\")           latex-mode)
+    ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")        editorconfig-conf-mode)
+    ("python"        "\\.py[iw]?\\'"        '("_")            python-mode)))
 
 ;;; Internal core functions.
 
@@ -71,6 +72,5 @@
     (package-install package))
   ;; Push value into `embla-component-packages' variable.
   (add-to-list 'embla-component-packages (format "%s" package)))
-
 
 (provide 'core-package)
