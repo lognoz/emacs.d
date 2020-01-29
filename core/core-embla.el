@@ -1,4 +1,4 @@
-;;; core-embla.el - Core Initialization File
+;;; core-embla.el --- Core Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -63,6 +63,9 @@
 (defconst embla-private-init-file (concat embla-private-directory "init.el")
   "The private initialization file.")
 
+(defconst embla-autoload-file (concat embla-temporary-directory "embla-autoload.el")
+  "The Embla autoload file.")
+
 (defvar embla-startup-hook nil
   "Hook called before Emacs is started.")
 
@@ -124,6 +127,14 @@
        ,@body)))
 
 ;;; Internal core functions.
+
+(defun embla--create-autoload ()
+  (let ((generated-autoload-file embla-autoload-file))
+    (when (not (file-exists-p generated-autoload-file))
+      (with-current-buffer (find-file-noselect generated-autoload-file)
+        (insert "")
+        (save-buffer))
+      (update-directory-autoloads embla-core-directory))))
 
 (defun embla--load-composant-files (path)
   (setq embla-component-packages nil)
@@ -187,15 +198,17 @@
 ;;; External core functions.
 
 (defun embla-initialize ()
+  (embla--create-autoload)
+  (require 'embla-autoload embla-autoload-file)
   ;; Use `embla-core-directory' path reference to fetch elisp files and load
   ;; them dynamicly. If a startup hook is defined in the file, it will add it
   ;; to embla to execute it after by it's own after this statement.
-  (fetch-content embla-core-directory
-    (when (and (not (file-directory-p path))
-               (not (equal f "core-embla.el")))
-      (load path nil 'nomessage)
-      (let ((module (replace-regexp-in-string "core-" "" module)))
-        (when-function-exists (concat module "-startup-hook")
-          (add-hook 'embla-startup-hook func)))))
+  (dolist (target '(core-package core-file core-editor core-mode-line))
+    (require target)
+    (let ((module (replace-regexp-in-string "core-" "" (symbol-name target))))
+      (when-function-exists (concat module "-startup-hook")
+        (add-hook 'embla-startup-hook func))))
   (run-hooks 'embla-startup-hook)
   (add-hook 'emacs-startup-hook 'embla--after-emacs-startup-hook))
+
+(provide 'core-embla)

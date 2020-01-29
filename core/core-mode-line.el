@@ -1,4 +1,4 @@
-;;; core-mode-line.el - Mode line Initialization File
+;;; core-mode-line.el --- Mode line Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -72,29 +72,33 @@
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))))
 
+;;;###autoload
 (defun mode-line-initialize ()
-  (setq-default mode-line-format
-                '("%e"
-                  (:eval
-                    (let* (
-                      ;; Mode line at left position.
-                      (left-content (concat
-                        (face (mode-line--buffer-name))
-                        (face (mode-line--column-line))
-                        (face (mode-line--mode-name))))
+  (setq-default
+    mode-line-format
+    '("%e"
+      (:eval
+        (let* (
+          ;; Mode line at left position.
+          (left-content (concat
+            (face (mode-line--buffer-name))
+            (face (mode-line--column-line))
+            (face (mode-line--mode-name))))
 
-                      ;; Mode line at right position.
-                      (right-content (concat
-                        (face (mode-line--evil-macro))
-                        (face (mode-line--evil-state))
-                        (face (mode-line--version-control))))
+          ;; Mode line at right position.
+          (right-content (concat
+            (face (mode-line--evil-macro))
+            (face (mode-line--evil-state))
+            (face (mode-line--version-control))))
 
-                      ;; Mode line at center position.
-                      (center-fill
-                        (mode-line--fill (+ (length right-content) 1))))
+          ;; Mode line at center position.
+          (center-fill
+            (mode-line--fill (+ (length right-content) 1))))
 
-                      ;; Concat contents
-                      (concat left-content center-fill right-content)))))
+          ;; Concat contents
+          (concat left-content center-fill right-content)))))
 
   (setq-default mode-line-format
     (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format)))
+
+(provide 'core-mode-line)

@@ -1,4 +1,4 @@
-;;; core-package.el - Core Package File
+;;; core-package.el --- Core Package File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -63,3 +63,5 @@
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
   (package-initialize))
+
+(provide 'core-package)

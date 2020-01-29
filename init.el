@@ -32,6 +32,6 @@
   (error "Embla requires GNU Emacs 25.1 or newer, but you're running %s"
          emacs-version)
   (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
+  (add-to-list 'load-path (concat user-emacs-directory "core/"))
+  (require 'core-embla)
   (embla-initialize))

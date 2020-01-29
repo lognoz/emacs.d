@@ -1,4 +1,4 @@
-;;; core-file.el - Core File Initialization File
+;;; core-file.el --- Core File Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -87,3 +87,5 @@
 
   (file--undo-tree)
   (file--backup))
+
+(provide 'core-file)

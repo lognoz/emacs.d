@@ -1,4 +1,4 @@
-;;; core-editor.el - Core Editor Initialization File
+;;; core-editor.el --- Core Editor Initialization File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -64,3 +64,5 @@
 
   ;; Load Embla mode line
   (mode-line-initialize))
+
+(provide 'core-editor)

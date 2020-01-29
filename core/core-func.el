@@ -1,4 +1,4 @@
-;;; core-func.el - Core Function File
+;;; core-func.el --- Core Function File
 
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
@@ -22,6 +22,7 @@
 
 ;;; Code:
 
+;;;###autoload
 (defun sudo ()
   "Use TRAMP to `sudo` the current buffer"
   (interactive)
@@ -30,6 +31,7 @@
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
 
+;;;###autoload
 (defun stage-current-buffer ()
   "Stage changes of active buffer."
   (interactive)
@@ -39,6 +41,7 @@
     (message (if (not (string= output ""))
         output (concat "Added " buffile)))))
 
+;;;###autoload
 (defun get-file-content (path)
   "Return the contents of filename."
   (string-trim
@@ -46,6 +49,7 @@
       (insert-file-contents path)
       (buffer-string))))
 
+;;;###autoload
 (defun replace-in-file (path replacements)
   "Replace variables in file."
   (with-temp-file path
@@ -57,9 +61,23 @@
         (replace-match (cdr entry))))
       replacements)))
 
+;;;###autoload
+(defun byte-recompile (path)
+  (if (fboundp 'async-byte-recompile-directory)
+      (async-byte-recompile-directory path)
+    (byte-recompile-directory path)))
+
+;;;###autoload
 (defun recompile-elpa ()
   "Recompile packages in elpa directory."
   (interactive)
-  (if (fboundp 'async-byte-recompile-directory)
-      (async-byte-recompile-directory package-user-dir)
-    (byte-recompile-directory package-user-dir 0 t)))
+  (byte-recompile package-user-dir))
+
+;;;###autoload
+(defun recompile-embla ()
+  "Recompile component and core directories."
+  (interactive)
+  (byte-recompile embla-core-directory)
+  (byte-recompile embla-component-directory))
+
+(provide 'core-func)
