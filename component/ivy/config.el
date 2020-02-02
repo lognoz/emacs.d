@@ -38,9 +38,6 @@
   (ivy//setup-keybindings)
   (add-hook 'minibuffer-setup-hook 'ivy//resize-minibuffer-setup-hook))
 
-;;(defun ivy/init-smex ()
-;;  (smex-initialize))
-
 (defun ivy/init-ivy-prescient ()
   (setq ivy-prescient-retain-classic-highlighting t)
   (setq ivy-prescient-enable-filtering nil)
