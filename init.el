@@ -28,6 +28,9 @@
 ;; Show warning when opening files bigger than 100MB.
 (setq large-file-warning-threshold 100000000)
 
+;; Disabled local variable before to create autoload files.
+(setq enable-dir-local-variables nil)
+
 (if (version< emacs-version "25.1")
   (error "Embla requires GNU Emacs 25.1 or newer, but you're running %s"
          emacs-version)
