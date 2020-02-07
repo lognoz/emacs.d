@@ -1,10 +1,12 @@
 .litable-lists.el
 .lsp-session-*
+.mc-lists.el
 .python-environments
 TAGS
 auto-save-list
 elpa
 eshell
+request
 lsp-cache
 projectile-bookmarks.eld
 projectile.cache
