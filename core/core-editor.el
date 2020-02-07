@@ -55,12 +55,26 @@
 ;; Define tab width
 (setq-default tab-width 3)
 
+;; Define Emacs frame title format.
+(setq frame-title-format '("%b - Emacs"))
+
+;; Use UTF-8 as the default coding system.
+(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
+(when (fboundp 'set-charset-priority)
+  (set-charset-priority 'unicode))
+
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
+(put 'overwrite-mode 'disabled t)
+
 ;;; External core functions.
 
-(defun editor-startup-hook ()
-  ;; Setup Embla theme
-  (require-package 'atom-one-dark-theme)
-  (load-theme 'atom-one-dark t))
-
+;;(defun editor-startup-hook ()
+;;  ;; Setup Embla theme
+;;  (require-package 'atom-one-dark-theme)
+;;  (load-theme 'atom-one-dark t))
 
 (provide 'core-editor)

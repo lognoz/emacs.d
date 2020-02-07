@@ -23,6 +23,12 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'core-func)
+(require 'core-file)
+(require 'core-editor)
+(require 'core-package)
+
+;;; Environmental constants.
 
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
@@ -33,8 +39,13 @@
 (defconst is-xorg
   (eq window-system 'x))
 
+(defconst is-archlinux
+  (string-match-p "ARCH" operating-system-release))
+
 (defconst current-user
   (getenv (if (eq operating-system "windows") "USERNAME" "USER")))
+
+;;; Contextual Embla constants.
 
 (defconst embla-core-init (concat user-emacs-directory "init.el")
   "The Embla file reference.")
@@ -66,57 +77,24 @@
 (defconst embla-autoload-file (concat embla-temporary-directory "embla-autoload.el")
   "The Embla autoload file.")
 
-(defvar embla-startup-hook nil
-  "Hook called before Emacs is started.")
+;;; Hook used by Embla.
 
 (defvar embla-after-component-installation nil
   "Hook called after component packages has been install.")
 
-;; Place the variables created by Emacs in custom file.
-(setq custom-file (concat embla-temporary-directory "custom.el"))
-(unless (file-exists-p custom-file)
-  (write-region "" nil custom-file))
-(load custom-file nil 'nomessage)
-
-;; Disable useless GUI components.
-(when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
-  (tool-bar-mode -1))
-(when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
-  (menu-bar-mode -1))
-(when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
-  (scroll-bar-mode -1))
-(when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
-  (tooltip-mode -1))
-
-;; Use UTF-8 as the default coding system.
-(prefer-coding-system 'utf-8)
-(setq locale-coding-system 'utf-8)
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
-
-;; Remove splash and startup screen.
-(setq inhibit-default-init t
-      inhibit-splash-screen t
-      inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
-
-;; Remove mode line for loading.
-(setq-default mode-line-format nil)
-
-;; Fix Emacs confusion on Windows with HOME and APPDATA,
-;; causing `abbreviate-home-dir' to produce incorrect paths.
-(when (eq operating-system "windows")
-  (setq abbreviated-home-dir "\\`'"))
-
 ;;; External macro functions.
 
-(defmacro fetch-content (source &rest body)
-  `(dolist (f (directory-files ,source))
-     (let ((path (concat ,source f))
+(defmacro fetch-content (path &rest body)
+  "Macro used to fetch directory content and easily execute action on
+target file."
+  `(dolist (f (directory-files ,path))
+     (let ((path (concat ,path f))
            (module (file-name-sans-extension f)))
        ,@body)))
 
 (defmacro fetch-dependencies (module &rest body)
+  "Fetch component dependencies dynamically installed by Embla so it
+could be easy to call function to its config file."
   `(when embla-component-packages
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat ,module "/hook-" dependency)
@@ -125,76 +103,130 @@
         ,@body))))
 
 (defmacro when-function-exists (name &rest body)
+  "Convert a string to a function reference and that can quickly
+execute action with it."
   `(let ((func (intern ,name)))
      (when (fboundp func)
        ,@body)))
 
 ;;; Internal core functions.
 
-(defun embla--create-autoload ()
-  (let ((generated-autoload-file embla-autoload-file))
-    (when (not (file-exists-p generated-autoload-file))
+(defun create-custom-file ()
+  "Place the variables created by Emacs in custom file."
+  (setq custom-file (concat embla-temporary-directory "custom.el"))
+  (unless (file-exists-p custom-file)
+    (write-region "" nil custom-file))
+  (load custom-file nil 'nomessage))
+
+(defun remove-components ()
+  "Disable GUI components."
+  (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
+    (tool-bar-mode -1))
+  (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
+    (menu-bar-mode -1))
+  (when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
+    (scroll-bar-mode -1))
+  (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
+    (tooltip-mode -1)))
+
+(defun create-autoload-file (&optional force)
+  "This function parse magic comments locate in core and project
+directories and append it to autoload file locate. It will helps to
+optimize Embla."
+  (when (or (not (file-exists-p embla-autoload-file))
+            (equal force t))
+    (let ((generated-autoload-file embla-autoload-file))
+      ;; Clear content in autoload file.
       (with-current-buffer (find-file-noselect generated-autoload-file)
         (insert "")
         (save-buffer))
-      (update-directory-autoloads embla-core-directory))))
+      ;; Update autoload in core directory.
+      (update-directory-autoloads embla-core-directory)
+      ;; Update autoload with recursive directories found in project.
+      (dolist (path (recursive-directories embla-project-directory))
+        (update-directory-autoloads path))))
+  ;; Require autoload file locate.
+  (require 'embla-autoload embla-autoload-file))
 
-(defun embla--load-composant-files (path)
+(defun define-context-files ()
+  "This function is used to set bookmark, minibuffer, history, place,
+undo-tree and backup files."
+  ;; Define bookmark file.
+  (setq bookmark-default-file
+        (concat embla-temporary-directory "bookmark"))
+  ;; Save minibuffer.
+  (savehist-mode 1)
+  (setq savehist-file (concat embla-temporary-directory "savehist")
+        history-length 100)
+  ;; Record history.
+  (recentf-mode 1)
+  (setq recentf-save-file (concat embla-temporary-directory "recentf")
+        recentf-max-menu-items 10
+        recentf-max-saved-items 100
+        recentf-show-file-shortcuts-flag nil)
+  ;; Save cursor positions.
+  (save-place-mode 1)
+  (setq save-place-file
+        (concat embla-temporary-directory "saveplace"))
+  ;; Set undo tree.
+  (file-set-undo-tree)
+  ;; Set backup files.
+  (file-set-backup))
+
+(defun load-component-files (path)
+  "This function is used to load packages and config files into
+component directory."
   (setq embla-component-packages nil)
-  (dolist (f '("/packages.el" "/config.el"))
-    (message (concat path f))
-    (when (file-exists-p (concat path f))
+  (dolist (f '("/packages" "/config"))
+    (when (file-exists-p (concat path f ".el"))
       (load (concat path f) nil 'nomessage))))
 
-(defun embla--after-emacs-startup-hook ()
+(defun require-mode (entry)
+  "Add language to auto mode, load what inside mode directory
+dynamically and define word syntax."
+  (let* ((mode-name (car entry))
+         (extension (cadr entry))
+         (word-syntax (cadr (cdr entry)))
+         (mode (cadr (cdr (cdr entry))))
+         (hook (concat (symbol-name mode) "-hook"))
+         (path (concat embla-mode-directory mode-name)))
+
+    (when extension
+      ;; Add mode to auto-mode-alist and install package if it's not
+      ;; included by default in Emacs.
+      (add-to-list 'auto-mode-alist
+        `(,extension . (lambda ()
+          (when (not (fboundp ',mode))
+            (require-package ',mode))
+          (,mode)))))
+
+    ;; Load module in mode directory and define word syntax.
+    (add-hook (intern hook) `(lambda ()
+      (load-component-files ,path)
+      (when ,word-syntax
+        (dolist (character ,word-syntax)
+          (modify-syntax-entry
+            (cond ((string-equal character "_") ?_)
+                  ((string-equal character "-") ?-)
+                  ((string-equal character "\\") ?\\)
+                  ((string-equal character "$") ?$)) "w")))))))
+
+(defun embla-after-startup-hook ()
+  "This function is used to load packages and config files into
+component directory."
   (fetch-content embla-component-directory
     (when (and (file-directory-p path)
                (not (equal f "."))
                (not (equal f "..")))
-      ;; Load composant files in component directory.
-      (embla--load-composant-files path)
+      ;; Load component files in component directory.
+      (load-component-files path)
       ;; Add hook to set all configurations after dependencies installation.
       (fetch-dependencies module
         (add-hook 'embla-after-component-installation func))))
-
-  ;; Add language to auto mode to load what inside language directory
-  ;; dynamically.
-  (mapc (lambda (entry)
-    (let* ((mode-name (car entry))
-           (extension (cadr entry))
-           (word-syntax (cadr (cdr entry)))
-           (mode (cadr (cdr (cdr entry))))
-           (hook (concat (symbol-name mode) "-hook"))
-           (path (concat embla-mode-directory mode-name)))
-
-      (when extension
-        ;; Add mode to auto-mode-alist and install package if it's not
-        ;; included by default in Emacs.
-        (add-to-list 'auto-mode-alist
-          `(,extension . (lambda ()
-            (when (not (fboundp ',mode))
-              (require-package ',mode))
-            (,mode))))
-
-        ;; Display line number.
-        (add-hook (intern hook) 'display-line-numbers-mode))
-
-      ;; Load module in mode directory and define word syntax.
-      (add-hook (intern hook) `(lambda ()
-        (embla--load-composant-files ,path)
-        (when ,word-syntax
-          (dolist (character ,word-syntax)
-            (modify-syntax-entry
-              (cond ((string-equal character "_") ?_)
-                    ((string-equal character "-") ?-)
-                    ((string-equal character "\\") ?\\)
-                    ((string-equal character "$") ?$)) "w")))))))
-
-    embla-mode-alist)
-
+  ;; Require mode into `embla-mode-alist'.
+  (mapc 'require-mode embla-mode-alist)
   ;; Execute hook to apply component configurations.
   (run-hooks 'embla-after-component-installation)
-
   ;; Call private initialization file.
   (when (file-exists-p embla-private-init-file)
     (load embla-private-init-file nil 'nomessage)))
@@ -202,20 +234,32 @@
 ;;; External core functions.
 
 (defun embla-initialize ()
+  ;; Remove splash and startup screen.
+  (setq inhibit-default-init t
+        inhibit-splash-screen t
+        inhibit-startup-message t
+        inhibit-startup-echo-area-message t)
+
+  ;; Remove mode line for loading.
+  (setq-default mode-line-format nil)
+
+  ;; Remove GUI components.
+  (remove-components)
+
+  ;; Place the variables created by Emacs in custom file.
+  (create-custom-file)
+
   ;; Create autoload for optimization and performance.
-  (embla--create-autoload)
-  (require 'embla-autoload embla-autoload-file)
+  (create-autoload-file)
 
-  ;; Use `embla-core-directory' path reference to fetch elisp files and load
-  ;; them dynamicly. If a startup hook is defined in the file, it will add it
-  ;; to embla to execute it after by it's own after this statement.
-  (dolist (target '(core-package core-file core-editor))
-    (require target)
-    (let ((module (replace-regexp-in-string "core-" "" (symbol-name target))))
-      (when-function-exists (concat module "-startup-hook")
-        (add-hook 'embla-startup-hook func))))
+  ;; Enable local variable to load .dir-locals.el.
+  (setq enable-dir-local-variables t)
 
-  (run-hooks 'embla-startup-hook)
-  (add-hook 'emacs-startup-hook 'embla--after-emacs-startup-hook))
+  ;; Define bookmark, minibuffer, history, place, undo-tree
+  ;; and backup files.
+  (define-context-files)
+
+  ;; Add hook after Emacs startup.
+  (add-hook 'emacs-startup-hook 'embla-after-startup-hook))
 
 (provide 'core-embla)

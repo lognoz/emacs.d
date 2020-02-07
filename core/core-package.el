@@ -51,12 +51,11 @@
 
 ;;; Internal core functions.
 
-(defun package--initialize ()
+(defun package-set-archives ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-                           ("org"   . "http://orgmode.org/elpa/")
-                           ("gnu"   . "http://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (setq embla-package-initialized t))
+                            ("org"  . "http://orgmode.org/elpa/")
+                            ("gnu"  . "http://elpa.gnu.org/packages/")))
+  (package-initialize))
 
 ;;; External core functions.
 
@@ -64,9 +63,10 @@
   (interactive)
   ;; Add archive and initialize package.
   (unless embla-package-initialized
-    (package--initialize))
+    (package-set-archives)
+    (setq embla-package-initialized t))
   ;; Install package if not installed.
-  (when (not (package-installed-p package))
+  (unless (package-installed-p package)
     (unless package-archive-contents
       (package-refresh-contents))
     (package-install package))

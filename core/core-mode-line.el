@@ -85,7 +85,7 @@
 
           ;; Mode line at right position.
           (right-content (concat
-            (face (mode-line--evil-macro))
+            ;;(face (mode-line--evil-macro))
             (face (mode-line--evil-state))
             (face (mode-line--version-control))))
 

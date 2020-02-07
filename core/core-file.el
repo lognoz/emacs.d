@@ -27,7 +27,7 @@
 
 ;;; Internal core functions.
 
-(defun file--save-backup ()
+(defun file-save-backup ()
   ;; Make a special "per session" backup at the first save of each
   ;; emacs session.
   (when (not buffer-backed-up)
@@ -42,50 +42,35 @@
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
-(defun file--undo-tree ()
+(defun file-set-undo-tree ()
   (require-package 'undo-tree)
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
 
-(defun file--backup ()
-  ;; Backup file
-  (setq version-control t       ; Use version numbers for backups.
-        kept-new-versions 8     ; Number of newest versions to keep.
-        kept-old-versions 0     ; Number of oldest versions to keep.
-        delete-old-versions t   ; Don't ask to delete excess backup versions.
-        backup-by-copying t     ; Copy all files, don't rename them.
-        vc-make-backup-files t) ; Backup also versioned files.
+(defun file-set-backup ()
+  ;; Use version numbers for backups.
+  (setq version-control t)
+
+  ;; Number of newest versions to keep.
+  (setq kept-new-versions 8)
+  (setq kept-old-versions 0)
+
+  ;; Don't ask to delete excess backup versions.
+  (setq delete-old-versions t)
+
+  ;; Copy all files, don't rename them.
+  (setq backup-by-copying t)
+
+  ;; Backup also versioned files.
+  (setq vc-make-backup-files t)
+
   ;; Default and save backups go here
   (let ((path (concat embla-temporary-directory "backup/save")))
     (setq backup-directory-alist `((".*" .  ,path))))
+
   ;; Create backup on save
-  (add-hook 'before-save-hook 'file--save-backup))
-
-;;; External core functions.
-
-(defun file-startup-hook ()
-  ;; Bookmark file
-  (setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
-
-  ;; Save minibuffer
-  (savehist-mode 1)
-  (setq savehist-file (concat embla-temporary-directory "savehist"))
-  (setq history-length 100)
-
-  ;; Record history
-  (recentf-mode 1)
-  (setq recentf-save-file (concat embla-temporary-directory "recentf"))
-  (setq recentf-max-menu-items 10)
-  (setq recentf-max-saved-items 100)
-  (setq recentf-show-file-shortcuts-flag nil)
-
-  ;; Save cursor positions
-  (save-place-mode 1)
-  (setq save-place-file (concat embla-temporary-directory "saveplace"))
-
-  (file--undo-tree)
-  (file--backup))
+  (add-hook 'before-save-hook 'file-save-backup))
 
 (provide 'core-file)
