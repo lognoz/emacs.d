@@ -31,3 +31,13 @@
 (defun embla/init-which-key ()
   (which-key-mode)
   (which-key-setup-minibuffer))
+
+(defun embla/init-multiple-cursors ()
+  (require 'multiple-cursors)
+
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+
+(defun embla/init-atom-one-dark-theme ()
+  (load-theme 'atom-one-dark t))

@@ -26,3 +26,5 @@
 (require-package 'projectile)
 (require-package 'which-key)
 (require-package 'editorconfig)
+(require-package 'multiple-cursors)
+(require-package 'atom-one-dark-theme)
