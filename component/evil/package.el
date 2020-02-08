@@ -1,9 +1,9 @@
-;;; packages.el - Snippet Packages Component File
+;;; package.el --- Evil Package Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: snippet
+;; Keywords: evil
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,4 +22,10 @@
 
 ;;; Code:
 
-(require-package 'yasnippet)
+(require-package 'evil)
+(require-package 'evil-collection)
+(require-package 'evil-indent-plus)
+(require-package 'evil-leader)
+(require-package 'evil-magit)
+(require-package 'evil-smartparens)
+(require-package 'evil-surround)

@@ -1,9 +1,9 @@
-;;; packages.el - Company Packages Component File
+;;; package.el --- Org Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: company
+;; Keywords: org
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,5 @@
 
 ;;; Code:
 
-(require-package 'company)
-(require-package 'company-ctags)
-(require-package 'yasnippet)
+(require-package 'ob-http)
+(require-package 'ob-async)

@@ -1,6 +1,6 @@
 ;;; config.el --- Ibuffer Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: ibuffer

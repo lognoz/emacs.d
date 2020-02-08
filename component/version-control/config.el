@@ -1,6 +1,6 @@
-;;; config.el - Version Control Component File
+;;; config.el --- Version Control Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: version-control git

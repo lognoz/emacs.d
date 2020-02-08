@@ -1,6 +1,6 @@
 ;;; config.el --- Ivy Component File
 
-;; Copyright (c) 2019-2020 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: ivy counsel

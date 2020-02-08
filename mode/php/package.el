@@ -1,9 +1,9 @@
-;;; packages.el --- Web Mode File
+;;; package.el --- PHP Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: web html css
+;; Keywords: php
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,8 @@
 
 ;;; Code:
 
-(require-package 'web-mode)
-(require-package 'emmet-mode)
-(require-package 'company-web)
+(require-package 'ac-php)
+(require-package 'company-php)
+(require-package 'company-phpactor)
+(require-package 'php-mode)
+(require-package 'phpactor)

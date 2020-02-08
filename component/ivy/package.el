@@ -1,9 +1,9 @@
-;;; packages.el --- Org Mode File
+;;; package.el --- Ivy Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: ivy counsel
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,7 @@
 
 ;;; Code:
 
-(require-package 'ob-http)
-(require-package 'ob-async)
+(require-package 'ivy)
+(require-package 'ivy-prescient)
+(require-package 'counsel)
+(require-package 'prescient)

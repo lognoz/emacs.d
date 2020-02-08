@@ -1,6 +1,6 @@
-;;; packages.el - Projectile Packages Component File
+;;; package.el - Projectile Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: projectile
@@ -22,6 +22,4 @@
 
 ;;; Code:
 
-(require-package 'helm)
-(require-package 'helm-projectile)
 (require-package 'projectile)

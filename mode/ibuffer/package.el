@@ -1,9 +1,9 @@
-;;; packages.el - Embla Packages Component File
+;;; package.el --- Ibuffer Packages Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: embla
+;; Keywords: ibuffer
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,9 +22,4 @@
 
 ;;; Code:
 
-(require-package 'evil)
-(require-package 'projectile)
-(require-package 'which-key)
-(require-package 'editorconfig)
-(require-package 'multiple-cursors)
-(require-package 'atom-one-dark-theme)
+(require-package 'ibuffer-projectile)

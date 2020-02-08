@@ -177,7 +177,7 @@ undo-tree and backup files."
   "This function is used to load packages and config files into
 component directory."
   (setq embla-component-packages nil)
-  (dolist (f '("/packages" "/config"))
+  (dolist (f '("/package" "/config"))
     (when (file-exists-p (concat path f ".el"))
       (load (concat path f) nil 'nomessage))))
 

@@ -1,9 +1,9 @@
-;;; packages.el - Version control Packages Component File
+;;; package.el - Snippet Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: version-control git
+;; Keywords: snippet
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,4 @@
 
 ;;; Code:
 
-(require-package 'evil)
-(require-package 'git-gutter)
-(require-package 'git-gutter+)
+(require-package 'yasnippet)

@@ -1,9 +1,9 @@
-;;; packages.el - Evil Packages Component File
+;;; packages.el --- Company Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: evil
+;; Keywords: company
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,11 +22,6 @@
 
 ;;; Code:
 
-(require-package 'evil)
-(require-package 'evil-collection)
-(require-package 'evil-indent-plus)
-(require-package 'evil-leader)
-(require-package 'evil-magit)
-(require-package 'evil-smartparens)
-(require-package 'evil-surround)
-(require-package 'helm)
+(require-package 'company)
+(require-package 'company-ctags)
+(require-package 'yasnippet)

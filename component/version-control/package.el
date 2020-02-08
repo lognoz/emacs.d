@@ -1,9 +1,9 @@
-;;; packages.el --- PHP Mode File
+;;; package.el --- Version control Packages Component File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: php
+;; Keywords: version-control git
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,6 @@
 
 ;;; Code:
 
-(require-package 'ac-php)
-(require-package 'company-php)
-(require-package 'company-phpactor)
-(require-package 'php-mode)
-(require-package 'phpactor)
+(require-package 'evil)
+(require-package 'git-gutter)
+(require-package 'git-gutter+)

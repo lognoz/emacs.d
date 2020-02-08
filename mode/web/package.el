@@ -1,9 +1,9 @@
-;;; packages.el --- Ivy Packages Component File
+;;; package.el --- Web Mode File
 
-;; Copyright (c) 2019-2020 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ivy counsel
+;; Keywords: web html css
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require-package 'ivy)
-(require-package 'counsel)
-(require-package 'ivy-prescient)
-(require-package 'prescient)
+(require-package 'web-mode)
+(require-package 'emmet-mode)
+(require-package 'company-web)
