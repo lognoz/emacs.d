@@ -22,9 +22,15 @@
 
 ;;; Code:
 
+;;;###autoload
+(defvar crawler-mode-map
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap "\C-c\pt" 'crawler-test)
+    keymap))
+
 ;;; Internal project functions.
 
-(defun crawler--get-data-candidates ()
+(defun crawler-get-data-candidates ()
   (let* ((list (directory-files "./data")))
     (dolist (f list)
       (when (not (string-match ".org$" f))
@@ -37,14 +43,23 @@
   (interactive)
   (let* ((default-directory (projectile-project-root))
          (path (substring buffer-file-name (length default-directory)))
-         (path-parsed (split-string path "\/"))
+         (path-split (split-string path "\/"))
          (source path))
 
-    (when (not (string-equal (nth 0 path-parsed) "data"))
+    (when (not (string-equal (nth 0 path-split) "data"))
       (ivy-read "Test Source: "
-        (crawler--get-data-candidates)
+        (crawler-get-data-candidates)
         :require-match t
         :action (lambda (target)
                   (setq source (concat "data/" target)))))
 
-    (shell-command (concat "make test_list target=" source))))
+    (async-shell-command (concat "make test_list target=" source))))
+
+;;; Define minor mode.
+
+;;;###autoload
+(define-minor-mode crawler-mode
+  "A minor-mode to help to manage crawler configuration."
+  nil " crawler" crawler-mode-map)
+
+(provide 'crawler)
