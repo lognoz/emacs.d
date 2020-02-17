@@ -1,4 +1,4 @@
-;;; package.el --- Evil Package Component File
+;;; package.el --- Evil Packages Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

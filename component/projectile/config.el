@@ -29,3 +29,6 @@
     '(".git"
       "node_modules"
       "composer")))
+
+(defun projectile/init-counsel-projectile ()
+  (message "asdfasdfasdf"))

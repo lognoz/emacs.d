@@ -23,8 +23,9 @@
 ;;; Code:
 
 (require-package 'evil)
+(require-package 'wgrep)
 (require-package 'projectile)
 (require-package 'which-key)
 (require-package 'editorconfig)
 (require-package 'multiple-cursors)
-(require-package 'atom-one-dark-theme)
+(require-package 'pdf-tools)

@@ -26,6 +26,7 @@
   ;; Remap toggle key
   (global-unset-key (kbd "C-z"))
   (setq evil-toggle-key "C-`")
+  (setq evil-want-keybinding nil)
   (require 'evil)
 
   ;; Enable Evil
@@ -34,26 +35,42 @@
   (global-evil-surround-mode 1)
   (evil-mode 1)
 
+  ;; Remove shell command key bindings.
+  (define-key evil-motion-state-map ":" nil)
+  (define-key evil-motion-state-map "!" nil)
+
+  ;; Remove the vim way to execute a macro.
+  (define-key evil-normal-state-map "q" nil)
+  (define-key evil-normal-state-map "}" nil)
+  (define-key evil-normal-state-map "{" nil)
+
+  ;; Remove the vim way to search something.
+  (define-key evil-motion-state-map "/" nil)
+  (define-key evil-motion-state-map "*" nil)
+
+  (define-key evil-normal-state-map "e" 'right-word)
+  ;; (define-key evil-normal-state-map (kbd "RET") 'newline)
+
+  (setq evil-move-beyond-eol t)
+  (setq evil-move-cursor-back t)
+
   ;; Normal state
   (define-key evil-normal-state-map "=" 'evil-indent-line)
   (define-key evil-normal-state-map "<" 'evil-shift-left-line)
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
-  (define-key evil-normal-state-map "+" 'evil-numbers/inc-at-pt)
-  (define-key evil-normal-state-map "-" 'evil-numbers/dec-at-pt)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "C-]") 'helm-etags-select)
-  (define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
-  (define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
   (define-key evil-normal-state-map (kbd "C-z") nil)
+  ;;;;(define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
+  ;;;;(define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
 
-  ;; Visual state
+  ;;;; Visual state
   (define-key evil-visual-state-map "=" 'visual-indent)
   (define-key evil-visual-state-map "<" 'visual-shift-left)
   (define-key evil-visual-state-map ">" 'visual-shift-right)
-  (define-key evil-visual-state-map "." (kbd ":normal ."))
-  (define-key evil-visual-state-map (kbd "C-j") (concat ":m '>+1" (kbd "RET") "gv=gv"))
-  (define-key evil-visual-state-map (kbd "C-k") (concat ":m '<-2" (kbd "RET") "gv=gv"))
+  (define-key evil-visual-state-map [remap evil-repeat] 'evil-repeat)
+  ;;;;(define-key evil-visual-state-map (kbd "C-j") (concat ":m '>+1" (kbd "RET") "gv=gv"))
+  ;;;;(define-key evil-visual-state-map (kbd "C-k") (concat ":m '<-2" (kbd "RET") "gv=gv"))
 
   (defun visual-shift-left ()
     (interactive)
@@ -81,6 +98,10 @@
 (defun evil/init-evil-magit ()
   (with-eval-after-load 'magit
     (require 'evil-magit)))
+
+(defun evil/init-evil-collection ()
+  (with-eval-after-load 'evil
+    (evil-collection-init)))
 
 (defun evil/init-evil-indent-plus ()
   (define-key evil-inner-text-objects-map "i" 'evil-indent-plus-i-indent)
