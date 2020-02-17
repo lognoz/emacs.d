@@ -1,6 +1,6 @@
 ;;; config.el --- Dired Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: dired
@@ -31,10 +31,10 @@
 
 (put 'dired-find-alternate-file 'disabled nil)
 
-(with-eval-after-load 'dired
-  (define-key dired-mode-map [mouse-2] 'dired-find-alternate-file)
-  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-  (define-key dired-mode-map [tab] 'dired-toogle-dotfile))
+(evil-collection-define-key 'normal 'dired-mode-map
+  [tab] 'dired-toogle-dotfile
+  [mouse-2] 'dired-find-alternate-file
+  (kbd "RET") 'dired-find-alternate-file)
 
 (defun dired-toogle-dotfile ()
   (interactive)

@@ -41,4 +41,4 @@
 
 ;; Return back
 (define-key php-mode-map (kbd "M-[")
- 'ac-php-location-stack-back))
+ 'ac-php-location-stack-back)

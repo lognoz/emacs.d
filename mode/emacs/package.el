@@ -1,9 +1,9 @@
-;;; config.el --- Python Mode File
+;;; package.el --- Emacs Lisp Mode File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: python
+;; Keywords: emacs lisp
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,4 @@
 
 ;;; Code:
 
-(add-to-list 'company-backends 'company-jedi)
-
-(define-key evil-normal-state-map "gd" 'jedi:goto-definition)
+(require-package 'paredit)
