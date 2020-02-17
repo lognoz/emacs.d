@@ -41,26 +41,9 @@
       (setq face 'italic))
     (propertize (concat " " text) 'face face)))
 
-(defun mode-line--evil-state ()
-  (cond
-    ((eq evil-state 'insert) "Insert")
-    ((eq evil-state 'visual) "Visual")
-    ((eq evil-state 'replace) "Replace")
-    (t "Normal")))
-
-(defun mode-line--evil-macro ()
-  (when evil-this-macro
-     (propertize
-       (concat "Recording @" (string evil-this-macro))
-           'face '(:foreground "orange"))))
-
-(defun mode-line--mode-name ()
-  (propertize mode-name
-              'face 'bold))
-
 (defun mode-line--column-line ()
   (when (derived-mode-p 'prog-mode)
-    (face (format-mode-line "%l,%c"))))
+    (face (format-mode-line "%l:%c"))))
 
 (defun face (text)
   (when (not (= (length text) 0))
@@ -73,28 +56,26 @@
 ;;;###autoload
 (defun mode-line-initialize ()
   (setq-default
-    mode-line-format
-    '("%e"
-      (:eval
-        (let* (
-          ;; Mode line at left position.
-          (left-content (concat
-            (face (mode-line--buffer-name))
-            (face (mode-line--column-line))
-            (face (mode-line--mode-name))))
+   mode-line-format
+   '("%e"
+     (:eval
+       (let* (
+         ;; Mode line at left position.
+         (left-content (concat
+           (face (mode-line--buffer-name))
+           (face (mode-line--column-line))))
 
-          ;; Mode line at right position.
-          (right-content (concat
-            ;;(face (mode-line--evil-macro))
-            (face (mode-line--evil-state))
-            (face (mode-line--version-control))))
+         ;; Mode line at right position.
+         (right-content (concat
+           (face (concat mode-name " "))
+           (face (mode-line--version-control))))
 
-          ;; Mode line at center position.
-          (center-fill
-            (mode-line--fill (+ (length right-content) 1))))
+         ;; Mode line at center position.
+         (center-fill
+           (mode-line--fill (+ (length right-content) 1))))
 
-          ;; Concat contents
-          (concat left-content center-fill right-content)))))
+         ;; Concat contents
+         (concat left-content center-fill right-content)))))
 
   (setq-default mode-line-format
     (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format)))

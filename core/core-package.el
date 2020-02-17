@@ -45,6 +45,7 @@
     ("json"          "\\.json\\'"           '("-" "_")        json-mode)
     ("emacs"         "\\.el\\'"             '("-" "_")        emacs-lisp-mode)
     ("org"           "\\.org\\'"            '("-" "_")        org-mode)
+    ("clojure"       "\\.clj\\'"            '("-" "_")        clojure-mode)
     ("latex"         "\\.tex\\'"            '("\\")           latex-mode)
     ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")        editorconfig-conf-mode)
     ("python"        "\\.py[iw]?\\'"        '("_")            python-mode)))

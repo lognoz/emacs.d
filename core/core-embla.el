@@ -1,6 +1,6 @@
 ;;; core-embla.el --- Core Initialization File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: core init
@@ -23,10 +23,11 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'core-package)
+(require 'core-editor)
 (require 'core-func)
 (require 'core-file)
-(require 'core-editor)
-(require 'core-package)
+(require 'core-keybinding)
 
 ;;; Environmental constants.
 
@@ -117,17 +118,6 @@ execute action with it."
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
-
-(defun remove-components ()
-  "Disable GUI components."
-  (when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
-    (tool-bar-mode -1))
-  (when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
-    (menu-bar-mode -1))
-  (when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
-    (scroll-bar-mode -1))
-  (when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
-    (tooltip-mode -1)))
 
 (defun create-autoload-file (&optional force)
   "This function parse magic comments locate in core and project
@@ -229,36 +219,28 @@ component directory."
   (run-hooks 'embla-after-component-installation)
   ;; Call private initialization file.
   (when (file-exists-p embla-private-init-file)
-    (load embla-private-init-file nil 'nomessage)))
+    (load embla-private-init-file nil 'nomessage))
+  ;; Enable local variable to load .dir-locals.el.
+  (setq enable-dir-local-variables t))
 
 ;;; External core functions.
 
 (defun embla-initialize ()
-  ;; Remove splash and startup screen.
+  "This function is the main initialization function. It create custom
+and autoload file to manage Emacs configuration."
   (setq inhibit-default-init t
         inhibit-splash-screen t
         inhibit-startup-message t
         inhibit-startup-echo-area-message t)
-
   ;; Remove mode line for loading.
   (setq-default mode-line-format nil)
-
-  ;; Remove GUI components.
-  (remove-components)
-
   ;; Place the variables created by Emacs in custom file.
   (create-custom-file)
-
   ;; Create autoload for optimization and performance.
   (create-autoload-file)
-
-  ;; Enable local variable to load .dir-locals.el.
-  (setq enable-dir-local-variables t)
-
   ;; Define bookmark, minibuffer, history, place, undo-tree
   ;; and backup files.
   (define-context-files)
-
   ;; Add hook after Emacs startup.
   (add-hook 'emacs-startup-hook 'embla-after-startup-hook))
 

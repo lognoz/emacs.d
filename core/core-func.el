@@ -1,6 +1,6 @@
 ;;; core-func.el --- Core Function File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: functions helpers utils
@@ -58,6 +58,7 @@
       replacements)))
 
 (defun byte-recompile (path)
+  "Byte compile a directory path."
   (if (fboundp 'async-byte-recompile-directory)
       (async-byte-recompile-directory path)
     (byte-recompile-directory path)))
@@ -73,7 +74,18 @@
   (byte-recompile embla-core-directory)
   (byte-recompile embla-component-directory))
 
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+
 (defun recursive-directories (path)
+  "Return all directories in a specific path."
   (split-string
     (shell-command-to-string
       (concat "find " path " -type d"))

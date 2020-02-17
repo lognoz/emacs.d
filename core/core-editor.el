@@ -22,6 +22,16 @@
 
 ;;; Code:
 
+;; Disable GUI components
+(when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
+  (tool-bar-mode -1))
+(when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
+  (menu-bar-mode -1))
+(when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
+  (scroll-bar-mode -1))
+(when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
+  (tooltip-mode -1))
+
 ;; Scroll compilation to first error or end
 (setq compilation-scroll-output 'first-error)
 
@@ -64,17 +74,18 @@
 (when (fboundp 'set-charset-priority)
   (set-charset-priority 'unicode))
 
+;; Enable somes usefull functions.
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'overwrite-mode 'disabled t)
 
-;;; External core functions.
+;; Enable winner mode for window management.
+(winner-mode 1)
 
-;;(defun editor-startup-hook ()
-;;  ;; Setup Embla theme
-;;  (require-package 'atom-one-dark-theme)
-;;  (load-theme 'atom-one-dark t))
+;; Load Embla theme.
+(require-package 'atom-one-dark-theme)
+(load-theme 'atom-one-dark t)
 
 (provide 'core-editor)
