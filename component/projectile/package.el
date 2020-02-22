@@ -23,4 +23,4 @@
 ;;; Code:
 
 (require-package 'projectile)
-;;(require-package 'counsel-projectile)
+(require-package 'counsel-projectile)
