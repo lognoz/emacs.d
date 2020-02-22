@@ -25,6 +25,7 @@
 (defun ivy/init-ivy ()
   (ivy-mode 1)
   (setq enable-recursive-minibuffers t
+        ivy-initial-inputs-alist nil
         ivy-count-format "(%d/%d) "
         ivy-wrap nil
         ivy-display-style 'fancy
@@ -38,6 +39,9 @@
   (ivy//setup-keybindings)
   (add-hook 'minibuffer-setup-hook 'ivy//resize-minibuffer-setup-hook))
 
+(defun ivy/init-counsel ()
+  (setq counsel-yank-pop-preselect-last t))
+
 (defun ivy/init-ivy-prescient ()
   (setq ivy-prescient-retain-classic-highlighting t)
   (setq ivy-prescient-enable-filtering nil)
@@ -46,6 +50,7 @@
         '(:not counsel-grep
                counsel-rg
                counsel-find-file
+               counsel-yank-pop
                ivy-switch-buffer))
   (ivy-prescient-mode 1))
 
@@ -58,6 +63,7 @@
 
 (defun ivy//setup-keybindings ()
   (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
   (global-set-key (kbd "C-x d") 'counsel-dired)
   (global-set-key (kbd "C-x f") 'counsel-recentf)
   (global-set-key (kbd "C-x g") 'counsel-git-grep)
