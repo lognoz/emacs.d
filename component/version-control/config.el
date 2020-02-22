@@ -22,6 +22,14 @@
 
 ;;; Code:
 
+(defun version-control/init-magit ()
+  (require 'magit)
+  (global-set-key (kbd "C-c ga") 'stage-current-buffer)
+  (global-set-key (kbd "C-c gc") 'magit-commit-create)
+  (global-set-key (kbd "C-c gs") 'magit-status)
+  (global-set-key (kbd "C-c gl") 'magit-log-all)
+  (global-set-key (kbd "C-c gps") 'magit-push-current-to-upstream))
+
 (defun version-control/init-git-gutter ()
   (global-git-gutter-mode t)
   (setq git-gutter:update-interval 2
