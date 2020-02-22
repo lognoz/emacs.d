@@ -22,6 +22,8 @@
 
 ;;; Code:
 
+;; Use jedi as company backend.
 (add-to-list 'company-backends 'company-jedi)
 
-(define-key evil-normal-state-map "gd" 'jedi:goto-definition)
+;; Use counsel-imenu instead of imenu.
+(global-set-key (kbd "C-c C-j") 'counsel-imenu)
