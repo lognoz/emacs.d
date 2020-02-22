@@ -25,8 +25,12 @@
 (defun evil/init-evil ()
   ;; Remap toggle key
   (global-unset-key (kbd "C-z"))
-  (setq evil-toggle-key "C-`")
-  (setq evil-want-keybinding nil)
+  (setq evil-toggle-key "C-`"
+        evil-want-keybinding nil
+        evil-move-beyond-eol t
+        evil-move-cursor-back t)
+
+  ;; Require evil to changes some motion and keybindings.
   (require 'evil)
 
   ;; Enable Evil
@@ -41,18 +45,20 @@
 
   ;; Remove the vim way to execute a macro.
   (define-key evil-normal-state-map "q" nil)
-  (define-key evil-normal-state-map "}" nil)
-  (define-key evil-normal-state-map "{" nil)
+  (define-key evil-motion-state-map "}" nil)
+  (define-key evil-motion-state-map "{" nil)
 
   ;; Remove the vim way to search something.
   (define-key evil-motion-state-map "/" nil)
   (define-key evil-motion-state-map "*" nil)
 
-  (define-key evil-normal-state-map "e" 'right-word)
-  ;; (define-key evil-normal-state-map (kbd "RET") 'newline)
+  ;; Remove the vim way to reundo to keep native Emacs backward
+  ;; search. Use C-? to reundo instead.
+  (define-key evil-normal-state-map "\C-r" nil)
 
-  (setq evil-move-beyond-eol t)
-  (setq evil-move-cursor-back t)
+  ;; Add useful motions.
+  (define-key evil-normal-state-map "e" 'right-word)
+  (define-key evil-normal-state-map (kbd "RET") 'newline)
 
   ;; Normal state
   (define-key evil-normal-state-map "=" 'evil-indent-line)
@@ -61,16 +67,12 @@
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
   (define-key evil-normal-state-map (kbd "C-z") nil)
-  ;;;;(define-key evil-normal-state-map (kbd "C-j") (concat ":m .+1" (kbd "RET") "=="))
-  ;;;;(define-key evil-normal-state-map (kbd "C-k") (concat ":m .-2" (kbd "RET") "=="))
 
   ;;;; Visual state
   (define-key evil-visual-state-map "=" 'visual-indent)
   (define-key evil-visual-state-map "<" 'visual-shift-left)
   (define-key evil-visual-state-map ">" 'visual-shift-right)
   (define-key evil-visual-state-map [remap evil-repeat] 'evil-repeat)
-  ;;;;(define-key evil-visual-state-map (kbd "C-j") (concat ":m '>+1" (kbd "RET") "gv=gv"))
-  ;;;;(define-key evil-visual-state-map (kbd "C-k") (concat ":m '<-2" (kbd "RET") "gv=gv"))
 
   (defun visual-shift-left ()
     (interactive)
