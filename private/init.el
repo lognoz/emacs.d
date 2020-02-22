@@ -1,6 +1,6 @@
 ;;; init.el --- Private Initialization File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: init
@@ -24,5 +24,7 @@
 
 (add-to-list 'load-path embla-project-directory)
 
-;; A minor-mode to help to manage Emacs configuration.
-(autoload 'emacs-mode "emacs-mode" nil t)
+(setq elfeed-feeds
+  '(("https://stallman.org/rss/rss.xml" political)
+    ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g", emacs)
+    ("https://www.lemonde.fr/international/rss_full.xml" actuality)))
