@@ -1,0 +1,31 @@
+* Emacs documentation
+
+** Emacs macros
+|--------------------------------------+-----------------|
+| Record macro:                        |                 |
+| - Start                              | C-x (           |
+| - Close                              | C-x )           |
+|--------------------------------------+-----------------|
+| Append to a after to record a macro. | C-u C-u C-x (   |
+| Execute macro until the last line.   | C-0 C-x e       |
+| Execute macro on region.             | C-x C-k r       |
+|--------------------------------------+-----------------|
+| Edit a macro:                        |                 |
+| - Enter in keyboard macro            | C-x C-k e       |
+| - Enter in edition mode              | C-x e           |
+| - Save change                        | C-c C-c         |
+|--------------------------------------+-----------------|
+| Macro counter:                       |                 |
+| - Add macro counter                  | C-x C-k C-c     |
+| - Append macro counter               | C-x C-k C-i     |
+|--------------------------------------+-----------------|
+| Debug a macro:                       |                 |
+| - Open debug macro                   | C-x C-k <space> |
+| - View change                        | <tab>           |
+|--------------------------------------+-----------------|
+
+** Narrow
+|--------------+---------|
+| Open narrow  | C-x n n |
+| Close narrow | C-x n w |
+|--------------+---------|
