@@ -25,22 +25,22 @@
 ;;;###autoload
 (defvar crawler-mode-map
   (let ((keymap (make-sparse-keymap)))
-    (define-key keymap "\C-c\pt" 'crawler-test)
+    (define-key keymap "\C-c\pl" 'crawler-test-list)
+    (define-key keymap "\C-c\pd" 'crawler-test-detail)
     keymap))
 
 ;;; Internal project functions.
 
 (defun crawler-get-data-candidates ()
+  "Return org files located in data directory."
   (let* ((list (directory-files "./data")))
     (dolist (f list)
       (when (not (string-match ".org$" f))
         (setq list (remove f list))))
     list))
 
-;;; External project functions.
-
-(defun crawler-test ()
-  (interactive)
+(defun crawler-make (maker)
+  "Find a source and execute a shell command for testing."
   (let* ((default-directory (projectile-project-root))
          (path (substring buffer-file-name (length default-directory)))
          (path-split (split-string path "\/"))
@@ -53,7 +53,19 @@
         :action (lambda (target)
                   (setq source (concat "data/" target)))))
 
-    (async-shell-command (concat "make test_list target=" source))))
+    (async-shell-command (concat "make " maker " target=" source))))
+
+;;; External project functions.
+
+(defun crawler-test-list ()
+  "Execute shell command 'make test_list'"
+  (interactive)
+  (crawler-make "test_list"))
+
+(defun crawler-test-detail ()
+  "Execute shell command 'make test_detail'"
+  (interactive)
+  (crawler-make "test_detail"))
 
 ;;; Define minor mode.
 

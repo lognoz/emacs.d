@@ -185,7 +185,7 @@ Expected package.el file in component directory."
   (ivy-read "Create Template: "
     '("component" "core")
     :require-match t
-    :preselect embla--last-selection
+    :preselect embla-last-template-selection
     :action (lambda (target)
       (setq embla-last-template-selection target)
       (when-function-exists (concat "embla-create-" target "-template")
