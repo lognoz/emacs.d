@@ -22,9 +22,22 @@
 
 ;;; Code:
 
+;; Keybinding align a region.
 (global-set-key (kbd "C-x =") 'align-regexp)
+
+;; Keybinding to sort lines.
+;; If you want to execute descending sort, just execute C-u C-x
+;; <down>.
+(global-set-key (kbd "C-x <down>") 'sort-lines)
+
+;; Keybinding to show ibuffer.
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+;; Keybinding eval statement and replace.
+;; Ex (+ 1 2 3) = 6
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)
+
+;; Keybinding to use winner mode easily.
 (global-set-key (kbd "<s-right>") 'winner-redo)
 (global-set-key (kbd "<s-left>") 'winner-undo)
 

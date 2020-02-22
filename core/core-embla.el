@@ -221,7 +221,9 @@ component directory."
   (when (file-exists-p embla-private-init-file)
     (load embla-private-init-file nil 'nomessage))
   ;; Enable local variable to load .dir-locals.el.
-  (setq enable-dir-local-variables t))
+  (setq enable-dir-local-variables t)
+  ;; Clear initialization component message.
+  (message ""))
 
 ;;; External core functions.
 
