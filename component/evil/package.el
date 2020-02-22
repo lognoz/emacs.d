@@ -23,9 +23,8 @@
 ;;; Code:
 
 (require-package 'evil)
+(require-package 'evil-magit)
 (require-package 'evil-collection)
 (require-package 'evil-indent-plus)
-(require-package 'evil-leader)
-(require-package 'evil-magit)
 (require-package 'evil-smartparens)
 (require-package 'evil-surround)
