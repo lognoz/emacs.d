@@ -1,17 +1,19 @@
 * Embla, Another Emacs configuration
 
-** Global
+** Key bindings
+
+*** Global
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
 - ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
 
-** Isearch enhancements
+*** Isearch enhancements
 
 - ~C-s C-w~ (=isearch-yank-word-or-char=) :: Search char or word at point.
 - ~M-s .~ (=isearch-forward-symbol-at-point=) :: Do incremental search forward for a symbol found near point.
 
-** Git integration
+*** Git integration
 
 - ~C-c g s~ (=magit-status=) :: Show the status of the current Git repository in a buffer.
 - ~C-c g l~ (=magit-log-all=) :: Show log for all references and head.
@@ -19,14 +21,14 @@
 - ~C-c g c~ (=magit-commit-create=) :: Create a new commit on head.
 - ~C-c g p u~ (=magit-push-current-to-upstream=) :: Push the current branch to its upstream branch.
 
-** Undo and redo changes
+*** Undo and redo changes
 
 Remove the evil way to redo (~C-r~) to keep vanilla backward search.
 
-- ~C-/~ or ~u~ (=undo-tree-undo=) :: Undo change.
-- ~C-?~ (=undo-tree-redo=) :: Redo change.
+- ~C-z~ or ~u~ (=undo-tree-undo=) :: Undo change.
+- ~C-S-z~ (=undo-tree-redo=) :: Redo change.
 
-** Winner mode
+*** Winner mode
 
 When activated, it allows you to “undo” (and “redo”) changes in the
 window configuration with the key commands.
@@ -34,12 +36,12 @@ window configuration with the key commands.
 - ~<s-left>~ (=winner-undo=) :: Switch back to an earlier window configuration.
 - ~<s-right>~ (=winner-redo=) :: Restore a more recent window configuration,
 
-** Sort lines
+*** Sort lines
 
 - ~C-x <down>~ (=sort-lines=) :: Sort lines in region alphabetically.
 - ~C-u C-x <down>~ :: Sort lines alphabetically descending.
 
-** Narrowing
+*** Narrowing
 
 Narrowing means focusing in on some portion of the buffer, making the rest temporarily inaccessible.
 
@@ -47,37 +49,37 @@ Narrowing means focusing in on some portion of the buffer, making the rest tempo
 - ~C-x n d~ (=narrow-to-defun=) :: Narrow down to the current function.
 - ~C-x n w~ (=widen=) :: Make the entire buffer accessible again.
 
-** Keyboard Macros
+*** Keyboard Macros
 
-*** Key bindings to record and apply it
+**** Key bindings to record and apply it
 
 - ~C-x (~ (=kmacro-start-macro=) :: Record subsequent keyboard input.
 - ~C-x )~ (=kmacro-end-macro=) :: Finish defining a keyboard macro.
 - ~C-x e~ (=kmacro-end-and-call-macro=) :: Call last keyboard macro, ending it first if currently being defined.
 
-*** Key bindings for counter usage
+**** Key bindings for counter usage
 
 - ~C-x C-k C-c~ (=kmacro-set-counter=) :: Set the value of counter to arg, or prompt for value if no argument.
 - ~C-x C-k C-i~ (=kmacro-insert-counter=) :: Insert current value of counter, then increment it.
 
-*** Key bindings to debug
+**** Key bindings to debug
 
 - ~C-x C-k <space>~ (=kmacro-step-edit-macro=) :: Step edit and execute last keyboard macro.
 - ~<tab>~ :: Go to the next keyboard macro step.
 
-*** Key bindings for edition
+**** Key bindings for edition
 
 - ~C-x C-k e~ (=edit-kbd-macro=) :: Edit a keyboard macro.
 - ~C-x e~ :: Enter in keyboard Macro Editor.
 - ~C-c C-c~ :: Save change.
 
-*** Other key bindings
+**** Other key bindings
 
 - ~C-u C-u C-x (~ (=kmacro-start-macro=) :: Append to the last keyboard macro.
 - ~C-x C-k r~ (=apply-macro-to-region-lines=) :: Apply last keyboard macro to all lines in the region.
 - ~C-0 C-x e~ (=kmacro-end-and-call-macro=) :: Apply keyboard macro until the last line.
 
-** Help
+*** Help
 
 - ~C-x f~ (=find-function=) :: Find the definition of the function near point.
 - ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
