@@ -37,10 +37,6 @@
   (global-evil-surround-mode 1)
   (evil-mode 1)
 
-  ;; Remove shell command key bindings.
-  (define-key evil-motion-state-map ":" nil)
-  (define-key evil-motion-state-map "!" nil)
-
   ;; Remove the vim way to execute a macro.
   (define-key evil-normal-state-map "q" nil)
   (define-key evil-motion-state-map "}" nil)
@@ -57,6 +53,10 @@
   ;; Add useful motions.
   (define-key evil-normal-state-map "e" 'right-word)
   (define-key evil-normal-state-map (kbd "RET") 'newline)
+
+  ;; Use shell-command function for '!' and ':' evil motions.
+  (define-key evil-motion-state-map "!" 'shell-command)
+  (define-key evil-motion-state-map ":" 'shell-command)
 
   ;; Normal state
   (define-key evil-normal-state-map "=" 'evil-indent-line)
