@@ -84,18 +84,6 @@
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'overwrite-mode 'disabled t)
 
-;; Iseach settings.
-(setq search-highlight t)
-(setq search-whitespace-regexp ".*?")
-(setq isearch-lax-whitespace t)
-(setq isearch-regexp-lax-whitespace nil)
-(setq isearch-lazy-highlight t)
-(setq isearch-lazy-count t)
-(setq lazy-count-prefix-format "(%s/%s) ")
-(setq lazy-count-suffix-format nil)
-(setq isearch-yank-on-move 'shift)
-(setq isearch-allow-scroll 'unlimited)
-
 ;; Enable winner mode for window management.
 (winner-mode 1)
 
