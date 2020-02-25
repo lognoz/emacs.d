@@ -1,9 +1,27 @@
 * Embla, Another Emacs configuration
 
-** Help
+** Align a region
 
-- ~C-x f~ (=find-function=) :: Find the definition of the function near point.
-- ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
+- ~C-x =~ (=align-regexp=) :: Align the current region by argument.
+
+*** Before:
+#+begin_example python
+name = "Zara"
+element = "First"
+age = 7
+#+end_example
+
+*** After:
+#+begin_example python
+name    = "Zara"
+element = "First"
+age     = 7
+#+end_example
+
+** Sort lines
+
+- ~C-x <down>~ (=sort-lines=) :: Sort lines in region alphabetically.
+- ~C-u C-x <down>~ :: Sort lines alphabetically descending.
 
 ** Narrowing
 
@@ -42,3 +60,8 @@ Narrowing means focusing in on some portion of the buffer, making the rest tempo
 - ~C-u C-u C-x (~ (=kmacro-start-macro=) :: Append to the last keyboard macro.
 - ~C-x C-k r~ (=apply-macro-to-region-lines=) :: Apply last keyboard macro to all lines in the region.
 - ~C-0 C-x e~ (=kmacro-end-and-call-macro=) :: Apply keyboard macro until the last line.
+
+** Help
+
+- ~C-x f~ (=find-function=) :: Find the definition of the function near point.
+- ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
