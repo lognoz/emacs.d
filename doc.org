@@ -5,6 +5,7 @@
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
 - ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
+- ~C-x C-o~ (=delete-blank-lines=) :: On line blank, delete all surrounding blank lines, leaving just one.
 
 ** Isearch enhancements
 
@@ -77,6 +78,28 @@ rest temporarily inaccessible.
 - ~C-u C-u C-x (~ (=kmacro-start-macro=) :: Append to the last keyboard macro.
 - ~C-x C-k r~ (=apply-macro-to-region-lines=) :: Apply last keyboard macro to all lines in the region.
 - ~C-0 C-x e~ (=kmacro-end-and-call-macro=) :: Apply keyboard macro until the last line.
+
+** Replace rectangle contents
+
+- ~C-x r t~ (=string-rectangle=) :: Replace rectangle contents with string on each line.
+
+** Example
+
+Go at the beginning of the line of the first var definition. Use
+isearch to find the next variable and go after the word "var" and the space.
+
+#+BEGIN_SRC javascript
+var search_highlight = true;
+var search_whitespace_regexp = ".*?"
+#+END_SRC
+
+Execute the key binding ~C-x r t~ and use "this." as argument and
+press return.
+
+#+BEGIN_SRC javascript
+this.search_highlight = true;
+this.search_whitespace_regexp = ".*?"
+#+END_SRC
 
 ** Useful functions
 
