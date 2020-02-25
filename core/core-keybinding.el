@@ -45,4 +45,16 @@
 (global-set-key (kbd "C-x C-t") 'open-terminal)
 (global-set-key (kbd "C-x 4 t") 'open-terminal-other-window)
 
+;; Define better emacs help keybindings.
+(global-set-key (kbd "C-h f") 'find-function)
+(global-set-key (kbd "C-h k") 'find-function-on-key)
+
+;; Keybindings fo undo and redo.
+(global-set-key (kbd "C-z") 'undo-tree-undo)
+(global-set-key (kbd "C-S-z") 'undo-tree-redo)
+
+;; Keybindings isearch and replace.
+(global-set-key (kbd "M-s r") 'query-replace)
+(global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+
 (provide 'core-keybinding)
