@@ -41,4 +41,8 @@
 (global-set-key (kbd "<s-right>") 'winner-redo)
 (global-set-key (kbd "<s-left>") 'winner-undo)
 
+;; Open terminal in right tab.
+(global-set-key (kbd "C-x C-t") 'open-terminal)
+(global-set-key (kbd "C-x 4 t") 'open-terminal-other-window)
+
 (provide 'core-keybinding)

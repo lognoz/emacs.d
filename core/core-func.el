@@ -121,4 +121,29 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
+(defun open-terminal ()
+  "Open terminal easily."
+  (interactive)
+  ;; Switch to terminal buffer if it's exists.
+  (let ((buffers (cdr (buffer-list))))
+    (while buffers
+      (when (with-current-buffer (car buffers) (string= "term-mode" major-mode))
+        (switch-to-buffer (car buffers))
+        (setq buffers nil))
+      (setq buffers (cdr buffers))))
+  ;; Open terminal.
+  (when (not (string= "term-mode" major-mode))
+    (ansi-term "/bin/bash")))
+
+(defun open-terminal-other-window ()
+  "Open terminal in other window."
+  (interactive)
+  ;; Split window if there is only one window.
+  (when (one-window-p)
+    (split-window-right))
+  ;; Focus the next window.
+  (other-window 1)
+  ;; Open terminal.
+  (open-terminal))
+
 (provide 'core-func)
