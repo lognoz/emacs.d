@@ -4,10 +4,19 @@
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
+- ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
+
+** Undo and redo changes
+
+Remove the evil way to redo (~C-r~) to keep vanilla backward search.
+
+- ~C-/~ or ~u~ (=undo-tree-undo=) :: Undo change.
+- ~C-?~ (=undo-tree-redo=) :: Redo change.
 
 ** Winner mode
 
-When activated, it allows you to “undo” (and “redo”) changes in the window configuration with the key commands.
+When activated, it allows you to “undo” (and “redo”) changes in the
+window configuration with the key commands.
 
 - ~<s-left>~ (=winner-undo=) :: Switch back to an earlier window configuration.
 - ~<s-right>~ (=winner-redo=) :: Restore a more recent window configuration,
