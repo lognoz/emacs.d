@@ -1,22 +1,16 @@
 * Embla, Another Emacs configuration
 
-** Align a region
+** Global
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
+- ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
 
-#+begin_example python
-# Before alignement:
-name = "Zara"
-element = "First"
-age = 7
-#+end_example
+** Winner mode
 
-#+begin_example python
-# After alignement:
-name    = "Zara"
-element = "First"
-age     = 7
-#+end_example
+When activated, it allows you to “undo” (and “redo”) changes in the window configuration with the key commands.
+
+- ~<s-left>~ (=winner-undo=) :: Switch back to an earlier window configuration.
+- ~<s-right>~ (=winner-redo=) :: Restore a more recent window configuration,
 
 ** Sort lines
 
