@@ -5,13 +5,37 @@
 - ~C-x f~ (=find-function=) :: Find the definition of the function near point.
 - ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
 
+** Narrowing
+
+Narrowing means focusing in on some portion of the buffer, making the rest temporarily inaccessible.
+
+- ~C-x n n~ (=narrow-to-region=) :: Narrow down to between point and mark.
+- ~C-x n d~ (=narrow-to-defun=) :: Narrow down to the current function.
+- ~C-x n w~ (=widen=) :: Make the entire buffer accessible again.
+
 ** Keyboard Macros
 
-*** Key bindings to record a macro and apply it
+*** Key bindings to record and apply it
 
 - ~C-x (~ (=kmacro-start-macro=) :: Record subsequent keyboard input.
 - ~C-x )~ (=kmacro-end-macro=) :: Finish defining a keyboard macro.
 - ~C-x e~ (=kmacro-end-and-call-macro=) :: Call last keyboard macro, ending it first if currently being defined.
+
+*** Key bindings for counter usage
+
+- ~C-x C-k C-c~ (=kmacro-set-counter=) :: Set the value of counter to arg, or prompt for value if no argument.
+- ~C-x C-k C-i~ (=kmacro-insert-counter=) :: Insert current value of counter, then increment it.
+
+*** Key bindings to debug
+
+- ~C-x C-k <space>~ (=kmacro-step-edit-macro=) :: Step edit and execute last keyboard macro.
+- ~<tab>~ :: Go to the next keyboard macro step.
+
+*** Key bindings for edition
+
+- ~C-x C-k e~ (=edit-kbd-macro=) :: Edit a keyboard macro.
+- ~C-x e~ :: Enter in keyboard Macro Editor.
+- ~C-c C-c~ :: Save change.
 
 *** Other key bindings
 
