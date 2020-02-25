@@ -6,6 +6,14 @@
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
 - ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
 
+** Git integration
+
+- ~C-c g s~ (=magit-status=) :: Show the status of the current Git repository in a buffer.
+- ~C-c g l~ (=magit-log-all=) :: Show log for all references and 'HEAD'.
+- ~C-c g a~ (=stage-current-buffer=) :: Stage changes of active buffer.
+- ~C-c g c~ (=magit-commit-create=) :: Create a new commit on 'HEAD'.
+- ~C-c g p u~ (=magit-push-current-to-upstream=) :: Push the current branch to its upstream branch.
+
 ** Undo and redo changes
 
 Remove the evil way to redo (~C-r~) to keep vanilla backward search.
