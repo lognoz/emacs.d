@@ -6,12 +6,17 @@
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
 - ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
 
+** Isearch enhancements
+
+- ~C-s C-w~ (=isearch-yank-word-or-char=) :: Search char or word at point.
+- ~M-s .~ (=isearch-forward-symbol-at-point=) :: Do incremental search forward for a symbol found near point.
+
 ** Git integration
 
 - ~C-c g s~ (=magit-status=) :: Show the status of the current Git repository in a buffer.
-- ~C-c g l~ (=magit-log-all=) :: Show log for all references and 'HEAD'.
+- ~C-c g l~ (=magit-log-all=) :: Show log for all references and head.
 - ~C-c g a~ (=stage-current-buffer=) :: Stage changes of active buffer.
-- ~C-c g c~ (=magit-commit-create=) :: Create a new commit on 'HEAD'.
+- ~C-c g c~ (=magit-commit-create=) :: Create a new commit on head.
 - ~C-c g p u~ (=magit-push-current-to-upstream=) :: Push the current branch to its upstream branch.
 
 ** Undo and redo changes
