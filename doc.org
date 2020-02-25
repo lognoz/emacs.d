@@ -7,10 +7,22 @@
 - ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
 - ~C-x C-o~ (=delete-blank-lines=) :: On line blank, delete all surrounding blank lines, leaving just one.
 
-** Isearch enhancements
+** Isearch, occur and replacement enhancements
 
+*** Isearch
 - ~C-s C-w~ (=isearch-yank-word-or-char=) :: Search char or word at point.
 - ~M-s .~ (=isearch-forward-symbol-at-point=) :: Do incremental search forward for a symbol found near point.
+- ~C-s M-r~ or ~C-M-s~ (=isearch-forward-regexp=) :: Do incremental search forward for regular expression.
+
+*** Replace string
+
+These functions can be apply on region.
+
+- ~M-s r~ (=query-replace=) :: Replace some occurrences of from-string with to-string.
+- ~M-s M-r~ (=query-replace-regexp=) :: Replace some things after point matching regex with to-string.
+
+*** Occur
+- ~M-s o~ (=occur=) :: Show all lines in the current buffer containing a match for regex.
 
 ** Git integration
 
