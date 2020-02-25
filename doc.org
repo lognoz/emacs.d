@@ -1,31 +1,20 @@
-* Emacs documentation
+* Embla, Another Emacs configuration
 
-** Emacs macros
-|--------------------------------------+-----------------|
-| Record macro:                        |                 |
-| - Start                              | C-x (           |
-| - Close                              | C-x )           |
-|--------------------------------------+-----------------|
-| Append to a after to record a macro. | C-u C-u C-x (   |
-| Execute macro until the last line.   | C-0 C-x e       |
-| Execute macro on region.             | C-x C-k r       |
-|--------------------------------------+-----------------|
-| Edit a macro:                        |                 |
-| - Enter in keyboard macro            | C-x C-k e       |
-| - Enter in edition mode              | C-x e           |
-| - Save change                        | C-c C-c         |
-|--------------------------------------+-----------------|
-| Macro counter:                       |                 |
-| - Add macro counter                  | C-x C-k C-c     |
-| - Append macro counter               | C-x C-k C-i     |
-|--------------------------------------+-----------------|
-| Debug a macro:                       |                 |
-| - Open debug macro                   | C-x C-k <space> |
-| - View change                        | <tab>           |
-|--------------------------------------+-----------------|
+** Help
 
-** Narrow
-|--------------+---------|
-| Open narrow  | C-x n n |
-| Close narrow | C-x n w |
-|--------------+---------|
+- ~C-x f~ (=find-function=) :: Find the definition of the function near point.
+- ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
+
+** Keyboard Macros
+
+*** Key bindings to record a macro and apply it
+
+- ~C-x (~ (=kmacro-start-macro=) :: Record subsequent keyboard input.
+- ~C-x )~ (=kmacro-end-macro=) :: Finish defining a keyboard macro.
+- ~C-x e~ (=kmacro-end-and-call-macro=) :: Call last keyboard macro, ending it first if currently being defined.
+
+*** Other key bindings
+
+- ~C-u C-u C-x (~ (=kmacro-start-macro=) :: Append to the last keyboard macro.
+- ~C-x C-k r~ (=apply-macro-to-region-lines=) :: Apply last keyboard macro to all lines in the region.
+- ~C-0 C-x e~ (=kmacro-end-and-call-macro=) :: Apply keyboard macro until the last line.
