@@ -83,9 +83,7 @@ rest temporarily inaccessible.
 
 - ~C-x r t~ (=string-rectangle=) :: Replace rectangle contents with string on each line.
 
-** Example
-
-Go at the beginning of the line of the first var definition. Use
+Put your cursor at the beginning of the line of the first var definition. Use
 isearch to find the next variable and go after the word "var" and the space.
 
 #+BEGIN_SRC javascript
