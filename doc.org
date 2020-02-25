@@ -4,15 +4,15 @@
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
 
-*** Before:
 #+begin_example python
+# Before alignement:
 name = "Zara"
 element = "First"
 age = 7
 #+end_example
 
-*** After:
 #+begin_example python
+# After alignement:
 name    = "Zara"
 element = "First"
 age     = 7
