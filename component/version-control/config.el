@@ -26,23 +26,16 @@
   (require 'magit)
   (global-set-key (kbd "C-c g") 'magit))
 
-  ;;(global-set-key (kbd "C-c ga") 'stage-current-buffer)
-  ;;(global-set-key (kbd "C-c gc") 'magit-commit-create)
-  ;;(global-set-key (kbd "C-c gs") 'magit-status)
-  ;;(global-set-key (kbd "C-c gl") 'magit-log-all)
-  ;;(global-set-key (kbd "C-c gpu") 'magit-push-current-to-upstream))
-
 (defun version-control/init-git-gutter ()
   (global-git-gutter-mode t)
+
   (setq git-gutter:update-interval 2
         git-gutter:modified-sign "~"
         git-gutter:added-sign "+"
         git-gutter:deleted-sign "-"
         git-gutter:hide-gutter t
         git-gutter:ask-p nil
-        git-gutter:hide-gutter t))
+        git-gutter:hide-gutter t)
 
-(defun version-control/init-evil ()
-  (add-hook 'prog-mode-hook '(lambda ()
-    (define-key evil-normal-state-map [up] 'git-gutter:previous-hunk)
-    (define-key evil-normal-state-map [down] 'git-gutter:next-hunk))))
+  (global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "<s-down>") 'git-gutter:next-hunk))

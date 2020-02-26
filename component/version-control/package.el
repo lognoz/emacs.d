@@ -22,7 +22,6 @@
 
 ;;; Code:
 
-(require-package 'evil)
 (require-package 'magit)
 (require-package 'git-gutter)
 (require-package 'git-gutter+)
