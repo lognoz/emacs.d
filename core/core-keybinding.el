@@ -57,4 +57,7 @@
 (global-set-key (kbd "M-s r") 'query-replace)
 (global-set-key (kbd "M-s M-r") 'query-replace-regexp)
 
+;; Keybinding to occur in multiple buffer.
+(global-set-key (kbd "M-s M-o") 'multi-occur)
+
 (provide 'core-keybinding)
