@@ -1,5 +1,18 @@
-* Embla, Another Emacs configuration
+* Table of Contents
+- [[#embla-another-emacs-configuration][Embla, Another Emacs configuration]]
+  - [[#global][Global]]
+  - [[#isearch-occur-and-replacement-enhancements][Isearch, occur and replacement enhancements]]
+  - [[#git-integration][Git integration]]
+  - [[#undo-and-redo-changes][Undo and redo changes]]
+  - [[#winner-mode][Winner mode]]
+  - [[#sort-lines][Sort lines]]
+  - [[#narrowing][Narrowing]]
+  - [[#keyboard-macros][Keyboard Macros]]
+  - [[#replace-rectangle-contents][Replace rectangle contents]]
+  - [[#useful-functions][Useful functions]]
+  - [[#help][Help]]
 
+* Embla, Another Emacs configuration
 ** Global
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
