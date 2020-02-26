@@ -45,18 +45,16 @@ These functions can be apply on region.
 
 ** Git integration
 
-- ~C-c g s~ (=magit-status=) :: Show the status of the current Git repository in a buffer.
-- ~C-c g l~ (=magit-log-all=) :: Show log for all references and head.
-- ~C-c g a~ (=stage-current-buffer=) :: Stage changes of active buffer.
-- ~C-c g c~ (=magit-commit-create=) :: Create a new commit on head.
-- ~C-c g p u~ (=magit-push-current-to-upstream=) :: Push the current branch to its upstream branch.
+- ~C-c g~ (=magit=) :: Show the status of the current Git repository in a buffer.
+
+*** Magit
 
 ** Undo and redo changes
 
 Remove the evil way to redo (~C-r~) to keep vanilla backward search.
 
-- ~C-z~ or ~u~ (=undo-tree-undo=) :: Undo change.
-- ~C-S-z~ (=undo-tree-redo=) :: Redo change.
+- ~C-/~ or ~u~ (=undo-tree-undo=) :: Undo change.
+- ~C-?~ (=undo-tree-redo=) :: Redo change.
 
 ** Winner mode
 
