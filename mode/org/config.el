@@ -27,3 +27,7 @@
     (http . t)
     (emacs-lisp . t)
     (python . t)))
+
+(org-bullets-mode)
+
+(toc-org-mode)
