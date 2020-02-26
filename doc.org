@@ -1,4 +1,5 @@
 * Table of Contents
+
 - [[#embla-another-emacs-configuration][Embla, Another Emacs configuration]]
   - [[#global][Global]]
   - [[#isearch-occur-and-replacement-enhancements][Isearch, occur and replacement enhancements]]
@@ -13,12 +14,17 @@
   - [[#help][Help]]
 
 * Embla, Another Emacs configuration
+
 ** Global
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
 - ~C-x C-b~ (=ibuffer=) :: Edit a list of buffers.
-- ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
+- ~C-x C-f~ (=find-file=) :: Switch to a buffer visiting file filename.
 - ~C-x C-o~ (=delete-blank-lines=) :: On line blank, delete all surrounding blank lines, leaving just one.
+- ~C-x C-q~ (=read-only-mode=) :: Change the current buffer to read-only.
+- ~C-x b~ (=switch-to-buffer=) :: Display buffer in the selected window.
+- ~C-x f~ (=counsel-recentf=) :: Find a file on recentf-list.
+- ~C-x k~ (=kill-buffer=) :: Kill a buffer.
 
 ** Isearch, occur and replacement enhancements
 
