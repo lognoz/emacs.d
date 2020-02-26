@@ -24,11 +24,8 @@
 
 (defun evil/init-evil ()
   ;; Remap toggle key
-  (global-unset-key (kbd "C-z"))
   (setq evil-toggle-key "C-`"
-        evil-want-keybinding nil
-        evil-move-beyond-eol t
-        evil-move-cursor-back t)
+        evil-want-keybinding nil)
 
   ;; Require evil to changes some motion and keybindings.
   (require 'evil)
@@ -51,12 +48,13 @@
   (define-key evil-normal-state-map "\C-r" nil)
 
   ;; Add useful motions.
-  (define-key evil-normal-state-map "e" 'right-word)
   (define-key evil-normal-state-map (kbd "RET") 'newline)
 
-  ;; Use shell-command function for '!' and ':' evil motions.
+  ;; Use shell-command function for '!' evil motions.
   (define-key evil-motion-state-map "!" 'shell-command)
-  (define-key evil-motion-state-map ":" 'shell-command)
+
+  ;; Use goto-line function for ':' evil motions.
+  (define-key evil-motion-state-map ":" 'goto-line)
 
   ;; Normal state
   (define-key evil-normal-state-map "=" 'evil-indent-line)
@@ -64,7 +62,6 @@
   (define-key evil-normal-state-map ">" 'evil-shift-right-line)
   (define-key evil-normal-state-map (kbd "j") 'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "k") 'evil-previous-visual-line)
-  (define-key evil-normal-state-map (kbd "C-z") nil)
 
   ;;;; Visual state
   (define-key evil-visual-state-map "=" 'visual-indent)
