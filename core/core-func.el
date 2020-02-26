@@ -30,15 +30,6 @@
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
 
-(defun stage-current-buffer ()
-  "Stage changes of active buffer."
-  (interactive)
-  (let* ((buffile (buffer-file-name))
-    (output (shell-command-to-string
-            (concat "git add " (buffer-file-name)))))
-    (message (if (not (string= output ""))
-        output (concat "Added " buffile)))))
-
 (defun get-file-content (path)
   "Return the contents of filename."
   (string-trim
@@ -124,26 +115,24 @@
 (defun open-terminal ()
   "Open terminal easily."
   (interactive)
-  ;; Switch to terminal buffer if it's exists.
+
   (let ((buffers (cdr (buffer-list))))
     (while buffers
       (when (with-current-buffer (car buffers) (string= "term-mode" major-mode))
         (switch-to-buffer (car buffers))
         (setq buffers nil))
-      (setq buffers (cdr buffers))))
-  ;; Open terminal.
-  (when (not (string= "term-mode" major-mode))
-    (ansi-term "/bin/bash")))
+      (setq buffers (cdr buffers)))
+
+    (when (not (string= "term-mode" major-mode))
+      (ansi-term "/bin/bash")
+      (rename-buffer "Terminal"))))
 
 (defun open-terminal-other-window ()
   "Open terminal in other window."
   (interactive)
-  ;; Split window if there is only one window.
   (when (one-window-p)
     (split-window-right))
-  ;; Focus the next window.
   (other-window 1)
-  ;; Open terminal.
   (open-terminal))
 
 (provide 'core-func)
