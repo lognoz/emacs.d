@@ -67,7 +67,7 @@
 
          ;; Mode line at right position.
          (right-content (concat
-           (face (concat mode-name " "))
+           (face (concat (format-mode-line mode-name) " "))
            (face (mode-line--version-control))))
 
          ;; Mode line at center position.
