@@ -1,5 +1,4 @@
-* Table of Contents
-
+* Table of Content                                                              :noexport:TOC:
 - [[#embla-another-emacs-configuration][Embla, Another Emacs configuration]]
   - [[#global][Global]]
   - [[#isearch-occur-and-replacement-enhancements][Isearch, occur and replacement enhancements]]
@@ -12,9 +11,9 @@
   - [[#replace-rectangle-contents][Replace rectangle contents]]
   - [[#useful-functions][Useful functions]]
   - [[#help][Help]]
+- [[#footnote][Footnote]]
 
 * Embla, Another Emacs configuration
-
 ** Global
 
 - ~C-x =~ (=align-regexp=) :: Align the current region by argument.
@@ -25,6 +24,10 @@
 - ~C-x b~ (=switch-to-buffer=) :: Display buffer in the selected window.
 - ~C-x f~ (=counsel-recentf=) :: Find a file on recentf-list.
 - ~C-x k~ (=kill-buffer=) :: Kill a buffer.
+
+*** Folding
+- ~Tab~ (=origami-toggle-node=) :: Toggle open or closed a fold node.
+- ~S-tab~ (=origami-toggle-all-nodes=) :: Toggle open/closed every fold node in the buffer.
 
 ** Isearch, occur and replacement enhancements
 
@@ -140,3 +143,6 @@ It can be execute on all document if you go to the beginning or on a region.
 
 - ~C-x f~ (=find-function=) :: Find the definition of the function near point.
 - ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
+
+* Footnote
+https://emacs.stackexchange.com/questions/12519/string-rectangle-how-to-make-input-vary
