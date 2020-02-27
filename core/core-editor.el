@@ -72,7 +72,11 @@
 (setq frame-title-format '("%b - Emacs"))
 
 ;; Change default font
-(set-frame-font "Source Code Pro 10" nil t)
+(set-face-attribute 'default nil
+                    :family "Source Code Pro"
+                    :height 100
+                    :weight 'normal
+                    :width 'normal)
 
 ;; Use UTF-8 as the default coding system
 (prefer-coding-system 'utf-8)
