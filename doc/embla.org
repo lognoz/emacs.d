@@ -11,7 +11,7 @@
   - [[#replace-rectangle-contents][Replace rectangle contents]]
   - [[#useful-functions][Useful functions]]
   - [[#help][Help]]
-- [[#footnote][Footnote]]
+- [[#footnotes][Footnotes]]
 
 * Embla, Another Emacs configuration
 ** Global
@@ -42,6 +42,9 @@ These functions can be apply on region.
 
 - ~M-s r~ (=query-replace=) :: Replace some occurrences of from-string with to-string.
 - ~M-s M-r~ (=query-replace-regexp=) :: Replace some things after point matching regex with to-string.
+
+Your can also execute the query replace keybinding when you proceeds a search.
+Ex: *C-S 'text' M-s 'replacement'*
 
 *** Occur
 - ~M-s o~ (=occur=) :: Show all lines in the current buffer containing a match for regex.
@@ -144,5 +147,5 @@ It can be execute on all document if you go to the beginning or on a region.
 - ~C-x f~ (=find-function=) :: Find the definition of the function near point.
 - ~C-x k~ (=find-function-on-key=) :: Find the function that key invokes.
 
-* Footnote
+* Footnotes
 https://emacs.stackexchange.com/questions/12519/string-rectangle-how-to-make-input-vary
