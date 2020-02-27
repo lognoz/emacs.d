@@ -34,16 +34,32 @@
         isearch-yank-on-move 'shif
         isearch-allow-scroll 'unlimited)
 
+  (defadvice isearch-exit (after my-goto-match-beginning activate)
+    "Go to beginning of match."
+    (when (and isearch-forward isearch-other-end)
+      (goto-char isearch-other-end)))
+
   (isearch//setup-keybindings))
 
 (defun isearch//setup-keybindings ()
-  (define-key isearch-mode-map (kbd "DEL") 'isearch//isearch-abort))
+  (global-set-key (kbd "M-s r") 'query-replace)
+  (global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+  (define-key isearch-mode-map (kbd "M-s r") 'isearch//query-replace))
 
-(defun isearch//isearch-abort ()
-  "Remove non-matching `isearch' input, reverting to previous
-successful search and continuing with the search."
+(defun isearch//query-replace ()
   (interactive)
-  (discard-input)
-  (while (or (not isearch-success) isearch-error)
-    (isearch-pop-state))
-  (isearch-update))
+  (isearch-done t)
+  (isearch-clean-overlays)
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end))
+  (if isearch-regexp
+    (call-interactively 'isearch//query-replace-regexp-prompt)
+    (call-interactively 'isearch//query-replace-prompt)))
+
+(defun isearch//query-replace-prompt (replace-str)
+  (interactive "sReplace with: ")
+  (query-replace isearch-string replace-str))
+
+(defun isearch//query-replace-regexp-prompt (replace-str)
+  (interactive "sReplace with: ")
+  (query-replace-regexp isearch-string replace-str))
