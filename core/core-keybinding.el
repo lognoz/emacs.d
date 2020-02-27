@@ -53,10 +53,6 @@
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-;; Keybindings isearch and replace.
-(global-set-key (kbd "M-s r") 'query-replace)
-(global-set-key (kbd "M-s M-r") 'query-replace-regexp)
-
 ;; Keybinding to occur in multiple buffer.
 (global-set-key (kbd "M-s M-o") 'multi-occur)
 
