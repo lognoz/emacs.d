@@ -44,7 +44,7 @@ These functions can be apply on region.
 - ~M-s M-r~ (=query-replace-regexp=) :: Replace some things after point matching regex with to-string.
 
 Your can also execute the query replace keybinding when you proceeds a search.
-Ex: *C-S 'text' M-s 'replacement'*
+- ~C-s 'text' M-s r 'replacement'~ :: Example of query replace in isearch.
 
 *** Occur
 - ~M-s o~ (=occur=) :: Show all lines in the current buffer containing a match for regex.
