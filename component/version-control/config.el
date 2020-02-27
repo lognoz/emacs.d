@@ -24,7 +24,7 @@
 
 (defun version-control/init-magit ()
   (require 'magit)
-  (global-set-key (kbd "C-c g") 'magit))
+  (global-set-key (kbd "C-x g") 'magit))
 
 (defun version-control/init-git-gutter ()
   (global-git-gutter-mode t)
