@@ -42,3 +42,7 @@
 ;; Return back
 (define-key php-mode-map (kbd "M-[")
  'ac-php-location-stack-back)
+
+;; Reinitialize PHPDoc face to acts like commentary block
+(setq php-phpdoc-font-lock-doc-comments nil)
+(face-remap-add-relative 'font-lock-doc-face 'font-lock-comment-face)
