@@ -29,3 +29,4 @@
 (require-package 'editorconfig)
 (require-package 'multiple-cursors)
 (require-package 'pdf-tools)
+(require-package 'orglink)

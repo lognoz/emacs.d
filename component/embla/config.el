@@ -28,6 +28,10 @@
 (defun embla/init-editorconfig ()
   (editorconfig-mode 1))
 
+(defun embla/init-which-key ()
+  (which-key-mode)
+  (which-key-setup-minibuffer))
+
 (defun embla/init-multiple-cursors ()
   (require 'multiple-cursors)
 
@@ -35,5 +39,8 @@
   (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 
-(defun embla/pdf-tools ()
+(defun embla/init-orglink ()
+  (global-orglink-mode))
+
+(defun embla/init-pdf-tools ()
   (pdf-tools-install))
