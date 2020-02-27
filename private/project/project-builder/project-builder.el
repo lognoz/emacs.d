@@ -3,7 +3,7 @@
 ;; Copyright (c) 2019-2019 Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: crawler project
+;; Keywords: project-builder project
 
 ;; This file is not part of GNU Emacs.
 
@@ -40,6 +40,6 @@
 ;;;###autoload
 (define-minor-mode project-builder-mode
   "A minor-mode to help to code in project builder."
-  nil " crawler" project-builder-mode-map)
+  nil " project-builder" project-builder-mode-map)
 
 (provide 'project-builder)
