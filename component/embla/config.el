@@ -44,3 +44,8 @@
 
 (defun embla/init-pdf-tools ()
   (pdf-tools-install))
+
+(defun embla/init-origami ()
+  (global-origami-mode)
+  (define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)
+  (global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes))
