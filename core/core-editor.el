@@ -68,26 +68,29 @@
 ;; Define line spacing
 (setq-default line-spacing 2)
 
-;; Define Emacs frame title format.
+;; Define Emacs frame title format
 (setq frame-title-format '("%b - Emacs"))
 
-;; Use UTF-8 as the default coding system.
+;; Change default font
+(set-frame-font "Source Code Pro 10" nil t)
+
+;; Use UTF-8 as the default coding system
 (prefer-coding-system 'utf-8)
 (setq locale-coding-system 'utf-8)
 (when (fboundp 'set-charset-priority)
   (set-charset-priority 'unicode))
 
-;; Enable somes usefull functions.
+;; Enable somes usefull functions
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'overwrite-mode 'disabled t)
 
-;; Enable winner mode for window management.
+;; Enable winner mode for window management
 (winner-mode 1)
 
-;; Load Embla theme.
+;; Load Embla theme
 (require-package 'atom-one-dark-theme)
 (load-theme 'atom-one-dark t)
 
