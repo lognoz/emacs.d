@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+":"; exec emacs --quick --script "$0" -- "$@" # -*- mode: emacs-lisp; lexical-binding: t; -*-
+
+;;; Contextual core constants.
+
+(defconst embla-core-directory (concat user-emacs-directory "core/")
+  "The directory of core files.")
+
+(defconst embla-component-directory (concat user-emacs-directory "component/")
+  "The directory of component files.")
+
+(defconst embla-private-directory (concat user-emacs-directory "private/")
+  "The directory of private files.")
+
+(defconst embla-temporary-directory (concat embla-private-directory "temporary/")
+  "The directory of temporary files.")
+
+(defconst embla-project-directory (concat embla-private-directory "project/")
+  "The directory of project files.")
+
+(defconst embla-component-file (concat embla-temporary-directory "embla-component.el")
+  "The Embla component file.")
+
+(defconst embla-autoload-file (concat embla-temporary-directory "embla-autoload.el")
+  "The Embla autoload file.")
+
+;;; Contextual core variable.
+
+(defvar component-file-content nil
+  "The content of component file.")
+
+;;; Internal core functions.
+
+(defun create-component-file ()
+  (push "(provide 'embla-component)" component-file-content)
+
+  (dolist (f (directory-files-recursively embla-component-directory ""))
+    (when (string-equal (file-name-base f) "autoload")
+      (push (with-temp-buffer
+              (insert-file-contents f)
+              (buffer-string))
+        component-file-content)))
+
+  (write-region
+    (mapconcat #'identity component-file-content "\n")
+    nil embla-component-file))
+
+(defun create-autoload-file (&optional force)
+  "This function parse magic comments locate in core and project
+directories and append it to autoload file locate. It will helps to
+optimize Embla."
+  (let ((generated-autoload-file embla-autoload-file))
+    ;; Clear content in autoload file.
+    (with-current-buffer (find-file-noselect generated-autoload-file)
+      (insert "")
+      (save-buffer))
+    ;; Update autoload in core directory.
+    (dolist (path (directory-files-recursively embla-core-directory ""))
+      (update-file-autoloads path t generated-autoload-file))
+    ;; Update autoload in temporary directory.
+    (update-file-autoloads embla-component-file t generated-autoload-file)
+    ;; Update autoload with recursive directories found in project.
+    (dolist (path (directory-files-recursively embla-project-directory ""))
+      (update-file-autoloads path t generated-autoload-file))))
+
+;;; Initialization core statements.
+
+;; Disabled local variable before to create autoload files.
+(setq enable-dir-local-variables nil)
+
+;; Create component file.
+(create-component-file)
+
+;; Create autoload file.
+(create-autoload-file)
