@@ -1,4 +1,4 @@
-;;; package.el - Isearch Package Component File
+;;; autoload.el - Isearch Autoload Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,5 +22,23 @@
 
 ;;; Code:
 
-(require-package 'isearch t)
-(require-package 'noccur)
+;;;###autoload
+(defun isearch-query-replace ()
+  (interactive)
+  (isearch-done t)
+  (isearch-clean-overlays)
+  (when (and isearch-forward isearch-other-end)
+    (goto-char isearch-other-end))
+  (if isearch-regexp
+    (call-interactively 'isearch-query-replace-regexp-prompt)
+    (call-interactively 'isearch-query-replace-prompt)))
+
+;;;###autoload
+(defun isearch-query-replace-prompt (replace-str)
+  (interactive "sReplace with: ")
+  (query-replace isearch-string replace-str))
+
+;;;###autoload
+(defun isearch-query-replace-regexp-prompt (replace-str)
+  (interactive "sReplace with: ")
+  (query-replace-regexp isearch-string replace-str))
