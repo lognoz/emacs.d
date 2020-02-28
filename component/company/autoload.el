@@ -1,9 +1,9 @@
-;;; config.el --- Version Control Component File
+;;; autoload.el --- Company Autoload Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: version-control git
+;; Keywords: autocomplete
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,21 +22,9 @@
 
 ;;; Code:
 
-(require 'magit)
-
-;; Define keybindings about magit.
-(global-set-key (kbd "C-x g") 'magit)
-
-;; Initialize git gutter
-(global-git-gutter-mode t)
-
-(setq git-gutter:update-interval 2
-      git-gutter:modified-sign "~"
-      git-gutter:added-sign "+"
-      git-gutter:deleted-sign "-"
-      git-gutter:hide-gutter t
-      git-gutter:ask-p nil
-      git-gutter:hide-gutter t)
-
-(global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "<s-down>") 'git-gutter:next-hunk)
+;;;###autoload
+(defun company-load-backend-with-yas (backend)
+  (if (and (listp backend) (member 'company-yasnippet backend))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))

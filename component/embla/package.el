@@ -22,12 +22,12 @@
 
 ;;; Code:
 
-(require-package 'evil)
-(require-package 'wgrep)
-(require-package 'projectile)
-(require-package 'which-key)
 (require-package 'editorconfig)
+(require-package 'projectile)
 (require-package 'multiple-cursors)
-(require-package 'pdf-tools)
 (require-package 'orglink)
 (require-package 'origami)
+(require-package 'pdf-tools)
+(require-package 'projectile)
+(require-package 'wgrep)
+(require-package 'which-key)

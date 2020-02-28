@@ -22,26 +22,19 @@
 
 ;;; Code:
 
-(defadvice isearch-exit (after my-goto-match-beginning activate)
-  "Go to beginning of match."
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
+(setq search-highlight t
+      search-whitespace-regexp ".*?"
+      isearch-lax-whitespace t
+      isearch-regexp-lax-whitespace nil
+      isearch-lazy-highlight t
+      isearch-lazy-count t
+      lazy-count-prefix-format "(%s/%s) "
+      lazy-count-suffix-format nil
+      isearch-yank-on-move 'shif
+      isearch-allow-scroll 'unlimited)
 
-(defun isearch/init-isearch ()
-  (setq search-highlight t
-        search-whitespace-regexp ".*?"
-        isearch-lax-whitespace t
-        isearch-regexp-lax-whitespace nil
-        isearch-lazy-highlight t
-        isearch-lazy-count t
-        lazy-count-prefix-format "(%s/%s) "
-        lazy-count-suffix-format nil
-        isearch-yank-on-move 'shif
-        isearch-allow-scroll 'unlimited)
+(global-set-key (kbd "M-s r") 'query-replace)
+(global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+(global-set-key (kbd "M-s M-o") 'noccur-project)
 
-  (global-set-key (kbd "M-s r") 'query-replace)
-  (global-set-key (kbd "M-s M-r") 'query-replace-regexp)
-  (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))
-
-(defun isearch/init-noccur ()
-  (global-set-key (kbd "M-s M-o") 'noccur-project))
+(define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace)

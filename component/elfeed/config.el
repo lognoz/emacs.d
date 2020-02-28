@@ -22,15 +22,14 @@
 
 ;;; Code:
 
-(defun elfeed/init-elfeed ()
-  (setq elfeed-use-curl t
-        elfeed-curl-max-connections 10
-        elfeed-search-clipboard-type 'CLIPBOARD
-        elfeed-search-title-max-width (current-fill-column)
-        elfeed-search-title-max-width 100
-        elfeed-search-title-min-width 30
-        elfeed-search-trailing-width 16
-        elfeed-show-truncate-long-urls t
-        elfeed-show-unique-buffers t)
+(setq elfeed-use-curl t
+      elfeed-curl-max-connections 10
+      elfeed-search-clipboard-type 'CLIPBOARD
+      elfeed-search-title-max-width (current-fill-column)
+      elfeed-search-title-max-width 100
+      elfeed-search-title-min-width 30
+      elfeed-search-trailing-width 16
+      elfeed-show-truncate-long-urls t
+      elfeed-show-unique-buffers t)
 
-  (global-set-key (kbd "C-x w") 'elfeed))
+(global-set-key (kbd "C-x w") 'elfeed)

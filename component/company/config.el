@@ -22,34 +22,19 @@
 
 ;;; Code:
 
-(defun company/init-company ()
-  (require 'company)
-  (require 'yasnippet)
+(require 'company)
+(require 'yasnippet)
 
-  (company//setup-ctags)
-  (company//setup-keybindings)
+(setq company-minimum-prefix-length 1
+      company-idle-delay 0
+      company-selection-wrap-around t
+      company-tooltip-align-annotations t
+      company-backends (mapcar #'company-load-backend-with-yas company-backends)
+      company-frontends '(company-pseudo-tooltip-frontend
+                          company-echo-metadata-frontend))
+(global-company-mode 1)
 
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0
-        company-selection-wrap-around t
-        company-tooltip-align-annotations t
-        company-backends (mapcar #'company//load-backend-with-yas company-backends)
-        company-frontends '(company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
-  (global-company-mode 1))
-
-(defun company//load-backend-with-yas (backend)
-  (if (and (listp backend) (member 'company-yasnippet backend))
-      backend
-    (append (if (consp backend) backend (list backend))
-            '(:with company-yasnippet))))
-
-(defun company//setup-ctags ()
-  (with-eval-after-load 'company
-    (company-ctags-auto-setup)))
-
-(defun company//setup-keybindings ()
-  (with-eval-after-load 'company
-    (define-key company-active-map [tab] 'company-complete-selection)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)))
+(with-eval-after-load 'company
+  (define-key company-active-map [tab] 'company-complete-selection)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))

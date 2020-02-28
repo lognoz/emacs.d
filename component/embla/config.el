@@ -22,30 +22,31 @@
 
 ;;; Code:
 
-(with-eval-after-load "evil"
+(require 'multiple-cursors)
+
+;; Initialize Embla mode line
+(with-eval-after-load "projectile"
   (mode-line-initialize))
 
-(defun embla/init-editorconfig ()
-  (editorconfig-mode 1))
+;; Initialize editorconfig
+(editorconfig-mode 1)
 
-(defun embla/init-which-key ()
-  (which-key-mode)
-  (which-key-setup-minibuffer))
+;; Initialize which key
+(which-key-mode)
+(which-key-setup-minibuffer)
 
-(defun embla/init-multiple-cursors ()
-  (require 'multiple-cursors)
+;; Initialize org link
+(global-orglink-mode)
 
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
+;; Initialize pdf tools
+(pdf-tools-install)
 
-(defun embla/init-orglink ()
-  (global-orglink-mode))
+;; Initialize multiple cursors
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
-(defun embla/init-pdf-tools ()
-  (pdf-tools-install))
-
-(defun embla/init-origami ()
-  (global-origami-mode)
-  (define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)
-  (global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes))
+;; Initialize origami
+(global-origami-mode)
+(global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes)
+(define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)

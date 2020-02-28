@@ -1,9 +1,9 @@
-;;; config.el --- Version Control Component File
+;;; autoload.el --- Evil Autoload Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: version-control git
+;; Keywords: evil
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,21 +22,23 @@
 
 ;;; Code:
 
-(require 'magit)
+;;;###autoload
+(defun visual-shift-left ()
+  (interactive)
+  (evil-shift-left (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
 
-;; Define keybindings about magit.
-(global-set-key (kbd "C-x g") 'magit)
+;;;###autoload
+(defun visual-indent ()
+  (interactive)
+  (evil-indent (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
 
-;; Initialize git gutter
-(global-git-gutter-mode t)
-
-(setq git-gutter:update-interval 2
-      git-gutter:modified-sign "~"
-      git-gutter:added-sign "+"
-      git-gutter:deleted-sign "-"
-      git-gutter:hide-gutter t
-      git-gutter:ask-p nil
-      git-gutter:hide-gutter t)
-
-(global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "<s-down>") 'git-gutter:next-hunk)
+;;;###autoload
+(defun visual-shift-right ()
+  (interactive)
+  (evil-shift-right (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))

@@ -1,9 +1,9 @@
-;;; config.el --- Version Control Component File
+;;; autoload.el --- Ivy Autoload Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: version-control git
+;; Keywords: ivy counsel
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,21 +22,13 @@
 
 ;;; Code:
 
-(require 'magit)
+;;;###autoload
+(defun ivy-resize-minibuffer-setup-hook ()
+  "Minibuffer setup hook."
+  (add-hook 'post-command-hook #'ivy-resize-post-commad-hook nil t))
 
-;; Define keybindings about magit.
-(global-set-key (kbd "C-x g") 'magit)
-
-;; Initialize git gutter
-(global-git-gutter-mode t)
-
-(setq git-gutter:update-interval 2
-      git-gutter:modified-sign "~"
-      git-gutter:added-sign "+"
-      git-gutter:deleted-sign "-"
-      git-gutter:hide-gutter t
-      git-gutter:ask-p nil
-      git-gutter:hide-gutter t)
-
-(global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "<s-down>") 'git-gutter:next-hunk)
+;;;###autoload
+(defun ivy-resize-post-commad-hook ()
+  "Hook run every command in minibuffer."
+  (when ivy-mode
+    (shrink-window (1+ ivy-height))))
