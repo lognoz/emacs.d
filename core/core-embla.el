@@ -23,11 +23,6 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'core-package)
-(require 'core-editor)
-(require 'core-func)
-(require 'core-file)
-(require 'core-keybinding)
 
 ;;; Environmental constants.
 
@@ -78,6 +73,9 @@
 (defconst embla-autoload-file (concat embla-temporary-directory "embla-autoload.el")
   "The Embla autoload file.")
 
+(defconst embla-component-file (concat embla-temporary-directory "embla-component.el")
+  "The Embla component file.")
+
 ;;; Hook used by Embla.
 
 (defvar embla-after-component-installation nil
@@ -119,24 +117,20 @@ execute action with it."
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
 
-(defun create-autoload-file (&optional force)
-  "This function parse magic comments locate in core and project
-directories and append it to autoload file locate. It will helps to
-optimize Embla."
-  (when (or (not (file-exists-p embla-autoload-file))
-            (equal force t))
-    (let ((generated-autoload-file embla-autoload-file))
-      ;; Clear content in autoload file.
-      (with-current-buffer (find-file-noselect generated-autoload-file)
-        (insert "")
-        (save-buffer))
-      ;; Update autoload in core directory.
-      (update-directory-autoloads embla-core-directory)
-      ;; Update autoload with recursive directories found in project.
-      (dolist (path (recursive-directories embla-project-directory))
-        (update-directory-autoloads path))))
+(defun require-composites ()
+  "This function is used to require all Embla composites and to check if
+requirements is ensure."
+  (when (or (not (file-exists-p embla-component-file))
+            (not (file-exists-p embla-autoload-file)))
+    (error "To install Embla, you need to execute 'make install' in your terminal."))
   ;; Require autoload file locate.
-  (require 'embla-autoload embla-autoload-file))
+  (require 'embla-autoload embla-autoload-file)
+  ;; Require core composites.
+  (require 'core-package)
+  (require 'core-editor)
+  (require 'core-func)
+  (require 'core-file)
+  (require 'core-keybinding))
 
 (defun define-context-files ()
   "This function is used to set bookmark, minibuffer, history, place,
@@ -234,12 +228,12 @@ and autoload file to manage Emacs configuration."
         inhibit-splash-screen t
         inhibit-startup-message t
         inhibit-startup-echo-area-message t)
-  ;; Remove mode line for loading.
-  (setq-default mode-line-format nil)
   ;; Place the variables created by Emacs in custom file.
   (create-custom-file)
-  ;; Create autoload for optimization and performance.
-  (create-autoload-file)
+  ;; Require composites.
+  (require-composites)
+  ;; Remove mode line for loading.
+  (setq-default mode-line-format nil)
   ;; Define bookmark, minibuffer, history, place, undo-tree
   ;; and backup files.
   (define-context-files)
