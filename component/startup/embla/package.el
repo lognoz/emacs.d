@@ -22,6 +22,7 @@
 
 ;;; Code:
 
+(require-package 'evil)
 (require-package 'editorconfig)
 (require-package 'projectile)
 (require-package 'multiple-cursors)

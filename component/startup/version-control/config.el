@@ -22,21 +22,20 @@
 
 ;;; Code:
 
-(require 'magit)
+(defun version-control-init-magit ()
+  (require 'magit)
+  (global-set-key (kbd "C-x g") 'magit))
 
-;; Define keybindings about magit.
-(global-set-key (kbd "C-x g") 'magit)
+(defun version-control-init-git-gutter ()
+  (global-git-gutter-mode t)
 
-;; Initialize git gutter
-(global-git-gutter-mode t)
+  (setq git-gutter:update-interval 2
+        git-gutter:modified-sign "~"
+        git-gutter:added-sign "+"
+        git-gutter:deleted-sign "-"
+        git-gutter:hide-gutter t
+        git-gutter:ask-p nil
+        git-gutter:hide-gutter t)
 
-(setq git-gutter:update-interval 2
-      git-gutter:modified-sign "~"
-      git-gutter:added-sign "+"
-      git-gutter:deleted-sign "-"
-      git-gutter:hide-gutter t
-      git-gutter:ask-p nil
-      git-gutter:hide-gutter t)
-
-(global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
-(global-set-key (kbd "<s-down>") 'git-gutter:next-hunk)
+  (global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "<s-down>") 'git-gutter:next-hunk))

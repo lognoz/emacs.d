@@ -22,7 +22,8 @@
 
 ;;; Code:
 
+(require-package 'org t)
+(require-package 'org-bullets)
 (require-package 'ob-async)
 (require-package 'ob-http)
-(require-package 'org-bullets)
 (require-package 'toc-org)

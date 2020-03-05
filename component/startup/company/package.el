@@ -23,5 +23,4 @@
 ;;; Code:
 
 (require-package 'company)
-(require-package 'company-ctags)
 (require-package 'yasnippet)

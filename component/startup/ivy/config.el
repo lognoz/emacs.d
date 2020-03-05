@@ -22,55 +22,53 @@
 
 ;;; Code:
 
-(require 'prescient)
+(defun ivy-init-ivy ()
+  (ivy-mode 1)
+  (setq enable-recursive-minibuffers t
+        ivy-initial-inputs-alist nil
+        ivy-count-format "(%d/%d) "
+        ivy-wrap nil
+        ivy-display-style 'fancy
+        ivy-use-selectable-prompt t
+        ivy-fixed-height-minibuffer nil
+        ivy-extra-directories ())
 
-;; Initialize ivy mode.
-(ivy-mode 1)
+  ;; Change the maximum width of the Ivy window to 1/3
+  (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
 
-(setq enable-recursive-minibuffers t
-      ivy-initial-inputs-alist nil
-      ivy-count-format "(%d/%d) "
-      ivy-wrap nil
-      ivy-display-style 'fancy
-      ivy-use-selectable-prompt t
-      ivy-fixed-height-minibuffer nil
-      ivy-extra-directories ())
+  (ivy--setup-keybindings)
+  (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook))
 
-;; Change the maximum width of the Ivy window to 1/3.
-(setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
+(defun ivy-init-counsel ()
+  (setq counsel-yank-pop-preselect-last t))
 
-;; Define keybindings about counsel.
-(global-set-key (kbd "C-c C-j") 'counsel-imenu)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-x d") 'counsel-dired)
-(global-set-key (kbd "C-x f") 'counsel-recentf)
-(global-set-key (kbd "C-x r l") 'counsel-bookmark)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(defun ivy-init-ivy-prescient ()
+  (setq ivy-prescient-retain-classic-highlighting t)
+  (setq ivy-prescient-enable-filtering nil)
+  (setq ivy-prescient-enable-sorting t)
+  (setq ivy-prescient-sort-commands
+        '(:not counsel-grep
+               counsel-rg
+               counsel-find-file
+               counsel-yank-pop
+               ivy-switch-buffer))
+  (ivy-prescient-mode 1))
 
-;; Use tab as ivy done.
-(define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done)
+(defun ivy-init-prescient ()
+  (require 'prescient)
+  (setq prescient-history-length 200)
+  (setq prescient-save-file (concat embla-temporary-directory "prescient-items"))
+  (setq prescient-filter-method '(literal regexp))
+  (prescient-persist-mode))
 
-;; Resize ivy minibuffer on setup hook.
-(add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook))
+(defun ivy--setup-keybindings ()
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "M-y") 'counsel-yank-pop)
+  (global-set-key (kbd "C-x d") 'counsel-dired)
+  (global-set-key (kbd "C-x f") 'counsel-recentf)
+  (global-set-key (kbd "C-x g") 'counsel-git-grep)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "C-c C-j") 'counsel-imenu)
+  (global-set-key (kbd "C-x r l") 'counsel-bookmark)
 
-;; Fix yank preselect in `counsel-yank-pop'.
-(setq counsel-yank-pop-preselect-last t)
-
-;; Set ivy prescient for somes functions.
-(setq ivy-prescient-retain-classic-highlighting t)
-(setq ivy-prescient-enable-filtering nil)
-(setq ivy-prescient-enable-sorting t)
-(setq ivy-prescient-sort-commands
-      '(:not counsel-grep
-             counsel-rg
-             counsel-find-file
-             counsel-yank-pop
-             ivy-switch-buffer))
-(ivy-prescient-mode 1)
-
-;; Initialize prescient mode.
-(setq prescient-history-length 200)
-(setq prescient-save-file (concat embla-temporary-directory "prescient-items"))
-(setq prescient-filter-method '(literal regexp))
-(prescient-persist-mode)
+  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))

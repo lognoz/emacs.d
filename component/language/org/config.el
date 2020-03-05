@@ -22,12 +22,33 @@
 
 ;;; Code:
 
-(org-babel-do-load-languages 'org-babel-load-languages
-  '((shell . t)
-    (http . t)
-    (emacs-lisp . t)
-    (python . t)))
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 
-(org-bullets-mode)
+;;;###autoload
+(add-hook 'org-mode-hook 'org-mode-component-hook)
 
-(toc-org-mode)
+;;;###autoload
+(defun org-mode-component-hook ()
+  (org-bullets-mode)
+  (toc-org-mode)
+  (org-init-org)
+
+  (setq org-startup-indented t
+          org-clock-idle-time 5
+          org-bullets-bullet-list '("› ")
+          org-pretty-entities t
+          org-hide-emphasis-markers t
+          org-agenda-block-separator ""
+          org-fontify-whole-heading-line t
+          org-fontify-done-headline t
+          org-fontify-quote-and-verse-blocks t
+          org-catch-invisible-edits 'show-and-error
+          org-cycle-separator-lines 0))
+
+(defun org-init-org ()
+  (org-babel-do-load-languages 'org-babel-load-languages
+    '((shell . t)
+      (http . t)
+      (emacs-lisp . t)
+      (python . t))))
