@@ -67,39 +67,29 @@
 (defconst embla-temporary-directory (concat embla-private-directory "temporary/")
   "The directory of temporary files.")
 
+(defconst embla-build-directory (concat embla-temporary-directory "build/")
+  "The directory of temporary files.")
+
 (defconst embla-private-init-file (concat embla-private-directory "init.el")
   "The private initialization file.")
 
-(defconst embla-autoload-file (concat embla-temporary-directory "embla-autoload.el")
+(defconst embla-autoload-file (concat embla-build-directory "embla-autoload.el")
   "The Embla autoload file.")
 
-(defconst embla-component-file (concat embla-temporary-directory "embla-component.el")
+(defconst embla-component-file (concat embla-build-directory "embla-component.el")
   "The Embla component file.")
 
-;;; Hook used by Embla.
-
-(defvar embla-after-component-installation nil
-  "Hook called after component packages has been install.")
+(defconst embla-startup-file (concat embla-build-directory "embla-startup.el")
+  "The Embla startup file.")
 
 ;;; External macro functions.
 
 (defmacro fetch-content (path &rest body)
-  "Macro used to fetch directory content and easily execute action on
+  "Macro used to fetch content and easily execute action on
 target file."
-  `(dolist (f (directory-files ,path))
-     (let ((path (concat ,path f))
-           (module (file-name-sans-extension f)))
-       ,@body)))
-
-(defmacro fetch-dependencies (module &rest body)
-  "Fetch component dependencies dynamically installed by Embla so it
-could be easy to call function to its config file."
-  `(when embla-component-packages
-    (dolist (dependency embla-component-packages)
-      (when-function-exists (concat ,module "/hook-" dependency)
-        (funcall func))
-      (when-function-exists (concat ,module "/init-" dependency)
-        ,@body))))
+  `(dolist (path (directories ,path))
+    (let ((module (directory-name path)))
+      ,@body)))
 
 (defmacro when-function-exists (name &rest body)
   "Convert a string to a function reference and that can quickly
@@ -110,6 +100,21 @@ execute action with it."
 
 ;;; Internal core functions.
 
+(defun directory-name (path)
+  (file-name-nondirectory
+   (directory-file-name
+     (file-name-directory path))))
+
+(defun directories (path)
+  (let ((directories))
+    (dolist (f (directory-files path))
+      (let ((path (concat path f)))
+        (when (and (file-directory-p path)
+                    (not (equal f "."))
+                    (not (equal f "..")))
+          (push (file-name-as-directory path) directories))))
+    directories))
+
 (defun create-custom-file ()
   "Place the variables created by Emacs in custom file."
   (setq custom-file (concat embla-temporary-directory "custom.el"))
@@ -117,20 +122,47 @@ execute action with it."
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
 
+(defun import-core (path)
+  "This function is used to load core file."
+  (load (concat embla-core-directory path)
+        nil 'nomessage))
+
 (defun require-composites ()
-  "This function is used to require all Embla composites and to check if
-requirements is ensure."
+  "This function is used to require all Embla composites and to check
+if requirements is ensure."
+  (import-core "core-editor")
+  (import-core "core-package")
+  ;; If Embla not installed, use execute installer.
   (when (or (not (file-exists-p embla-component-file))
             (not (file-exists-p embla-autoload-file)))
-    (error "To install Embla, you need to execute 'make install' in your terminal."))
-  ;; Require autoload file locate.
-  (require 'embla-autoload embla-autoload-file)
-  ;; Require core composites.
-  (require 'core-package)
-  (require 'core-editor)
-  (require 'core-func)
-  (require 'core-file)
-  (require 'core-keybinding))
+    (import-core "core-installer")
+    (embla-install-program))
+  ;; Load Embla theme
+  (load-theme 'atom-one-dark t))
+
+(defun embla-after-init-hook ()
+  "This function is used to load packages and config files into
+component directory."
+  (import-core "core-mode-line")
+  (import-core "core-func")
+  (import-core "core-file")
+  (import-core "core-keybinding")
+  ;; Initialize mode line.
+  (mode-line-initialize)
+  ;; Require autoload and startup files.
+  (add-to-list 'load-path embla-build-directory)
+  (require 'embla-autoload)
+  (require 'embla-startup)
+  ;; Define bookmark, minibuffer, history, place, undo-tree
+  ;; and backup files.
+  (define-context-files)
+  ;; Call private initialization file.
+  (when (file-exists-p embla-private-init-file)
+    (load embla-private-init-file nil 'nomessage))
+  ;; Enable local variable to load .dir-locals.el.
+  (setq enable-dir-local-variables t)
+  ;; Clear initialization component message.
+  (message ""))
 
 (defun define-context-files ()
   "This function is used to set bookmark, minibuffer, history, place,
@@ -157,68 +189,6 @@ undo-tree and backup files."
   ;; Set backup files.
   (file-set-backup))
 
-(defun load-component-files (path)
-  "This function is used to load packages and config files into
-component directory."
-  (setq embla-component-packages nil)
-  (dolist (f '("/package" "/config"))
-    (when (file-exists-p (concat path f ".el"))
-      (load (concat path f) nil 'nomessage))))
-
-(defun require-mode (entry)
-  "Add language to auto mode, load what inside mode directory
-dynamically and define word syntax."
-  (let* ((mode-name (car entry))
-         (extension (cadr entry))
-         (word-syntax (cadr (cdr entry)))
-         (mode (cadr (cdr (cdr entry))))
-         (hook (concat (symbol-name mode) "-hook"))
-         (path (concat embla-mode-directory mode-name)))
-
-    (when extension
-      ;; Add mode to auto-mode-alist and install package if it's not
-      ;; included by default in Emacs.
-      (add-to-list 'auto-mode-alist
-        `(,extension . (lambda ()
-          (when (not (fboundp ',mode))
-            (require-package ',mode))
-          (,mode)))))
-
-    ;; Load module in mode directory and define word syntax.
-    (add-hook (intern hook) `(lambda ()
-      (load-component-files ,path)
-      (when ,word-syntax
-        (dolist (character ,word-syntax)
-          (modify-syntax-entry
-            (cond ((string-equal character "_") ?_)
-                  ((string-equal character "-") ?-)
-                  ((string-equal character "\\") ?\\)
-                  ((string-equal character "$") ?$)) "w")))))))
-
-(defun embla-after-startup-hook ()
-  "This function is used to load packages and config files into
-component directory."
-  (fetch-content embla-component-directory
-    (when (and (file-directory-p path)
-               (not (equal f "."))
-               (not (equal f "..")))
-      ;; Load component files in component directory.
-      (load-component-files path)
-      ;; Add hook to set all configurations after dependencies installation.
-      (fetch-dependencies module
-        (add-hook 'embla-after-component-installation func))))
-  ;; Require mode into `embla-mode-alist'.
-  (mapc 'require-mode embla-mode-alist)
-  ;; Execute hook to apply component configurations.
-  (run-hooks 'embla-after-component-installation)
-  ;; Call private initialization file.
-  (when (file-exists-p embla-private-init-file)
-    (load embla-private-init-file nil 'nomessage))
-  ;; Enable local variable to load .dir-locals.el.
-  (setq enable-dir-local-variables t)
-  ;; Clear initialization component message.
-  (message ""))
-
 ;;; External core functions.
 
 (defun embla-initialize ()
@@ -234,10 +204,7 @@ and autoload file to manage Emacs configuration."
   (require-composites)
   ;; Remove mode line for loading.
   (setq-default mode-line-format nil)
-  ;; Define bookmark, minibuffer, history, place, undo-tree
-  ;; and backup files.
-  (define-context-files)
-  ;; Add hook after Emacs startup.
-  (add-hook 'emacs-startup-hook 'embla-after-startup-hook))
+  ;; Add hook after Emacs init.
+  (add-hook 'after-init-hook 'embla-after-init-hook))
 
 (provide 'core-embla)
