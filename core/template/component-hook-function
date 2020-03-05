@@ -1,0 +1,3 @@
+;;;###autoload
+(defun component-__module__-__component__-hook ()
+__content__)

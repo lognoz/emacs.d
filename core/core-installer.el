@@ -24,6 +24,18 @@
 
 ;;; Contextual core variables.
 
+(defvar template-hook-function-content
+  (with-temp-buffer
+    (insert-file-contents
+      (concat embla-core-directory "template/component-hook-function"))
+    (buffer-string)))
+
+(defvar template-hook-content
+  (with-temp-buffer
+    (insert-file-contents
+      (concat embla-core-directory "template/hook"))
+    (buffer-string)))
+
 (defvar component-autoload-file-content nil
   "The content of autoload component file.")
 
@@ -46,7 +58,7 @@ files and merge it into one file."
   (push "(provide 'embla-component)" component-autoload-file-content)
   ;; Extract all autoload.el in component directories to push it to
   ;; `component-autoload-file-content' variable.
-  (dolist (path (directory-files-recursively embla-component-directory ""))
+  (dolist (path (directory-files-recursively (concat embla-component-directory "/startup/") ""))
     (when (string-equal (file-name-base path) "autoload")
       (push (with-temp-buffer
               (insert-file-contents path)
@@ -79,7 +91,7 @@ optimize Embla."
 
 (defun refresh-package-repositories ()
   "This function is used to set and refresh package repositories."
-  (message "Download descriptions of configured ELPA packages:")
+  (message "Download descriptions of configured ELPA packages")
   (setq embla-package-initialized t)
   (package-set-archives)
   (package-refresh-contents))
@@ -90,6 +102,12 @@ optimize Embla."
       (build-component-file
         path module component mode))))
 
+(defun file-contents (path)
+  (with-temp-buffer
+    (insert-file-contents path)
+    (delete-documentation-header)
+    (buffer-string)))
+
 (defun build-component-file (path module component mode)
   ;; Remove file content because it cause problem when user rebuild
   ;; it on the same session.
@@ -97,26 +115,50 @@ optimize Embla."
   ;; Put this variable to nil to know what package is install inside
   ;; this component.
   (setq embla-component-packages nil)
-  ;; Load component files.
-  (dolist (f '("package" "config"))
-    (when (file-exists-p (concat path f ".el"))
-      (load (concat path f) nil 'nomessage)))
   ;; Add the provide statement as last line of the content.
   (push (format "(provide 'embla-%s-%s-component)" module component)
         component-content)
-  ;; Build content file and remove documentation header.
-  (push (with-temp-buffer
-          (insert-file-contents (concat path "/config.el"))
-          (delete-documentation-header)
-          (buffer-string))
-    component-content)
-  ;; Add extracted content to file.
+  ;; Add template hook function.
+  (push template-hook-function-content component-content)
+  ;; Load component files.
+  (dolist (f '("package" "autoload" "config"))
+    (when (file-exists-p (concat path f ".el"))
+      (load (concat path f) nil 'nomessage)
+      (unless (equal f "package")
+        (push (file-contents (concat path f ".el")) component-content))))
+  ;; Build hooks for the module.
+  (push (build-hooks-in-module module component)
+        component-content)
+  ;; Define path by variables.
   (setq path
     (format "%sembla-%s-%s-component.el"
       embla-build-directory module component))
+  ;; Add extracted content to file.
   (write-region
     (mapconcat #'identity component-content "\n")
-    nil path))
+    nil path)
+  ;; Loop into packages installed in component to create init
+  ;; function caller.
+  (setq component-content nil)
+  (dolist (dependency embla-component-packages)
+    (when-function-exists (concat module "-init-" dependency)
+      (push (format "(%s)" func) component-content)))
+  ;; Replace variables.
+  (replace-in-file path
+    '((cons "__module__" module)
+      (cons "__component__" component)
+      (cons "__content__" (mapconcat #'identity component-content "\n")))))
+
+(defun build-hooks-in-module (module component)
+  (let* ((variable (concat module "-" component "-loader-hooks"))
+         (reference (intern variable))
+         (content))
+    (when (boundp reference)
+      (dolist (mode (symbol-value reference))
+        (push
+          (format template-hook-content (symbol-name mode))
+          content))
+      (mapconcat #'identity content "\n"))))
 
 (defun build-embla-startup-file ()
   ;; Remove file content because it cause problem when user rebuild

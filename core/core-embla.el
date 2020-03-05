@@ -132,6 +132,7 @@ execute action with it."
 if requirements is ensure."
   (import-core "core-editor")
   (import-core "core-package")
+  (import-core "core-func")
   ;; If Embla not installed, use execute installer.
   (when (or (not (file-exists-p embla-component-file))
             (not (file-exists-p embla-autoload-file)))
@@ -144,7 +145,6 @@ if requirements is ensure."
   "This function is used to load packages and config files into
 component directory."
   (import-core "core-mode-line")
-  (import-core "core-func")
   (import-core "core-file")
   (import-core "core-keybinding")
   ;; Initialize mode line.
