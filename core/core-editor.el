@@ -22,16 +22,6 @@
 
 ;;; Code:
 
-;; Disable GUI components
-(when (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1)))
-  (tool-bar-mode -1))
-(when (and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1)))
-  (menu-bar-mode -1))
-(when (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1)))
-  (scroll-bar-mode -1))
-(when (and (fboundp 'tooltip-mode) (not (eq tooltip-mode -1)))
-  (tooltip-mode -1))
-
 ;; Scroll compilation to first error or end
 (setq compilation-scroll-output 'first-error)
 
@@ -48,7 +38,7 @@
 (blink-cursor-mode 0)
 
 ;; When emacs asks for "yes" or "no", let "y" or "n"
-(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Auto-indent with the Return key
 (define-key global-map (kbd "RET") 'newline-and-indent)
@@ -93,9 +83,5 @@
 
 ;; Enable winner mode for window management
 (winner-mode 1)
-
-;; Load Embla theme
-(require-package 'atom-one-dark-theme)
-(load-theme 'atom-one-dark t)
 
 (provide 'core-editor)
