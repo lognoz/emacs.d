@@ -25,7 +25,7 @@
 ;;; Contextual core variables.
 
 (defvar dired-emacs-loader-hooks '(dired-mode-hook)
-  "The hook that load dired emacs.")
+  "The hook that load dired emacs module.")
 
 ;;; Internal core functions.
 

@@ -23,6 +23,7 @@
 ;;; Code:
 
 (add-hook 'pre-command-hook 'company-completion-hook)
+(add-hook 'find-file-hook 'company-completion-hook)
 
 (defun company-completion-hook ()
   (company--setup-keybindings)
@@ -37,9 +38,9 @@
         company-dabbrev-code-other-buffers t
         company-tooltip-align-annotations t
         company-require-match 'never
-        company-backends '((company-capf company-yasnippet))
         company-frontends '(company-pseudo-tooltip-frontend
                             company-echo-metadata-frontend))
+
   (global-company-mode 1))
 
 (defun company--setup-keybindings ()

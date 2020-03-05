@@ -1,9 +1,9 @@
-;;; config.el --- Org Mode File
+;;; config.el --- Python Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: python
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,26 +24,15 @@
 
 ;;; Contextual component variables.
 
-(defvar org-language-loader-hooks '(org-mode-hook)
-  "The hook that load org language.")
+(defvar python-language-loader-hooks '(python-mode-hook)
+  "The hook that load python language.")
 
 ;;; Internal component functions.
 
-(defun org-init-org ()
-  (setq org-startup-indented t
-          org-clock-idle-time 5
-          org-bullets-bullet-list '("› ")
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-fontify-quote-and-verse-blocks t
-          org-catch-invisible-edits 'show-and-error
-          org-cycle-separator-lines 0))
+(defun python-init-python ()
+  ;; Use counsel-imenu instead of imenu.
+  (define-key python-mode-map (kbd "C-c C-j") 'counsel-imenu))
 
-(defun org-init-org-bullets ()
-  (org-bullets-mode))
-
-(defun org-init-toc-org ()
-  (toc-org-mode))
+(defun python-init-company ()
+  ;; Use jedi as company backend.
+  (add-to-list 'company-backends 'company-jedi))

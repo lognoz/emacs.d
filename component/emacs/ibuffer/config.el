@@ -1,9 +1,9 @@
-;;; config.el --- Org Mode File
+;;; config.el --- Ibuffer Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: ibuffer
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,26 +24,14 @@
 
 ;;; Contextual component variables.
 
-(defvar org-language-loader-hooks '(org-mode-hook)
-  "The hook that load org language.")
+(defvar ibuffer-emacs-loader-hooks '(ibuffer-mode-hook)
+  "The hook that load ibuffer emacs module.")
 
 ;;; Internal component functions.
 
-(defun org-init-org ()
-  (setq org-startup-indented t
-          org-clock-idle-time 5
-          org-bullets-bullet-list '("› ")
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-fontify-quote-and-verse-blocks t
-          org-catch-invisible-edits 'show-and-error
-          org-cycle-separator-lines 0))
+(defun ibuffer-init-ibuffer ()
+  (unless (equal ibuffer-sorting-mode 'alphabetic)
+    (ibuffer-do-sort-by-alphabetic)))
 
-(defun org-init-org-bullets ()
-  (org-bullets-mode))
-
-(defun org-init-toc-org ()
-  (toc-org-mode))
+(defun ibuffer-init-ibuffer-projectile ()
+  (ibuffer-projectile-set-filter-groups))
