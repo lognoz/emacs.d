@@ -1,9 +1,9 @@
-;;; config.el --- Org Mode File
+;;; config.el --- Dired Mode File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: dired
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,26 +24,23 @@
 
 ;;; Contextual core variables.
 
-(defvar org-language-loader-hooks '(org-mode-hook)
-  "The hook that load org language.")
+(defvar dired-emacs-loader-hooks '(dired-mode-hook)
+  "The hook that load dired emacs.")
 
 ;;; Internal core functions.
 
-(defun org-init-org ()
-  (setq org-startup-indented t
-          org-clock-idle-time 5
-          org-bullets-bullet-list '("› ")
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-fontify-quote-and-verse-blocks t
-          org-catch-invisible-edits 'show-and-error
-          org-cycle-separator-lines 0))
+(defun dired-init-dired ()
+  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-recursive-copies 'always
+        dired-recursive-deletes 'always
+        dired-isearch-filenames 'dwim
+        delete-by-moving-to-trash t
+        dired-dwim-target t
+        dired-listing-switches "-aFlv --group-directories-first"))
 
-(defun org-init-org-bullets ()
-  (org-bullets-mode))
-
-(defun org-init-toc-org ()
-  (toc-org-mode))
+(defun dired-init-evil-collection ()
+  (evil-collection-init 'dired)
+  (evil-collection-define-key 'normal 'dired-mode-map
+    [tab] 'dired-toogle-dotfile
+    [mouse-2] 'dired-find-alternate-file
+    (kbd "RET") 'dired-find-alternate-file))

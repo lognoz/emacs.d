@@ -29,11 +29,6 @@
   (which-key-mode)
   (which-key-setup-minibuffer))
 
-(defun embla-init-multiple-cursors ()
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
-
 (defun embla-init-orglink ()
   (global-orglink-mode))
 

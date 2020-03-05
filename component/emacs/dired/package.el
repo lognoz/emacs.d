@@ -1,9 +1,9 @@
-;;; package.el - Embla Packages Component File
+;;; package.el --- Dired Mode File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: embla
+;; Keywords: dired
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,12 +22,6 @@
 
 ;;; Code:
 
-(require-package 'evil)
-(require-package 'editorconfig)
-(require-package 'projectile)
-(require-package 'orglink)
-(require-package 'origami)
-(require-package 'pdf-tools)
-(require-package 'projectile)
-(require-package 'wgrep)
-(require-package 'which-key)
+(require-package 'dired t)
+(require-package 'dired-rsync)
+(require-package 'evil-collection)
