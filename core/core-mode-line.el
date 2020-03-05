@@ -53,7 +53,6 @@
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))))
 
-;;;###autoload
 (defun mode-line-initialize ()
   (setq-default
    mode-line-format
