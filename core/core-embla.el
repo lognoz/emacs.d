@@ -145,7 +145,6 @@ if requirements is ensure."
   "This function is used to load packages and config files into
 component directory."
   (import-core "core-mode-line")
-  (import-core "core-file")
   (import-core "core-keybinding")
   ;; Initialize mode line.
   (mode-line-initialize)
@@ -153,20 +152,22 @@ component directory."
   (add-to-list 'load-path embla-build-directory)
   (require 'embla-autoload)
   (require 'embla-startup)
-  ;; Define bookmark, minibuffer, history, place, undo-tree
-  ;; and backup files.
-  (define-context-files)
   ;; Call private initialization file.
   (when (file-exists-p embla-private-init-file)
     (load embla-private-init-file nil 'nomessage))
   ;; Enable local variable to load .dir-locals.el.
   (setq enable-dir-local-variables t)
+  ;; Define bookmark, minibuffer, history, place, undo-tree
+  ;; and backup files.
+  (add-hook 'pre-command-hook 'define-context-files)
   ;; Clear initialization component message.
   (message ""))
 
 (defun define-context-files ()
   "This function is used to set bookmark, minibuffer, history, place,
 undo-tree and backup files."
+  ;; Import file function.
+  (import-core "core-file")
   ;; Define bookmark file.
   (setq bookmark-default-file
         (concat embla-temporary-directory "bookmark"))
