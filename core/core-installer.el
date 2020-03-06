@@ -24,17 +24,17 @@
 
 ;;; Contextual core variables.
 
-(defvar template-hook-function-content
-  (with-temp-buffer
-    (insert-file-contents
-      (concat embla-core-directory "template/component-hook-function"))
-    (buffer-string)))
+(defvar template-component-hook-function
+  (template-content
+    (concat embla-core-directory "template/component-hook-function")))
 
-(defvar template-hook-content
-  (with-temp-buffer
-    (insert-file-contents
-      (concat embla-core-directory "template/hook"))
-    (buffer-string)))
+(defvar template-component-hook-statement
+  (template-content
+    (concat embla-core-directory "template/component-hook-statement")))
+
+(defvar template-simple-hook-statement
+  (template-content
+    (concat embla-core-directory "template/simple-hook-statement")))
 
 (defvar component-autoload-file-content nil
   "The content of autoload component file.")
@@ -43,6 +43,23 @@
   "The content of component file.")
 
 ;;; Internal core functions.
+
+(defun directory-name (path)
+  ""
+  (file-name-nondirectory
+   (directory-file-name
+     (file-name-directory path))))
+
+(defun directories (path)
+  ""
+  (let ((directories))
+    (dolist (f (directory-files path))
+      (let ((path (concat path f)))
+        (when (and (file-directory-p path)
+                    (not (equal f "."))
+                    (not (equal f "..")))
+          (push (file-name-as-directory path) directories))))
+    directories))
 
 (defun delete-documentation-header ()
   "This function is used to delete documentation header"
@@ -119,7 +136,7 @@ optimize Embla."
   (push (format "(provide 'embla-%s-%s-component)" module component)
         component-content)
   ;; Add template hook function.
-  (push template-hook-function-content component-content)
+  (push template-component-hook-function component-content)
   ;; Load component files.
   (dolist (f '("package" "autoload" "config"))
     (when (file-exists-p (concat path f ".el"))
@@ -129,6 +146,11 @@ optimize Embla."
   ;; Build hooks for the module.
   (push (build-hooks-in-module module component)
         component-content)
+  ;; Loop into packages installed to add hooks.
+  (dolist (dependency embla-component-packages)
+    (when-function-exists (concat module "-hook-" dependency)
+      (push (format template-simple-hook-statement (concat dependency "-hook") func)
+            component-content)))
   ;; Define path by variables.
   (setq path
     (format "%sembla-%s-%s-component.el"
@@ -156,7 +178,7 @@ optimize Embla."
     (when (boundp reference)
       (dolist (mode (symbol-value reference))
         (push
-          (format template-hook-content (symbol-name mode))
+          (format template-component-hook-statement (symbol-name mode))
           content))
       (mapconcat #'identity content "\n"))))
 

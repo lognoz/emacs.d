@@ -100,20 +100,10 @@ execute action with it."
 
 ;;; Internal core functions.
 
-(defun directory-name (path)
-  (file-name-nondirectory
-   (directory-file-name
-     (file-name-directory path))))
-
-(defun directories (path)
-  (let ((directories))
-    (dolist (f (directory-files path))
-      (let ((path (concat path f)))
-        (when (and (file-directory-p path)
-                    (not (equal f "."))
-                    (not (equal f "..")))
-          (push (file-name-as-directory path) directories))))
-    directories))
+(defun template-content (path)
+  (with-temp-buffer
+    (insert-file-contents path)
+    (buffer-string)))
 
 (defun create-custom-file ()
   "Place the variables created by Emacs in custom file."
