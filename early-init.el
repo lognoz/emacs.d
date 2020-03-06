@@ -31,3 +31,6 @@
 ;; font. By inhibiting this, we easily halve startup times with fonts that are
 ;; larger than the system default.
 (setq frame-inhibit-implied-resize t)
+
+;; Define background to prevend white screen loading.
+(face-spec-set 'default '((t :background "#282C34")))
