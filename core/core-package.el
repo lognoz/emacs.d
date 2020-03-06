@@ -32,10 +32,18 @@
 
 ;;; Internal core functions.
 
+(defun define-word-syntax (word-syntax)
+  (dolist (character word-syntax)
+    (modify-syntax-entry
+      (cond ((string-equal character "_") ?_)
+            ((string-equal character "-") ?-)
+            ((string-equal character "\\") ?\\)
+            ((string-equal character "$") ?$)) "w")))
+
 (defun package-set-archives ()
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
-                           ("org"  . "http://orgmode.org/elpa/")
-                           ("gnu"  . "http://elpa.gnu.org/packages/")))
+                           ("org"   . "http://orgmode.org/elpa/")
+                           ("gnu"   . "http://elpa.gnu.org/packages/")))
   (package-initialize))
 
 ;;; External core functions.
