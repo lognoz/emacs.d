@@ -56,4 +56,7 @@
 ;; Keybinding to occur in multiple buffer.
 (global-set-key (kbd "M-s M-o") 'multi-occur)
 
+;; Keybinding to show counsel imenu.
+(global-set-key (kbd "C-c C-j") 'counsel-imenu)
+
 (provide 'core-keybinding)

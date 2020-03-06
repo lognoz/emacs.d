@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Ibuffer Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: ibuffer
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,16 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+;;; Contextual component variables.
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defvar ibuffer-emacs-loader-hooks '(ibuffer-mode-hook)
+  "The hook that load ibuffer emacs module.")
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+;;; Internal component functions.
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun ibuffer-init-ibuffer ()
+  (unless (equal ibuffer-sorting-mode 'alphabetic)
+    (ibuffer-do-sort-by-alphabetic)))
+
+(defun ibuffer-init-ibuffer-projectile ()
+  (ibuffer-projectile-set-filter-groups))

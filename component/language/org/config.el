@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Org Mode File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: org
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,28 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+;;; Contextual component variables.
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defvar org-language-loader-hooks '(org-mode-hook)
+  "The hook that load org language.")
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+;;; Internal component functions.
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun org-init-org ()
+  (setq org-startup-indented t
+          org-clock-idle-time 5
+          org-bullets-bullet-list '("› ")
+          org-pretty-entities t
+          org-hide-emphasis-markers t
+          org-agenda-block-separator ""
+          org-fontify-whole-heading-line t
+          org-fontify-done-headline t
+          org-fontify-quote-and-verse-blocks t
+          org-catch-invisible-edits 'show-and-error
+          org-cycle-separator-lines 0))
+
+(defun org-init-org-bullets ()
+  (org-bullets-mode))
+
+(defun org-init-toc-org ()
+  (toc-org-mode))

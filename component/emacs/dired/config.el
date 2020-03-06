@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Dired Mode File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: dired
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,25 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+;;; Contextual core variables.
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defvar dired-emacs-loader-hooks '(dired-mode-hook)
+  "The hook that load dired emacs module.")
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+;;; Internal core functions.
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun dired-init-dired ()
+  (put 'dired-find-alternate-file 'disabled nil)
+  (setq dired-recursive-copies 'always
+        dired-recursive-deletes 'always
+        dired-isearch-filenames 'dwim
+        delete-by-moving-to-trash t
+        dired-dwim-target t
+        dired-listing-switches "-aFlv --group-directories-first"))
+
+(defun dired-init-evil-collection ()
+  (evil-collection-init 'dired)
+  (evil-collection-define-key 'normal 'dired-mode-map
+    [tab] 'dired-toogle-dotfile
+    [mouse-2] 'dired-find-alternate-file
+    (kbd "RET") 'dired-find-alternate-file))

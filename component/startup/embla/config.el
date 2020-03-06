@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Embla Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: embla
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,18 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+(defun embla-init-editorconfig ()
+  (editorconfig-mode 1))
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defun embla-init-which-key ()
+  (which-key-mode)
+  (which-key-setup-minibuffer))
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+(defun embla-init-orglink ()
+  (global-orglink-mode))
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun embla-init-origami ()
+  (global-origami-mode)
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)
+    (global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes)))

@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Isearch Config Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: isearch
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,23 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+;;; Contextual core variables.
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defvar isearch-emacs-loader-hooks '(isearch-mode-hook)
+  "The hook that load isearch emacs module.")
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+;;; Internal core functions.
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun isearch-init-isearch ()
+  (setq search-highlight t
+        search-whitespace-regexp ".*?"
+        isearch-lax-whitespace t
+        isearch-regexp-lax-whitespace nil
+        isearch-lazy-highlight t
+        isearch-lazy-count t
+        lazy-count-prefix-format "(%s/%s) "
+        lazy-count-suffix-format nil
+        isearch-yank-on-move 'shif
+        isearch-allow-scroll 'unlimited)
+
+  (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))

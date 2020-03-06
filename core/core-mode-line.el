@@ -53,7 +53,6 @@
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))))
 
-;;;###autoload
 (defun mode-line-initialize ()
   (setq-default
    mode-line-format
@@ -67,7 +66,7 @@
 
          ;; Mode line at right position.
          (right-content (concat
-           (face (concat mode-name " "))
+           (face (concat (format-mode-line mode-name) " "))
            (face (mode-line--version-control))))
 
          ;; Mode line at center position.

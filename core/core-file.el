@@ -52,24 +52,18 @@
 (defun file-set-backup ()
   ;; Use version numbers for backups.
   (setq version-control t)
-
   ;; Number of newest versions to keep.
-  (setq kept-new-versions 8)
-  (setq kept-old-versions 0)
-
+  (setq kept-new-versions 8
+        kept-old-versions 0)
   ;; Don't ask to delete excess backup versions.
   (setq delete-old-versions t)
-
   ;; Copy all files, don't rename them.
   (setq backup-by-copying t)
-
   ;; Backup also versioned files.
   (setq vc-make-backup-files t)
-
   ;; Default and save backups go here
   (let ((path (concat embla-temporary-directory "backup/save")))
     (setq backup-directory-alist `((".*" .  ,path))))
-
   ;; Create backup on save
   (add-hook 'before-save-hook 'file-save-backup))
 

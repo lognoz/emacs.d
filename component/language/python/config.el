@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Python Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: python
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,19 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+;;; Contextual component variables.
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defvar python-language-loader-hooks '(python-mode-hook)
+  "The hook that load python language.")
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+;;; Internal component functions.
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+(defun python-init-python ()
+  ;; Modify python syntax entry.
+  (define-word-syntax '("_"))
+  ;; Use counsel-imenu instead of imenu.
+  (define-key python-mode-map (kbd "C-c C-j") 'counsel-imenu))
+
+(defun python-init-company ()
+  ;; Use jedi as company backend.
+  (add-to-list 'company-backends 'company-jedi))

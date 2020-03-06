@@ -1,9 +1,9 @@
-;;; init.el --- Initialization File
+;;; config.el --- Version Control Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: init
+;; Keywords: version-control git
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,19 +22,19 @@
 
 ;;; Code:
 
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+(defun version-control-init-magit ()
+  (global-set-key (kbd "C-x g") 'magit))
 
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
+(defun version-control-init-git-gutter ()
+  (global-git-gutter-mode t)
 
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
+  (setq git-gutter:update-interval 2
+        git-gutter:modified-sign "~"
+        git-gutter:added-sign "+"
+        git-gutter:deleted-sign "-"
+        git-gutter:hide-gutter t
+        git-gutter:ask-p nil
+        git-gutter:hide-gutter t)
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
-         emacs-version)
-  (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+  (global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
+  (global-set-key (kbd "<s-down>") 'git-gutter:next-hunk))

@@ -1,0 +1,2 @@
+;;;###autoload
+(add-hook '%s  'component-__module__-__component__-hook)
