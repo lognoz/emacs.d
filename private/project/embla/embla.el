@@ -175,9 +175,10 @@ Expected package.el file in component directory."
 (defun embla-reload-init ()
   "Reload init configuration."
   (interactive)
+  (import-core "core-installer")
   (load-file embla-core-init)
-  (create-autoload-file t)
-  (embla-after-startup-hook))
+  (embla-install-program)
+  (embla-after-init-hook))
 
 (defun embla-create-template ()
   "Create core or component template."
