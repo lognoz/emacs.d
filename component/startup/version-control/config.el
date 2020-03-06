@@ -23,7 +23,6 @@
 ;;; Code:
 
 (defun version-control-init-magit ()
-  (require 'magit)
   (global-set-key (kbd "C-x g") 'magit))
 
 (defun version-control-init-git-gutter ()

@@ -30,6 +30,8 @@
 ;;; Internal component functions.
 
 (defun python-init-python ()
+  ;; Modify python syntax entry.
+  (define-word-syntax '("_"))
   ;; Use counsel-imenu instead of imenu.
   (define-key python-mode-map (kbd "C-c C-j") 'counsel-imenu))
 
