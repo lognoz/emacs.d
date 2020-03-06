@@ -1,4 +1,4 @@
-;;; package.el - Isearch Package Component File
+;;; config.el --- Isearch Config Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,4 +22,23 @@
 
 ;;; Code:
 
-(require-package 'noccur)
+;;; Contextual core variables.
+
+(defvar isearch-emacs-loader-hooks '(isearch-mode-hook)
+  "The hook that load isearch emacs module.")
+
+;;; Internal core functions.
+
+(defun isearch-init-isearch ()
+  (setq search-highlight t
+        search-whitespace-regexp ".*?"
+        isearch-lax-whitespace t
+        isearch-regexp-lax-whitespace nil
+        isearch-lazy-highlight t
+        isearch-lazy-count t
+        lazy-count-prefix-format "(%s/%s) "
+        lazy-count-suffix-format nil
+        isearch-yank-on-move 'shif
+        isearch-allow-scroll 'unlimited)
+
+  (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))

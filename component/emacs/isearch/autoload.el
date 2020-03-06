@@ -1,4 +1,4 @@
-;;; autoload.el - Isearch Autoload Component File
+;;; autoload.el --- Isearch Autoload Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -21,6 +21,15 @@
 ;; along with this Emacs config. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Code:
+
+;;;###autoload
+(global-set-key (kbd "M-s r") 'query-replace)
+
+;;;###autoload
+(global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+
+;;;###autoload
+(global-set-key (kbd "M-s M-o") 'noccur-project)
 
 ;;;###autoload
 (defadvice isearch-exit (after my-goto-match-beginning activate)
