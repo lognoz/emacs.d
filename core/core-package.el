@@ -30,26 +30,6 @@
 (defvar embla-component-packages nil
   "List of packages required by component.")
 
-(defvar embla-mode-alist
-  ;; Language        Extension              Word syntax       Mode
-  '(("dired"         nil                    nil               dired-mode)
-    ("ibuffer"       nil                    nil               ibuffer-mode)
-    ("php"           "\\.php\\'"            '("_" "$")        php-mode)
-    ("web"           "\\.html.php\\'"       '("-" "_" "$")    web-mode)
-    ("javascript"    "\\.js\\'"             '("-" "_")        js2-mode)
-    ("scss"          "\\.scss\\'"           '("-" "_")        scss-mode)
-    ("yaml"          "\\.yml\\'"            '("-" "_")        yaml-mode)
-    ("puppet"        "\\.pp\\'"             '("-" "_")        puppet-mode)
-    ("pkgbuild"      "PKGBUILD\\'"          '("-" "_")        pkgbuild-mode)
-    ("dockerfile"    "Dockerfile\\'"        '("-" "_")        dockerfile-mode)
-    ("json"          "\\.json\\'"           '("-" "_")        json-mode)
-    ("emacs"         "\\.el\\'"             '("-" "_")        emacs-lisp-mode)
-    ("org"           "\\.org\\'"            '("-" "_")        org-mode)
-    ("clojure"       "\\.clj\\'"            '("-" "_")        clojure-mode)
-    ("latex"         "\\.tex\\'"            '("\\")           latex-mode)
-    ("editorconfig"  "\\.editorconfig\\'"   '("-" "_")        editorconfig-conf-mode)
-    ("python"        "\\.py[iw]?\\'"        '("_")            python-mode)))
-
 ;;; Internal core functions.
 
 (defun package-set-archives ()
