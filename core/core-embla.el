@@ -126,7 +126,7 @@ if requirements is ensure."
   ;; If Embla not installed, use execute installer.
   (when (or (not (file-exists-p embla-component-file))
             (not (file-exists-p embla-autoload-file)))
-    (import-core "core-installer")
+    (import-core "installer/installer")
     (embla-install-program))
   ;; Load Embla theme
   (load-theme 'atom-one-dark t))

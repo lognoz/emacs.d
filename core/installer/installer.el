@@ -1,4 +1,4 @@
-;;; core-installer.el --- Core Installer File
+;;; installer.el --- Installer File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -26,15 +26,15 @@
 
 (defvar template-component-hook-function
   (template-content
-    (concat embla-core-directory "template/component-hook-function")))
+    (concat embla-core-directory "installer/template/component-hook-function")))
 
 (defvar template-component-hook-statement
   (template-content
-    (concat embla-core-directory "template/component-hook-statement")))
+    (concat embla-core-directory "installer/template/component-hook-statement")))
 
 (defvar template-simple-hook-statement
   (template-content
-    (concat embla-core-directory "template/simple-hook-statement")))
+    (concat embla-core-directory "installer/template/simple-hook-statement")))
 
 (defvar component-autoload-file-content nil
   "The content of autoload component file.")
@@ -45,13 +45,13 @@
 ;;; Internal core functions.
 
 (defun directory-name (path)
-  ""
+  "This function is used to get directory name."
   (file-name-nondirectory
    (directory-file-name
      (file-name-directory path))))
 
 (defun directories (path)
-  ""
+  "This function return a list of directories by a reference path."
   (let ((directories))
     (dolist (f (directory-files path))
       (let ((path (concat path f)))
@@ -239,4 +239,4 @@ file, refresh package repositories and build Embla."
   ;; autoload file.
   (create-autoload-file))
 
-(provide 'core-installer)
+(provide 'installer)
