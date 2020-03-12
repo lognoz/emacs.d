@@ -1,9 +1,9 @@
-;;; package.el --- Org Component File
+;;; package.el --- PHP Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: php
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,9 @@
 
 ;;; Code:
 
-(require-package 'org t)
-(require-package 'org-bullets)
-(require-package 'ob-async)
-(require-package 'ob-http)
-(require-package 'toc-org)
+(require-package 'ac-php)
+(require-package 'company)
+(require-package 'company-php)
+(require-package 'company-phpactor)
+(require-package 'php-mode)
+(require-package 'phpactor)

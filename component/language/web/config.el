@@ -1,9 +1,9 @@
-;;; package.el --- Org Component File
+;;; config.el --- Web Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: web
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,22 @@
 
 ;;; Code:
 
-(require-package 'org t)
-(require-package 'org-bullets)
-(require-package 'ob-async)
-(require-package 'ob-http)
-(require-package 'toc-org)
+;;; Contextual component variables.
+
+(defvar web-language-loader-hooks '(web-mode-hook)
+  "The hook that load Web language.")
+
+;;; Internal component functions.
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.html.php\\'" . web-mode))
+
+(defun web-init-company ()
+  (set (make-local-variable 'company-backends)
+       '(company-css company-web-html company-yasnippet company-files)))
+
+(defun org-init-emmet ()
+  (emmet-mode))

@@ -1,9 +1,9 @@
-;;; config.el --- Org Component File
+;;; config.el --- PHP Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: php
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,26 +24,30 @@
 
 ;;; Contextual component variables.
 
-(defvar org-language-loader-hooks '(org-mode-hook)
-  "The hook that load Org language.")
+(defvar php-language-loader-hooks '(php-mode-hook)
+  "The hook that load PHP language.")
 
 ;;; Internal component functions.
 
-(defun org-init-org ()
-  (setq org-startup-indented t
-          org-clock-idle-time 5
-          org-bullets-bullet-list '("› ")
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-fontify-quote-and-verse-blocks t
-          org-catch-invisible-edits 'show-and-error
-          org-cycle-separator-lines 0))
+(defun php-init-php-mode ()
+  ;; Modify PHP syntax entry.
+  (define-word-syntax '("_" "$"))
+  ;; Reinitialize PHPDoc face to acts like commentary block.
+  (setq php-phpdoc-font-lock-doc-comments nil)
+  (face-remap-add-relative 'font-lock-doc-face 'font-lock-comment-face))
 
-(defun org-init-org-bullets ()
-  (org-bullets-mode))
+(defun php-init-ac-php ()
+  ;; Enable ElDoc support
+  (ac-php-core-eldoc-setup)
+  ;; Jump to definition
+  (define-key php-mode-map (kbd "M-]")
+    'ac-php-find-symbol-at-point)
+  ;; Return back
+  (define-key php-mode-map (kbd "M-[")
+    'ac-php-location-stack-back))
 
-(defun org-init-toc-org ()
-  (toc-org-mode))
+(defun php-init-company ()
+  ;; Change company backend.
+  (set (make-local-variable 'company-backends)
+    '((company-ac-php-backend)
+        company-phpactor company-files)))

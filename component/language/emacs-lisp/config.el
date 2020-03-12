@@ -1,9 +1,9 @@
-;;; package.el --- Org Component File
+;;; config.el --- Emacs Lisp Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: org
+;; Keywords: emacs lisp
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,16 @@
 
 ;;; Code:
 
-(require-package 'org t)
-(require-package 'org-bullets)
-(require-package 'ob-async)
-(require-package 'ob-http)
-(require-package 'toc-org)
+;;; Contextual component variables.
+
+(defvar emacs-lisp-language-loader-hooks '(emacs-lisp-mode-hook)
+  "The hook that load Emacs Lisp language.")
+
+;;; Internal component functions.
+
+(defun emacs-lisp-init-elisp ()
+  ;; Modify Emacs Lisp syntax entry.
+  (define-word-syntax '("-")))
+
+(defun emacs-lisp-init-elisp-slime-nav ()
+  (turn-on-elisp-slime-nav-mode))
