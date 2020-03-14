@@ -22,14 +22,13 @@
 
 ;;; Code:
 
-;; Save every 20 characters typed
-(setq auto-save-interval 20)
-
-;;; Internal core functions.
+;;; Internal core function.
 
 (defun file-save-backup ()
+  "This function is used on `before-save-hook'. It create a
+backup on each session and on save interval."
   ;; Make a special "per session" backup at the first save of each
-  ;; emacs session.
+  ;; Emacs session.
   (when (not buffer-backed-up)
     ;; Override the default parameters for per-session backups.
     (let* ((path (concat embla-temporary-directory "backup/session"))
@@ -42,14 +41,19 @@
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
+;;; External core functions.
+
 (defun file-set-undo-tree ()
-  (require-package 'undo-tree)
+  "This function is used to configure undo tree module."
   (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist
+  (undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
 
 (defun file-set-backup ()
+  "This function is used to configure backup module."
+  ;; Save every 20 characters typed
+  (setq auto-save-interval 20)
   ;; Use version numbers for backups.
   (setq version-control t)
   ;; Number of newest versions to keep.
