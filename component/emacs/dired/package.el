@@ -1,4 +1,4 @@
-;;; package.el --- Dired Mode File
+;;; package.el --- Dired Component Packages File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

@@ -1,4 +1,4 @@
-;;; autoload.el --- Dired Mode Autoload File
+;;; autoload.el --- Dired Component Autoload File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

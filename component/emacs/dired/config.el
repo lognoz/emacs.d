@@ -1,4 +1,4 @@
-;;; config.el --- Dired Mode File
+;;; config.el --- Dired Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -43,4 +43,5 @@
   (evil-collection-define-key 'normal 'dired-mode-map
     [tab] 'dired-toogle-dotfile
     [mouse-2] 'dired-find-alternate-file
+
     (kbd "RET") 'dired-find-alternate-file))
