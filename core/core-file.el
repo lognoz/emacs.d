@@ -46,7 +46,7 @@ backup on each session and on save interval."
 (defun file-set-undo-tree ()
   "This function is used to configure undo tree module."
   (setq undo-tree-auto-save-history t)
-  (undo-tree-history-directory-alist
+  (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
 
