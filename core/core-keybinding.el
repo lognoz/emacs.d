@@ -22,6 +22,9 @@
 
 ;;; Code:
 
+;; Keybinding to kill buffers by a directory.
+(global-set-key (kbd "C-x K") 'kill-buffers-by-directory)
+
 ;; Keybinding align a region.
 (global-set-key (kbd "C-x =") 'align-regexp)
 
@@ -35,7 +38,7 @@
 
 ;; Keybinding eval statement and replace.
 ;; Ex (+ 1 2 3) = 6
-(global-set-key (kbd "C-c C-e") 'eval-and-replace)
+(global-set-key (kbd "C-x C-e") 'eval-and-replace)
 
 ;; Keybinding to use winner mode easily.
 (global-set-key (kbd "<s-right>") 'winner-redo)
@@ -58,5 +61,8 @@
 
 ;; Keybinding to show counsel imenu.
 (global-set-key (kbd "C-c C-j") 'counsel-imenu)
+
+;; Keybinding to find file on cursor.
+(global-set-key (kbd "M-f") 'find-file-on-cursor)
 
 (provide 'core-keybinding)
