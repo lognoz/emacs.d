@@ -112,17 +112,16 @@ execute action with it."
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
 
-(defun import-core (path)
+(defun import-core (&rest references)
   "This function is used to load core file."
-  (load (concat embla-core-directory path)
-        nil 'nomessage))
+  (dolist (reference references)
+    (load (concat embla-core-directory reference)
+          nil 'nomessage)))
 
 (defun require-composites ()
   "This function is used to require all Embla composites and to check
 if requirements is ensure."
-  (import-core "core-editor")
-  (import-core "core-package")
-  (import-core "core-func")
+  (import-core "core-editor" "core-package" "core-func")
   ;; If Embla not installed, use execute installer.
   (when (or (not (file-exists-p embla-component-file))
             (not (file-exists-p embla-autoload-file)))
@@ -134,8 +133,7 @@ if requirements is ensure."
 (defun embla-after-init-hook ()
   "This function is used to load packages and config files into
 component directory."
-  (import-core "core-mode-line")
-  (import-core "core-keybinding")
+  (import-core "core-mode-line" "core-keybinding")
   ;; Initialize mode line.
   (mode-line-initialize)
   ;; Require autoload and startup files.
@@ -173,8 +171,7 @@ undo-tree and backup files."
         recentf-show-file-shortcuts-flag nil)
   ;; Save cursor positions.
   (save-place-mode 1)
-  (setq save-place-file
-        (concat embla-temporary-directory "saveplace"))
+  (setq save-place-file (concat embla-temporary-directory "saveplace"))
   ;; Set undo tree.
   (file-set-undo-tree)
   ;; Set backup files.
