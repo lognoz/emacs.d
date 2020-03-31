@@ -87,20 +87,38 @@
 (defmacro fetch-content (path &rest body)
   "Macro used to fetch content and easily execute action on
 target file."
-  `(dolist (path (directories ,path))
+  `(dolist (path (directories-list ,path))
     (let ((module (directory-name path)))
       ,@body)))
 
 (defmacro when-function-exists (name &rest body)
-  "Convert a string to a function reference and that can quickly
-execute action with it."
+  "Macro used to convert a string to a function reference and
+that can quickly execute action with it."
   `(let ((func (intern ,name)))
      (when (fboundp func)
        ,@body)))
 
 ;;; Internal core functions.
 
+(defun directory-name (path)
+  "Return the directory name of a reference path."
+  (file-name-nondirectory
+   (directory-file-name
+     (file-name-directory path))))
+
+(defun directories-list (path)
+  "Return a list of directories by a reference path."
+  (let ((list))
+    (dolist (f (directory-files path))
+      (let ((path (concat path f)))
+        (when (and (file-directory-p path)
+                    (not (equal f "."))
+                    (not (equal f "..")))
+          (push (file-name-as-directory path) list))))
+    list))
+
 (defun template-content (path)
+  "Return template content by reference path."
   (with-temp-buffer
     (insert-file-contents path)
     (buffer-string)))
@@ -157,8 +175,7 @@ undo-tree and backup files."
   ;; Import file function.
   (import-core "core-file")
   ;; Define bookmark file.
-  (setq bookmark-default-file
-        (concat embla-temporary-directory "bookmark"))
+  (setq bookmark-default-file (concat embla-temporary-directory "bookmark"))
   ;; Save minibuffer.
   (savehist-mode 1)
   (setq savehist-file (concat embla-temporary-directory "savehist")
