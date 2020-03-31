@@ -1,0 +1,4 @@
+;;;###autoload
+(add-hook '__mode__-hook
+  (lambda ()
+    (define-word-syntax __syntax__)))
