@@ -30,17 +30,23 @@
 ;;; Internal component functions.
 
 (defun org-init-org ()
+  (org-babel-do-load-languages 'org-babel-load-languages
+    '((shell . t)
+      (http . t)
+      (emacs-lisp . t)
+      (python . t)))
+
   (setq org-startup-indented t
-          org-clock-idle-time 5
-          org-bullets-bullet-list '("› ")
-          org-pretty-entities t
-          org-hide-emphasis-markers t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-fontify-quote-and-verse-blocks t
-          org-catch-invisible-edits 'show-and-error
-          org-cycle-separator-lines 0))
+        org-clock-idle-time 5
+        org-bullets-bullet-list '("› ")
+        org-pretty-entities t
+        org-hide-emphasis-markers t
+        org-agenda-block-separator ""
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t
+        org-catch-invisible-edits 'show-and-error
+        org-cycle-separator-lines 0))
 
 (defun org-init-org-bullets ()
   (org-bullets-mode))

@@ -50,4 +50,4 @@
   ;; Change company backend.
   (set (make-local-variable 'company-backends)
     '((company-ac-php-backend)
-        company-phpactor company-files)))
+       company-phpactor company-files)))

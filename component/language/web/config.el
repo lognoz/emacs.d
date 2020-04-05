@@ -24,20 +24,20 @@
 
 ;;; Contextual component variables.
 
+(defvar web-language-major-mode 'web-mode
+  "The Web language major mode.")
+
 (defvar web-language-loader-hooks '(web-mode-hook)
   "The hook that load Web language.")
 
+(defvar web-language-filename-patterns '("\\.html\\'" "\\.html.php\\'")
+  "The filename patterns that corresponding with Web major mode.")
+
 ;;; Internal component functions.
-
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.html.php\\'" . web-mode))
 
 (defun web-init-company ()
   (set (make-local-variable 'company-backends)
        '(company-css company-web-html company-yasnippet company-files)))
 
-(defun org-init-emmet ()
+(defun web-init-emmet ()
   (emmet-mode))
