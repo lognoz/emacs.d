@@ -40,9 +40,15 @@
 ;; Ex (+ 1 2 3) = 6
 (global-set-key (kbd "C-x C-e") 'eval-and-replace)
 
-;; Keybinding to use winner mode easily.
+;; Keybindings to use winner mode easily.
 (global-set-key (kbd "<s-right>") 'winner-redo)
 (global-set-key (kbd "<s-left>") 'winner-undo)
+
+;; Keybindings to manage window faster.
+(global-set-key (kbd "s-o") 'other-window)
+(global-set-key (kbd "s-1") 'delete-other-windows)
+(global-set-key (kbd "s-2") 'split-window-below)
+(global-set-key (kbd "s-3") 'split-window-right)
 
 ;; Open terminal in right tab.
 (global-set-key (kbd "C-x C-t") 'open-terminal)
