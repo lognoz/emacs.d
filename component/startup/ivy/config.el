@@ -30,8 +30,14 @@
         ivy-wrap nil
         ivy-display-style 'fancy
         ivy-use-selectable-prompt t
-        ivy-fixed-height-minibuffer nil
-        ivy-extra-directories ())
+        ivy-fixed-height-minibuffer nil)
+
+  (setq counsel-find-file-ignore-regexp
+        (concat
+         ;; File names beginning with # or .
+         "\\(?:\\`[#.]\\)"
+         ;; File names ending with # or ~
+         "\\|\\(?:\\`.+?[#~]\\'\\)"))
 
   ;; Change the maximum width of the Ivy window to 1/3
   (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
@@ -47,17 +53,18 @@
   (setq ivy-prescient-enable-filtering nil)
   (setq ivy-prescient-enable-sorting t)
   (setq ivy-prescient-sort-commands
-        '(:not counsel-grep
-               counsel-rg
-               counsel-find-file
-               counsel-yank-pop
-               ivy-switch-buffer))
-  (ivy-prescient-mode 1))
+    '(:not counsel-dired
+           counsel-grep
+           counsel-rg
+           counsel-find-file
+           counsel-yank-pop
+           ivy-switch-buffer)))
+  ;;(ivy-prescient-mode 1))
 
 (defun ivy-init-prescient ()
   (require 'prescient)
   (setq prescient-history-length 200)
-  (setq prescient-save-file (concat embla-temporary-directory "prescient-items"))
+  (setq prescient-save-file (concat embla-temporary-directory "prescient"))
   (setq prescient-filter-method '(literal regexp))
   (prescient-persist-mode))
 
@@ -66,7 +73,6 @@
   (global-set-key (kbd "M-y") 'counsel-yank-pop)
   (global-set-key (kbd "C-x d") 'counsel-dired)
   (global-set-key (kbd "C-x f") 'counsel-recentf)
-  (global-set-key (kbd "C-x g") 'counsel-git-grep)
   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
   (global-set-key (kbd "C-c C-j") 'counsel-imenu)
   (global-set-key (kbd "C-x r l") 'counsel-bookmark)

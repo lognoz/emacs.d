@@ -27,9 +27,9 @@
   (interactive)
   (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
-        (progn
-          (set (make-local-variable 'dired-dotfiles-show-p) nil)
-          (dired-mark-files-regexp "^\\\.")
-          (dired-do-kill-lines))
-        (progn (revert-buffer)
-               (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+      (progn
+        (set (make-local-variable 'dired-dotfiles-show-p) nil)
+        (dired-mark-files-regexp "^\\\.")
+        (dired-do-kill-lines))
+      (progn (revert-buffer)
+             (set (make-local-variable 'dired-dotfiles-show-p) t)))))
