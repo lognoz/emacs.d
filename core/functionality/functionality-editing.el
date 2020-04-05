@@ -60,3 +60,29 @@
     (shell-command-to-string
       (concat "find " path " -type d"))
     "\n" t))
+
+;;;###autoload
+(defun eval-and-replace ()
+  "Replace lisp statement by its value. This functionality can
+only be executed on normal and insert mode."
+  (interactive)
+  ;; Check evil state before to replace the exepression by its
+  ;; value. If it's in normal mode, enter in insert.
+  (if (or (equal evil-state 'normal)
+          (equal evil-state 'insert))
+    (evil-insert-state)
+    (error "Need to be executed in normal or insert mode."))
+  ;; Check if the cursor is under lisp expression.
+  (when (and (not (or (> (nth 0 (syntax-ppss)) 0)
+                      (nth 3 (syntax-ppss))))
+             (not (equal (char-after) ?\()))
+    (error "Need to be executed on lisp expression."))
+  (when (not (equal (char-after) ?\())
+    (backward-up-list))
+  (forward-sexp)
+  (backward-kill-sexp)
+  (condition-case nil
+    (prin1 (eval (read (current-kill 0)))
+          (current-buffer))
+    (error (message "Invalid expression")
+          (insert (current-kill 0)))))

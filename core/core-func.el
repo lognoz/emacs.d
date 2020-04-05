@@ -33,33 +33,6 @@
 
 ;;; Eval and replace sexp.
 
-(defun verify-statement (message)
-  "Throw error if the cursor is not in a statement."
-  (when (and (not (or (> (nth 0 (syntax-ppss)) 0)
-                      (nth 3 (syntax-ppss))))
-             (not (equal (char-after) ?\()))
-    (error message)))
-
-(defun sexp-insert-mode ()
-  (if (or (equal evil-state 'normal)
-          (equal evil-state 'insert))
-    (evil-insert-state)
-    (error "This function can only be executed in normal or insert mode.")))
-
-(defun eval-and-replace ()
-  "Replace the preceding sexp with its value."
-  (interactive)
-  (sexp-insert-mode)
-  (verify-statement "This function only works on lisp sexp.")
-  (when (not (equal (char-after) ?\())
-    (backward-up-list))
-  (forward-sexp)
-  (backward-kill-sexp)
-  (condition-case nil
-    (prin1 (eval (read (current-kill 0)))
-          (current-buffer))
-    (error (message "Invalid expression")
-          (insert (current-kill 0)))))
 
 ;;; Find file on cursor.
 

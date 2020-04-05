@@ -35,10 +35,6 @@
 ;; Keybinding to show ibuffer.
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-;; Keybinding eval statement and replace.
-;; Ex (+ 1 2 3) = 6
-(global-set-key (kbd "C-x C-e") 'eval-and-replace)
-
 ;; Keybindings to use winner mode easily.
 (global-set-key (kbd "<s-right>") 'winner-redo)
 (global-set-key (kbd "<s-left>") 'winner-undo)
@@ -66,6 +62,10 @@
 
 ;; Keybinding to show counsel imenu.
 (global-set-key (kbd "C-c C-j") 'counsel-imenu)
+
+;; Keybinding eval statement and replace.
+;; Ex (+ 1 2 3) = 6
+(global-set-key (kbd "C-c C-e") 'eval-and-replace)
 
 ;; Keybinding to find file on cursor.
 (global-set-key (kbd "M-f") 'find-file-on-cursor)
