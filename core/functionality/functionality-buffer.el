@@ -54,4 +54,4 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
-(require 'functionality-buffer)
+(provide 'functionality-buffer)

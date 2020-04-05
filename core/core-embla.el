@@ -139,11 +139,12 @@ that can quickly execute action with it."
 (defun require-composites ()
   "This function is used to require all Embla composites and to check
 if requirements is ensure."
-  (import-core "core-editor" "core-package" "core-func")
+  (import-core "core-editor" "core-package")
   ;; If Embla not installed, use execute installer.
   (when (or (not (file-exists-p embla-component-file))
             (not (file-exists-p embla-autoload-file)))
-    (import-core "installer/installer")
+    (import-core "functionality/functionality-editing"
+                 "installer/installer")
     (embla-install-program))
   ;; Load Embla theme
   (load-theme 'atom-one-dark t))

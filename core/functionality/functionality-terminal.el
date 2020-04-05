@@ -52,4 +52,4 @@
   (other-window 1)
   (open-terminal))
 
-(require 'functionality-terminal)
+(provide 'functionality-terminal)

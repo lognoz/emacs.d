@@ -1,9 +1,9 @@
-;;; core-func.el --- Core Function File
+;;; functionality-tramp.el --- Tramp Function File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: functions helpers utils
+;; Keywords: functionality tramp
 
 ;; This file is not part of GNU Emacs.
 
@@ -30,28 +30,4 @@
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
 
-
-;;; Eval and replace sexp.
-
-
-;;; Find file on cursor.
-
-(defun content-inner-quote (char)
-  (let* ((right (save-excursion
-                  (re-search-forward char nil t)))
-         (left (save-excursion
-                  (re-search-backward char nil t))))
-    (when (and right right)
-      (substring (buffer-substring-no-properties right left) 1 -1))))
-
-(defun find-file-on-cursor ()
-  (interactive)
-  (let ((root (projectile-project-root))
-        (content (content-inner-quote "\"")))
-    (unless (file-exists-p (concat root content))
-      (setq content (content-inner-quote "'")))
-    (if (file-exists-p (concat root content))
-      (find-file (concat root content))
-      (error "Could not find file on point."))))
-
-(provide 'core-func)
+(provide 'functionality-tramp)

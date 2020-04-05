@@ -22,6 +22,29 @@
 
 ;;; Code:
 
+(defun check-lisp-statement ()
+  "Check if the cursor is under lisp expression."
+  (when (and (not (or (> (nth 0 (syntax-ppss)) 0)
+                      (nth 3 (syntax-ppss))))
+             (not (equal (char-after) ?\()))
+    (error "Need to be executed on lisp expression.")))
+
+(defun check-evil-state ()
+  "Check evil state before to replace the exepression by its
+value. If it's in normal mode, enter in insert."
+  (if (or (equal evil-state 'normal)
+          (equal evil-state 'insert))
+    (evil-insert-state)
+    (error "Need to be executed in normal or insert mode.")))
+
+(defun inner-quote-content (char)
+  (let* ((right (save-excursion
+                  (re-search-forward char nil t)))
+         (left (save-excursion
+                  (re-search-backward char nil t))))
+    (when (and right right)
+      (substring (buffer-substring-no-properties right left) 1 -1))))
+
 ;;;###autoload
 (defun get-file-content (path)
   "Return the contents of filename."
@@ -66,17 +89,8 @@
   "Replace lisp statement by its value. This functionality can
 only be executed on normal and insert mode."
   (interactive)
-  ;; Check evil state before to replace the exepression by its
-  ;; value. If it's in normal mode, enter in insert.
-  (if (or (equal evil-state 'normal)
-          (equal evil-state 'insert))
-    (evil-insert-state)
-    (error "Need to be executed in normal or insert mode."))
-  ;; Check if the cursor is under lisp expression.
-  (when (and (not (or (> (nth 0 (syntax-ppss)) 0)
-                      (nth 3 (syntax-ppss))))
-             (not (equal (char-after) ?\()))
-    (error "Need to be executed on lisp expression."))
+  (check-evil-state)
+  (check-lisp-statement)
   (when (not (equal (char-after) ?\())
     (backward-up-list))
   (forward-sexp)
@@ -86,3 +100,16 @@ only be executed on normal and insert mode."
           (current-buffer))
     (error (message "Invalid expression")
           (insert (current-kill 0)))))
+
+;;;###autoload
+(defun find-file-on-cursor ()
+  (interactive)
+  (let ((root (projectile-project-root))
+        (content (inner-quote-content "\"")))
+    (unless (file-exists-p (concat root content))
+      (setq content (inner-quote-content "'")))
+    (if (file-exists-p (concat root content))
+      (find-file (concat root content))
+      (error "Could not find file on point."))))
+
+(provide 'functionality-editing)
