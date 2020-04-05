@@ -30,39 +30,6 @@
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
 
-(defun get-file-content (path)
-  "Return the contents of filename."
-  (string-trim
-    (with-temp-buffer
-      (insert-file-contents path)
-      (buffer-string))))
-
-(defun replace-in-file (path replacement)
-  "Replace variables in file."
-  (with-temp-file path
-    (insert-file-contents-literally path)
-    (mapc (lambda (entry)
-      (setq entry (eval entry))
-      (goto-char 0)
-      (while (search-forward (car entry) nil t)
-        (replace-match (cdr entry))))
-      replacement)))
-
-(defun replace-in-string (string replacement)
-  (mapc (lambda (entry)
-    (setq entry (eval entry))
-    (setq string
-      (replace-regexp-in-string
-        (car entry) (cdr entry) string nil 'literal)))
-    replacement)
-  string)
-
-(defun recursive-directories (path)
-  "Return all directories in a specific path."
-  (split-string
-    (shell-command-to-string
-      (concat "find " path " -type d"))
-    "\n" t))
 
 ;;; Eval and replace sexp.
 
