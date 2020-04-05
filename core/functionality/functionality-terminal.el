@@ -51,3 +51,5 @@
     (split-window-right))
   (other-window 1)
   (open-terminal))
+
+(require 'functionality-terminal)
