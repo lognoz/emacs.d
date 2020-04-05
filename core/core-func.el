@@ -94,27 +94,6 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
-(defun open-terminal ()
-  "Open terminal easily."
-  (interactive)
-  (let ((buffers (cdr (buffer-list))))
-    (while buffers
-      (when (with-current-buffer (car buffers) (string= "term-mode" major-mode))
-        (switch-to-buffer (car buffers))
-        (setq buffers nil))
-      (setq buffers (cdr buffers)))
-    (when (not (string= "term-mode" major-mode))
-      (ansi-term "/bin/bash")
-      (rename-buffer "Terminal"))))
-
-(defun open-terminal-other-window ()
-  "Open terminal in other window."
-  (interactive)
-  (when (one-window-p)
-    (split-window-right))
-  (other-window 1)
-  (open-terminal))
-
 ;;; Eval and replace sexp.
 
 (defun verify-statement (message)

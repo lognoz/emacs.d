@@ -50,7 +50,7 @@
 (global-set-key (kbd "s-3") 'split-window-right)
 
 ;; Open terminal in right tab.
-(global-set-key (kbd "C-x C-t") 'open-terminal)
+(global-set-key (kbd "C-x t") 'open-terminal)
 (global-set-key (kbd "C-x 4 t") 'open-terminal-other-window)
 
 ;; Define better emacs help keybindings.
