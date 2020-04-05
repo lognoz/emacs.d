@@ -28,9 +28,8 @@
 ;; Keybinding align a region.
 (global-set-key (kbd "C-x =") 'align-regexp)
 
-;; Keybinding to sort lines.
-;; If you want to execute descending sort, just execute C-u C-x
-;; <down>.
+;; Keybinding to sort lines. If you want to execute descending sort,
+;; just execute C-u C-x <down>.
 (global-set-key (kbd "C-x <down>") 'sort-lines)
 
 ;; Keybinding to show ibuffer.
@@ -70,5 +69,8 @@
 
 ;; Keybinding to find file on cursor.
 (global-set-key (kbd "M-f") 'find-file-on-cursor)
+
+;; Keybinding to go on Elfeed.
+(global-set-key (kbd "C-x w") 'elfeed)
 
 (provide 'core-keybinding)
