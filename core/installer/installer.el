@@ -161,9 +161,8 @@ optimize Embla."
   "Fetch directories to create component file."
   (fetch-content directory
     (let ((mode (concat module "-" component "-mode")))
-      (when (equal mode "web-language-mode")
-        (make-component-file
-          path module component mode)))))
+      (make-component-file
+        path module component mode))))
 
 (defun make-component-file (path module component mode)
   "Create component file by given subdirectories arguments."
