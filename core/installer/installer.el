@@ -161,8 +161,9 @@ optimize Embla."
   "Fetch directories to create component file."
   (fetch-content directory
     (let ((mode (concat module "-" component "-mode")))
-      (make-component-file
-        path module component mode))))
+      (when (equal mode "web-language-mode")
+        (make-component-file
+          path module component mode)))))
 
 (defun make-component-file (path module component mode)
   "Create component file by given subdirectories arguments."
@@ -180,6 +181,9 @@ optimize Embla."
     ;; Build hooks for the module.
     (push (hook-in-module module component)
           file-content)
+    ;; Build filename patterns for the module.
+    (push (filename-pattern-in-module module component)
+          file-content)
     ;; Loop into packages installed to add hooks and create init
     ;; function caller.
     (dolist (dependency embla-component-packages)
@@ -193,6 +197,19 @@ optimize Embla."
       '((cons "__module__" module)
         (cons "__component__" component)
         (cons "__content__" (mapconcat #'identity variable-init-content "\n"))))))
+
+(defun filename-pattern-in-module (module component)
+  "Return autoload filename pattern statements by variable."
+  (let* ((extensions (intern (concat module "-" component "-filename-patterns")))
+         (mode (intern (concat module "-" component "-major-mode")))
+         (content))
+    (when (and (boundp extensions) (boundp mode))
+      (dolist (extension (symbol-value extensions))
+        (push (replace-in-string template-auto-mode-alist
+                '((cons "__mode__" (prin1-to-string (symbol-value mode)))
+                  (cons "__extension__" (prin1-to-string extension))))
+          content)))
+    (mapconcat #'identity content "\n")))
 
 (defun hook-in-module (module component)
   "Return autoload hook statements by variable."
@@ -210,22 +227,22 @@ optimize Embla."
 (defun embla-install-program ()
   "This function is the main installer function. It create autoload
 file, refresh package repositories and build Embla."
-  ;; Recreate build directory.
+  ;; recreate build directory.
   (delete-directory embla-build-directory t)
   (make-directory embla-build-directory)
-  ;; Refresh package repositories.
+  ;; refresh package repositories.
   (refresh-package-repositories)
-  ;; Install Embla theme.
+  ;; install embla theme.
   (require-package 'atom-one-dark-theme)
-  ;; Create component file with `auto-install-alist'.
+  ;; create component file with `auto-install-alist'.
   (create-auto-install-file)
-  ;; Create component file that contains the autoloads functions in
+  ;; create component file that contains the autoloads functions in
   ;; component directory.
   (create-startup-autoload-file)
   ;; Create file that's load on Emacs startup.
   (create-startup-component-file)
   ;; Create component files.
-  (dolist (directory (directories embla-component-directory))
+  (dolist (directory (directories-list embla-component-directory))
     (let ((component (directory-name directory)))
       (unless (equal component "startup")
         (make-component-files directory component))))
