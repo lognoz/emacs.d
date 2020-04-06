@@ -226,16 +226,16 @@ optimize Embla."
 (defun embla-install-program ()
   "This function is the main installer function. It create autoload
 file, refresh package repositories and build Embla."
-  ;; recreate build directory.
+  ;; Recreate build directory.
   (delete-directory embla-build-directory t)
   (make-directory embla-build-directory)
-  ;; refresh package repositories.
+  ;; Refresh package repositories.
   (refresh-package-repositories)
-  ;; install embla theme.
+  ;; Install embla theme.
   (require-package 'atom-one-dark-theme)
-  ;; create component file with `auto-install-alist'.
+  ;; Create component file with `auto-install-alist'.
   (create-auto-install-file)
-  ;; create component file that contains the autoloads functions in
+  ;; Create component file that contains the autoloads functions in
   ;; component directory.
   (create-startup-autoload-file)
   ;; Create file that's load on Emacs startup.
