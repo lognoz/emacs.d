@@ -103,6 +103,7 @@ only be executed on normal and insert mode."
 
 ;;;###autoload
 (defun find-file-on-cursor ()
+  "Switch to a buffer visiting file by string under cursor."
   (interactive)
   (let ((root (projectile-project-root))
         (content (inner-quote-content "\"")))
