@@ -24,7 +24,7 @@
 
 ;;; Contextual core variables.
 
-(defvar elfeed-web-loader-hooks '(elfeed-search-mode-hook)
+(defvar elfeed-emacs-loader-hooks '(elfeed-search-mode-hook)
   "The hook that load elfeed web module.")
 
 ;;; Internal core functions.
