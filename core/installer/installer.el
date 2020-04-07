@@ -24,23 +24,20 @@
 
 ;;; Contextual core variables.
 
-(defconst installer-template-directory (concat embla-core-directory "installer/template/")
-  "The directory of template files.")
-
 (defconst template-auto-mode-alist
-  (template-content (concat installer-template-directory "auto-mode-alist")))
+  (template-content (concat embla-template-directory "auto-mode-alist")))
 
 (defconst template-auto-install-hook
-  (template-content (concat installer-template-directory "auto-install-hook")))
+  (template-content (concat embla-template-directory "auto-install-hook")))
 
 (defconst template-hook-function
-  (template-content (concat installer-template-directory "hook-function")))
+  (template-content (concat embla-template-directory "hook-function")))
 
 (defconst template-hook-statement
-  (template-content (concat installer-template-directory "hook-statement")))
+  (template-content (concat embla-template-directory "hook-statement")))
 
 (defconst template-simple-hook-statement
-  (template-content (concat installer-template-directory "simple-hook-statement")))
+  (template-content (concat embla-template-directory "simple-hook-statement")))
 
 (defconst auto-install-components-alist
   ;; Extension              Word syntax   Require   Mode
