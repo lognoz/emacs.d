@@ -1,4 +1,6 @@
-* Embla, Another Emacs configuration
+* Documentation
+[[../../../doc/embla.org][Read the docs]] for more details on how to use Embla.
+
 ** Isearch, occur and replacement enhancements
 *** Isearch
 - ~C-s C-w~ (=isearch-yank-word-or-char=) :: Search char or word at point.
