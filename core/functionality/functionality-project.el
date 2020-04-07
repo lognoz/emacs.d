@@ -22,10 +22,38 @@
 
 ;;; Code:
 
+(defun create-directory-local-variable-file (source)
+  "Create .dir-locals.el file on project root."
+  (interactive "sProject source: ")
+  (let* ((project-root (projectile-project-root))
+         (path (concat project-root ".dir-locals.el"))
+         (template-dir-locals
+           (template-content (concat embla-template-directory "dir-locals"))))
+    (write-region
+      (replace-in-string template-dir-locals
+        '((cons "__source__" source)))
+      nil path)))
+
 ;;;###autoload
 (defun open-project-source ()
   "Browse project source path. Variable `project-source' is
 normally define into .dir-locals.el at the base of the project."
   (interactive)
-  (when (boundp 'project-source)
+  (when (and (boundp 'project-source)
+             (not (equal "" project-source)))
     (browse-url project-source)))
+
+;;;###autoload
+(defun open-directory-local-variable-file ()
+  "Find and open project .dir-locals.el. If it doesn't exist, a
+prompt will ask if the user want to create it."
+  (interactive)
+  (let* ((project-root (projectile-project-root))
+         (path (concat project-root ".dir-locals.el")))
+    (when (not project-root)
+      (error "This function can only be exectued in project."))
+    (if (file-exists-p path)
+      (find-file path)
+      (when (yes-or-no-p "dir-locals.el couldn't been found. Do you want to create it ? ")
+        (call-interactively 'create-directory-local-variable-file)
+        (find-file path)))))

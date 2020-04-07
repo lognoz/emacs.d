@@ -72,5 +72,6 @@
 
 ;; Keybinding to manage project.
 (global-set-key (kbd "C-c ! o") 'open-project-source)
+(global-set-key (kbd "C-c ! l") 'open-directory-local-variable-file)
 
 (provide 'core-keybinding)
