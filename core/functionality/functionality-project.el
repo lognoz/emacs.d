@@ -39,6 +39,8 @@
   "Browse project source path. Variable `project-source' is
 normally define into .dir-locals.el at the base of the project."
   (interactive)
+  (when (not (projectile-project-root))
+    (error "This function can only be exectued in project."))
   (when (and (boundp 'project-source)
              (equal (type-of project-source) 'cons))
     (if (equal (length project-source) 1)
@@ -46,7 +48,8 @@ normally define into .dir-locals.el at the base of the project."
       (ivy-read "Browse source: " project-source
         :require-match t
         :action (lambda (target)
-          (browse-url target))))))
+          (browse-url target))))
+    (message "Open url on browser")))
 
 ;;;###autoload
 (defun find-directory-local-variable-file ()
