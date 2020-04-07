@@ -33,6 +33,7 @@
 ;;; Internal core functions.
 
 (defun define-word-syntax (word-syntax)
+  "Define word syntax entry by list of characters."
   (dolist (character word-syntax)
     (modify-syntax-entry
       (cond ((string-equal character "_") ?_)
@@ -41,6 +42,7 @@
             ((string-equal character "$") ?$)) "w")))
 
 (defun package-set-archives ()
+  "Define package archives and initialize it."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
@@ -49,6 +51,8 @@
 ;;; External core functions.
 
 (defun require-package (package &optional built-in)
+  "This function is the main Embla functionality used to
+pre-install package into installer.el."
   (interactive)
   (when (not built-in)
      ;; Add archive and initialize package.
