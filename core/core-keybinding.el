@@ -57,9 +57,6 @@
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-;; Keybinding to occur in multiple buffer.
-(global-set-key (kbd "M-s M-o") 'multi-occur)
-
 ;; Keybinding to show counsel imenu.
 (global-set-key (kbd "C-c C-j") 'counsel-imenu)
 
