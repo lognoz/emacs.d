@@ -61,12 +61,29 @@
 ;; Define Emacs frame title format
 (setq frame-title-format '("%b - Emacs"))
 
-;; Change default font
+;; Change default font.
 (set-face-attribute 'default nil
                     :family "Source Code Pro"
                     :height 100
                     :weight 'normal
                     :width 'normal)
+
+;; Change face for matching elements.
+(face-spec-set 'lazy-highlight
+  '((t :foreground "#C678DD"
+       :background "#20242B"
+       :weight bold
+       :underline nil)))
+
+(face-spec-set 'match
+  '((t :foreground "#C678DD"
+       :background "#20242B"
+       :weight bold
+       :underline nil)))
+
+(face-spec-set 'highlight
+  '((t :background "#20242B"
+       :foreground nil)))
 
 ;; Use UTF-8 as the default coding system
 (prefer-coding-system 'utf-8)
