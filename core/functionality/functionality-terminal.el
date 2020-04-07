@@ -27,8 +27,9 @@
   "Open terminal on project root."
   (interactive)
   (let* ((root (projectile-project-root))
-         (default-directory root)
          (buffers (cdr (buffer-list)))
+         (default-directory
+           (if root root (getenv "HOME")))
          (project
            (if root (concat " - " (directory-name root)) ""))
          (terminal-name (concat "Terminal" project)))
