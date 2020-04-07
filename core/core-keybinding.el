@@ -70,4 +70,7 @@
 ;; Keybinding to go on Elfeed.
 (global-set-key (kbd "C-x w") 'elfeed)
 
+;; Keybinding to manage project.
+(global-set-key (kbd "C-c ! o") 'open-project-source)
+
 (provide 'core-keybinding)
