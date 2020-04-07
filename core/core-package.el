@@ -1,6 +1,6 @@
 ;;; core-package.el --- Core Package File
 
-;; Copyright (c) 2019-2019 Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: packages
@@ -42,7 +42,7 @@
             ((string-equal character "$") ?$)) "w")))
 
 (defun package-set-archives ()
-  "Define package archives and initialize it."
+  "Set package archives and initialize it."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
