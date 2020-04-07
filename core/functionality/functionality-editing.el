@@ -37,7 +37,8 @@ value. If it's in normal mode, enter in insert."
     (evil-insert-state)
     (error "Need to be executed in normal or insert mode.")))
 
-(defun inner-quote-content (char)
+(defun inner-character-content (char)
+  "Return content inner a character."
   (let* ((right (save-excursion
                   (re-search-forward char nil t)))
          (left (save-excursion
@@ -47,7 +48,7 @@ value. If it's in normal mode, enter in insert."
 
 ;;;###autoload
 (defun get-file-content (path)
-  "Return the contents of filename."
+  "Return contents of filename."
   (string-trim
     (with-temp-buffer
       (insert-file-contents path)
@@ -106,9 +107,9 @@ only be executed on normal and insert mode."
   "Switch to a buffer visiting file by string under cursor."
   (interactive)
   (let ((root (projectile-project-root))
-        (content (inner-quote-content "\"")))
+        (content (inner-character-content "\"")))
     (unless (file-exists-p (concat root content))
-      (setq content (inner-quote-content "'")))
+      (setq content (inner-character-content "'")))
     (if (file-exists-p (concat root content))
       (find-file (concat root content))
       (error "Could not find file on point."))))
