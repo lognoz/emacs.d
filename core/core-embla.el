@@ -49,6 +49,9 @@
 (defconst embla-core-directory (concat user-emacs-directory "core/")
   "The directory of core files.")
 
+(defconst embla-template-directory (concat embla-core-directory "template/")
+  "The directory of template files.")
+
 (defconst embla-component-directory (concat user-emacs-directory "component/")
   "The directory of component files.")
 
