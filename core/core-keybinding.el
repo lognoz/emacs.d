@@ -71,7 +71,7 @@
 (global-set-key (kbd "C-x w") 'elfeed)
 
 ;; Keybinding to manage project.
-(global-set-key (kbd "C-c ! o") 'open-project-source)
-(global-set-key (kbd "C-c ! l") 'open-directory-local-variable-file)
+(global-set-key (kbd "C-c ! o") 'browse-project-source)
+(global-set-key (kbd "C-c ! l") 'find-directory-local-variable-file)
 
 (provide 'core-keybinding)

@@ -35,16 +35,21 @@
       nil path)))
 
 ;;;###autoload
-(defun open-project-source ()
+(defun browse-project-source ()
   "Browse project source path. Variable `project-source' is
 normally define into .dir-locals.el at the base of the project."
   (interactive)
   (when (and (boundp 'project-source)
-             (not (equal "" project-source)))
-    (browse-url project-source)))
+             (equal (type-of project-source) 'cons))
+    (if (equal (length project-source) 1)
+      (browse-url (car project-source))
+      (ivy-read "Browse source: " project-source
+        :require-match t
+        :action (lambda (target)
+          (browse-url target))))))
 
 ;;;###autoload
-(defun open-directory-local-variable-file ()
+(defun find-directory-local-variable-file ()
   "Find and open project .dir-locals.el. If it doesn't exist, a
 prompt will ask if the user want to create it."
   (interactive)
