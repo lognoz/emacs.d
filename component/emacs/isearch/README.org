@@ -1,5 +1,5 @@
 * Documentation
-[[../../../doc/embla.org][Read the docs]] for more details on how to use Embla.
+*[[../../../doc/embla.org][Read the docs]]* for more details on how to use Embla.
 
 ** Isearch, occur and replacement enhancements
 *** Isearch
