@@ -41,4 +41,5 @@
         isearch-yank-on-move 'shif
         isearch-allow-scroll 'unlimited)
 
+  ;; Keybinding to search and replace.
   (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))

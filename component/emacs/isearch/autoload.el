@@ -23,17 +23,24 @@
 ;;; Code:
 
 ;;;###autoload
-(global-set-key (kbd "M-s r") 'query-replace)
+(progn
+  ;; Keybinding to search and replace.
+  (global-set-key (kbd "M-s r") 'query-replace)
+  (global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+  ;; Keybinding to occur in multiple buffer.
+  (global-set-key (kbd "M-s M-o") 'occur-project)
+  (global-set-key (kbd "M-s g") 'occur-project))
 
 ;;;###autoload
-(global-set-key (kbd "M-s M-r") 'query-replace-regexp)
-
-;;;###autoload
-(global-set-key (kbd "M-s M-o") 'noccur-project)
+(defun occur-project (keyword)
+  (interactive "sGrep for: ")
+  (let ((directory (projectile-project-root)))
+    (if directory
+      (noccur-project keyword 0 directory)
+      (noccur-project keyword))))
 
 ;;;###autoload
 (defadvice isearch-exit (after my-goto-match-beginning activate)
-  "Go to beginning of match."
   (when (and isearch-forward isearch-other-end)
     (goto-char isearch-other-end)))
 
