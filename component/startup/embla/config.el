@@ -37,3 +37,7 @@
   (with-eval-after-load 'evil
     (define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)
     (global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes)))
+
+(defun embla-init-expand-region ()
+  (global-set-key (kbd "C-'") 'er/expand-region)
+  (global-set-key (kbd "C-M-'") 'er/contract-region))
