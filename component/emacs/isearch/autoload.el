@@ -25,8 +25,8 @@
 ;;;###autoload
 (progn
   ;; Keybinding to search and replace.
-  (global-set-key (kbd "M-s r") 'query-replace)
-  (global-set-key (kbd "M-s M-r") 'query-replace-regexp)
+  (global-set-key (kbd "M-s r") 'vr/query-replace)
+  (global-set-key (kbd "M-s M-r") 'vr/replace)
   ;; Keybinding to occur in multiple buffer.
   (global-set-key (kbd "M-s M-o") 'occur-project)
   (global-set-key (kbd "M-s g") 'occur-project))
