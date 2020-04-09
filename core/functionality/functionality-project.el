@@ -98,10 +98,12 @@ prompt will ask if the user want to create it."
   "Find projects under directories define in `project-directories'
 variables. Return candidates is sorting by last modification."
   (interactive)
-  (unless project-directory
+  (unless project-directories
     (error "No project-directories variable is defined."))
   (let ((candidates (find-project-candidates)))
     (ivy-read "Open project: " candidates
       :require-match t
       :action (lambda (target)
         (dired (cdr target))))))
+
+(provide 'functionality-project)

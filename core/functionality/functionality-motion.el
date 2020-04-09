@@ -27,3 +27,5 @@
   "Jump to precedent mark ring."
   (interactive)
   (set-mark-command t))
+
+(provide 'functionality-motion)
