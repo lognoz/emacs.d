@@ -54,4 +54,10 @@
         (kill-buffer buffer)
         (message "File '%s' successfully removed" filename)))))
 
+;;;###autoload
+(defun kill-current-buffer ()
+  "Kill current buffer without asking confirmation."
+  (interactive)
+  (kill-buffer (buffer-name)))
+
 (provide 'functionality-buffer)

@@ -38,6 +38,7 @@
 
 ;; Keybindings to manage window faster.
 (global-set-key (kbd "s-o") 'other-window)
+(global-set-key (kbd "s-k") 'kill-current-buffer)
 (global-set-key (kbd "s-1") 'delete-other-windows)
 (global-set-key (kbd "s-2") 'split-window-below)
 (global-set-key (kbd "s-3") 'split-window-right)
