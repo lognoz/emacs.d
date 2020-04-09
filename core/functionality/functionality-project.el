@@ -34,12 +34,39 @@
         '((cons "__source__" source)))
       nil path)))
 
+(defun directories-attributes (directory)
+  "Return list of directories and its attributes like last
+modification, user permissions, etc."
+  (let ((directories))
+    (dolist (attributes (directory-files-and-attributes directory))
+      (let ((path (car attributes))
+            (is-directory (cadr attributes)))
+        (unless (or (equal path ".")
+                    (equal path "..")
+                    (not is-directory))
+          (setf (cadr attributes) (concat directory path "/"))
+          (add-to-list 'directories attributes))))
+    directories))
+
+(defun find-project-candidates ()
+  "Return a list candidates sorted by last modification for
+`find-project' function."
+  (let ((directories))
+    (dolist (directory project-directories)
+      (setq directories (append directories (directories-attributes directory))))
+    (mapcar
+      (lambda (directory)
+        (cons (car directory) (cadr directory)))
+      (sort directories
+            #'(lambda (x y)
+                (time-less-p (nth 6 y) (nth 6 x)))))))
+
 ;;;###autoload
 (defun browse-project-source ()
   "Browse project source path. Variable `project-source' is
 normally define into .dir-locals.el at the base of the project."
   (interactive)
-  (when (not (projectile-project-root))
+  (unless (projectile-project-root)
     (error "This function can only be exectued in project."))
   (when (and (boundp 'project-source)
              (equal (type-of project-source) 'cons))
@@ -58,10 +85,23 @@ prompt will ask if the user want to create it."
   (interactive)
   (let* ((project-root (projectile-project-root))
          (path (concat project-root ".dir-locals.el")))
-    (when (not project-root)
+    (unless project-root
       (error "This function can only be exectued in project."))
     (if (file-exists-p path)
       (find-file path)
-      (when (yes-or-no-p "dir-locals.el couldn't been found. Do you want to create it ? ")
+      (when (yes-or-no-p "File .dir-locals.el couldn't been found. Do you want to create it? ")
         (call-interactively 'create-directory-local-variable-file)
         (find-file path)))))
+
+;;;###autoload
+(defun find-project ()
+  "Find projects under directories define in `project-directories'
+variables. Return candidates is sorting by last modification."
+  (interactive)
+  (unless project-directory
+    (error "No project-directories variable is defined."))
+  (let ((candidates (find-project-candidates)))
+    (ivy-read "Open project: " candidates
+      :require-match t
+      :action (lambda (target)
+        (dired (cdr target))))))

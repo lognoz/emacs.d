@@ -22,9 +22,6 @@
 
 ;;; Code:
 
-;; Keybinding to kill buffers by a directory.
-(global-set-key (kbd "C-x K") 'kill-matching-buffers)
-
 ;; Keybinding align a region.
 (global-set-key (kbd "C-x =") 'align-regexp)
 
@@ -71,6 +68,7 @@
 (global-set-key (kbd "C-x w") 'elfeed)
 
 ;; Keybinding to manage project.
+(global-set-key (kbd "C-x p") 'find-project)
 (global-set-key (kbd "C-c p k") 'projectile-kill-buffers)
 (global-set-key (kbd "C-c p u") 'browse-project-source)
 (global-set-key (kbd "C-c p v") 'find-directory-local-variable-file)
