@@ -12,4 +12,4 @@
 
 ;;; Code:
 
-((nil (project-source . ("__source__"))))
+((nil (project-sources . ("__source__"))))

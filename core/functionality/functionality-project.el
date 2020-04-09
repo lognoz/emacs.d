@@ -63,16 +63,16 @@ modification, user permissions, etc."
 
 ;;;###autoload
 (defun browse-project-source ()
-  "Browse project source path. Variable `project-source' is
+  "Browse project source path. Variable `project-sources' is
 normally define into .dir-locals.el at the base of the project."
   (interactive)
   (unless (projectile-project-root)
     (error "This function can only be exectued in project."))
-  (when (and (boundp 'project-source)
-             (equal (type-of project-source) 'cons))
-    (if (equal (length project-source) 1)
-      (browse-url (car project-source))
-      (ivy-read "Browse source: " project-source
+  (when (and (boundp 'project-sources)
+             (equal (type-of project-sources) 'cons))
+    (if (equal (length project-sources) 1)
+      (browse-url (car project-sources))
+      (ivy-read "Browse source: " project-sources
         :require-match t
         :action (lambda (target)
           (browse-url target))))
