@@ -14,7 +14,7 @@
 
 ((nil
   (mode . embla)
-  (project-source .
+  (project-sources .
     ("https://github.com/lognoz/embla"
      "https://github.com/lognoz/embla/issues")))
  (emacs-lisp-mode
