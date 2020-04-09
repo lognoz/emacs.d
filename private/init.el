@@ -22,9 +22,12 @@
 
 ;;; Code:
 
-(add-to-list 'load-path embla-project-directory)
-
 (setq elfeed-feeds
-  '(("https://stallman.org/rss/rss.xml" political)
-    ("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g", emacs)
+  '(("https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g" emacs)
+    ("https://www.legrandsoir.info/spip.php?page=backend" actuality)
+    ("https://www.investigaction.net/fr/feed/rss/" actuality)
     ("https://www.lemonde.fr/international/rss_full.xml" actuality)))
+
+(setq project-directories
+  '("~/project/web/"
+    "~/project/program/"))
