@@ -28,6 +28,12 @@
 ;; Don't try to ping things that look like domain names
 (setq ffap-machine-p-known 'reject)
 
+;; Hide the cursor in inactive windows
+(setq cursor-in-non-selected-windows nil)
+
+;; Select help window
+(setq help-window-select t)
+
 ;; Use system trash for file deletion
 (setq delete-by-moving-to-trash t)
 
@@ -68,7 +74,6 @@
                     :weight 'normal
                     :width 'normal)
 
-;; Change face for matching elements.
 (face-spec-set 'lazy-highlight
   '((t :foreground "#C678DD"
        :background "#20242B"
@@ -84,6 +89,13 @@
 (face-spec-set 'highlight
   '((t :background "#20242B"
        :foreground nil)))
+
+(dolist (selector '(vr/match-0 vr/match-1))
+  (face-spec-set selector
+    '((t :foreground "#C678DD"
+        :background "#20242B"
+        :weight bold
+        :underline nil))))
 
 ;; Use UTF-8 as the default coding system
 (prefer-coding-system 'utf-8)
