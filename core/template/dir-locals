@@ -1,4 +1,15 @@
-;;; Directory Local Variables
-;;; For more information see (info "(emacs) Directory Variables")
+;;; .dir-locals.el --- Directory local File
 
-((nil . ((project-source . ("__source__")))))
+;; Copyright (c) Marc-Antoine Loignon
+
+;; Author: Marc-Antoine Loignon <developer@lognoz.org>
+;; Keywords: local variable
+
+;; This file specify local variable values common to all files
+;; in that directory; Emacs uses these to create buffer-local bindings
+;; for those variables in buffers visiting any file in that
+;; directory.
+
+;;; Code:
+
+((nil (project-source . ("__source__"))))
