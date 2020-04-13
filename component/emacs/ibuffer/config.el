@@ -46,6 +46,8 @@
   "Define keybindings related to ibuffer module. For more
 information, see the documentation."
   (define-keybinding :mode 'ibuffer-mode-map :normal
+    (kbd "<mouse-2>") 'ibuffer-mouse-visit-buffer
+    (kbd "RET") 'ibuffer-visit-buffer
     "d"  'ibuffer-mark-for-delete
     "x"  'ibuffer-do-kill-on-deletion-marks
     "A"  'ibuffer-do-view
