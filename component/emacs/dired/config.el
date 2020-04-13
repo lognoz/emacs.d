@@ -46,31 +46,33 @@
 (defun dired-define-keybinding ()
   "Define keybindings related to dired module. For more
 information, see the documentation."
-  (define-keybinding
-    :mode
-      'dired-mode-map
-    :normal
-      (kbd "RET")       'dired-find-alternate-file
-      (kbd "<mouse-2>") 'dired-find-alternate-file
-      (kbd "<s-tab>")   'dired-hide-details-mode
-      (kbd "<M-tab>")   'dired-toogle-dotfile
-      (kbd "<tab>")     'dired-subtree-toggle
-      (kbd "<backtab>") 'dired-subtree-cycle
-      (kbd "C-c C-r")   'dired-rsync
-
-      ;; Mouvement
-      "q" 'quit-window
-      "j" 'dired-next-line
-      "k" 'dired-previous-line
-
-      ;; Edition
-      "C" 'dired-do-copy
-      "R" 'dired-do-rename
-      "T" 'dired-do-touch
-      "D" 'dired-do-delete
-      "x" 'dired-do-flagged-delete
-      "+" 'dired-create-directory
-
-      ;; Compression
-      "Z" 'dired-do-compress
-      "c" 'dired-do-compress-to))
+  (define-keybinding :mode 'dired-mode-map :normal
+    (kbd "<mouse-2>") 'dired-find-alternate-file
+    (kbd "<s-tab>") 'dired-hide-details-mode
+    (kbd "<M-tab>") 'dired-toogle-dotfile
+    (kbd "<tab>") 'dired-subtree-toggle
+    (kbd "<backtab>") 'dired-subtree-cycle
+    (kbd "C-c C-r") 'dired-rsync
+    (kbd "RET") 'dired-find-alternate-file
+    "q" 'quit-window
+    "j" 'dired-next-line
+    "k" 'dired-previous-line
+    "C" 'dired-do-copy
+    "R" 'dired-do-rename
+    "T" 'dired-do-touch
+    "D" 'dired-do-delete
+    "x" 'dired-do-flagged-delete
+    "+" 'dired-create-directory
+    "Z" 'dired-do-compress
+    "c" 'dired-do-compress-to
+    "%u" 'dired-upcase
+    "%l" 'dired-downcase
+    "%d" 'dired-flag-files-regexp
+    "%g" 'dired-mark-files-containing-regexp
+    "%m" 'dired-mark-files-regexp
+    "%r" 'dired-do-rename-regexp
+    "%C" 'dired-do-copy-regexp
+    "%H" 'dired-do-hardlink-regexp
+    "%R" 'dired-do-rename-regexp
+    "%S" 'dired-do-symlink-regexp
+    "%&" 'dired-flag-garbage-files))
