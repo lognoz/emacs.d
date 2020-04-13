@@ -22,5 +22,6 @@
 
 ;;; Code:
 
+(require-package 'evil)
 (require-package 'ibuffer t)
 (require-package 'ibuffer-projectile)
