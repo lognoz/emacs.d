@@ -30,7 +30,36 @@
 (defvar embla-component-packages nil
   "List of packages required by component.")
 
-;;; Internal core functions.
+;;; External core functions.
+
+(defun define-keybinding-args-normalize (args)
+  "Return normalized `define-keybinding' arguments by allowed variables."
+  (let ((plist-grouped) (plist) (definition) (is-definition))
+    (while args
+      (let ((arg (car args)))
+        (setq is-definition nil)
+        (when (member arg '(:normal :visual))
+          (when plist
+            (add-to-list 'plist-grouped `(,definition ,plist) t))
+          (setq plist nil)
+          (setq definition arg)
+          (setq is-definition t))
+        (when (and (not is-definition) definition)
+          (setq plist
+            (append plist (list arg)))))
+      (setq args (cdr args)))
+    (when plist
+      (add-to-list 'plist-grouped `(,definition ,plist) t))
+    plist-grouped))
+
+(defun define-keybinding (&rest args)
+  ""
+  (let ((mode (plist-get args :mode)))
+    (unless mode
+      (error "Mode need to be specify in 'bind-key' function."))
+    (dolist (arg (define-keybinding-args-normalize args))
+      (let ((bindings (car (cdr arg))))
+        (apply #'evil-define-key* 'normal (symbol-value mode) bindings)))))
 
 (defun define-word-syntax (word-syntax)
   "Define word syntax entry by list of characters."
@@ -48,7 +77,14 @@
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
   (package-initialize))
 
-;;; External core functions.
+(defun define-word-syntax (word-syntax)
+  "Define word syntax entry by list of characters."
+  (dolist (character word-syntax)
+    (modify-syntax-entry
+      (cond ((string-equal character "_") ?_)
+            ((string-equal character "-") ?-)
+            ((string-equal character "\\") ?\\)
+            ((string-equal character "$") ?$)) "w")))
 
 (defun require-package (package &optional built-in)
   "This function is the main Embla functionality used to

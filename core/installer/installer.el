@@ -185,6 +185,8 @@ optimize Embla."
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat module "-init-" dependency)
         (push (format "(%s)" func) variable-init-content))
+      (when-function-exists (concat module "-define-keybinding")
+        (push (format "(%s)" func) variable-init-content))
       (when-function-exists (concat module "-hook-" dependency)
         (push (format template-simple-hook-statement (concat dependency "-hook") func)
               file-content)))
