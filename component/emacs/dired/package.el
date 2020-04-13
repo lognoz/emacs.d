@@ -23,5 +23,6 @@
 ;;; Code:
 
 (require-package 'dired t)
+(require-package 'dired-x t)
 (require-package 'dired-rsync)
-(require-package 'evil-collection)
+(require-package 'dired-subtree)

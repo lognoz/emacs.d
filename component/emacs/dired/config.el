@@ -30,18 +30,47 @@
 ;;; Internal core functions.
 
 (defun dired-init-dired ()
+  "Initialization of dired mode."
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-recursive-copies 'always
         dired-recursive-deletes 'always
         dired-isearch-filenames 'dwim
+        dired-auto-revert-buffer t
         delete-by-moving-to-trash t
-        dired-dwim-target t
-        dired-listing-switches "-aFlv --group-directories-first"))
+        dired-dwim-target t))
 
-(defun dired-init-evil-collection ()
-  (evil-collection-init 'dired)
-  (evil-collection-define-key 'normal 'dired-mode-map
-    [tab] 'dired-toogle-dotfile
-    [mouse-2] 'dired-find-alternate-file
+(defun dired-init-dired-x ()
+  "Initialization of dired-x package."
+  (dired-hide-details-mode 1))
 
-    (kbd "RET") 'dired-find-alternate-file))
+(defun dired-define-keybinding ()
+  "Define keybindings related to dired module. For more
+information, see the documentation."
+  (define-keybinding
+    :mode
+      'dired-mode-map
+    :normal
+      (kbd "RET")       'dired-find-alternate-file
+      (kbd "<mouse-2>") 'dired-find-alternate-file
+      (kbd "<s-tab>")   'dired-hide-details-mode
+      (kbd "<M-tab>")   'dired-toogle-dotfile
+      (kbd "<tab>")     'dired-subtree-toggle
+      (kbd "<backtab>") 'dired-subtree-cycle
+      (kbd "C-c C-r")   'dired-rsync
+
+      ;; Mouvement
+      "q" 'quit-window
+      "j" 'dired-next-line
+      "k" 'dired-previous-line
+
+      ;; Edition
+      "C" 'dired-do-copy
+      "R" 'dired-do-rename
+      "T" 'dired-do-touch
+      "D" 'dired-do-delete
+      "x" 'dired-do-flagged-delete
+      "+" 'dired-create-directory
+
+      ;; Compression
+      "Z" 'dired-do-compress
+      "c" 'dired-do-compress-to))
