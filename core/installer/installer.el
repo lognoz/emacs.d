@@ -39,6 +39,9 @@
 (defconst template-simple-hook-statement
   (template-content (concat embla-template-directory "simple-hook-statement")))
 
+(defconst template-evil-keybinding
+  (template-content (concat embla-template-directory "evil-keybinding")))
+
 (defconst auto-install-components-alist
   ;; Extension              Word syntax   Require   Mode
   '(("\\.js\\'"             '("-" "_")    nil       js2-mode)
@@ -69,6 +72,32 @@
       (delete-region st (point)))
     (delete-blank-lines)
     (buffer-string)))
+
+(defun define-keybinding-args-normalize (args)
+  "Return normalized `define-keybinding' arguments by allowed variables."
+  (let ((plist-grouped) (plist) (definition) (is-definition))
+    (while args
+      (let ((arg (car args)))
+        (setq is-definition nil)
+        (when (member arg '(:normal :visual))
+          (when plist
+            (add-to-list 'plist-grouped `(,definition ,plist) t))
+          (setq plist nil)
+          (setq definition arg)
+          (setq is-definition t))
+        (when (and (not is-definition) definition)
+          (setq plist
+            (append plist (list arg)))))
+      (setq args (cdr args)))
+    (when plist
+      (add-to-list 'plist-grouped `(,definition ,plist) t))
+    plist-grouped))
+
+(defun define-keybinding (&rest args)
+  (let ((mode (plist-get args :mode))
+        (formated-args (define-keybinding-args-normalize args)))
+    (setq formated-args (append `((:mode ,mode)) formated-args))
+    formated-args))
 
 (defun append-to-file (path content)
   "Write content into the end of a file."
@@ -170,10 +199,14 @@ optimize Embla."
          (file-content (list template-hook-function provider))
          (variable-init-content))
     ;; Install packages and append content of autoload and config.
-    (load-files path '("package" "autoload" "config")
-      (unless (equal f "package")
+    (load-files path '("package" "variable" "autoload" "config")
+      (unless (or (equal f "package")
+                  (equal f "variable"))
         (push (file-content-without-header (concat path f ".el"))
               file-content)))
+    ;; Build keybinding variable.
+    (push (variable-keybinding-in-module module component)
+          variable-init-content)
     ;; Build hooks for the module.
     (push (hook-in-module module component)
           file-content)
@@ -185,8 +218,6 @@ optimize Embla."
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat module "-init-" dependency)
         (push (format "(%s)" func) variable-init-content))
-      (when-function-exists (concat module "-define-keybinding")
-        (push (format "(%s)" func) variable-init-content))
       (when-function-exists (concat module "-hook-" dependency)
         (push (format template-simple-hook-statement (concat dependency "-hook") func)
               file-content)))
@@ -195,6 +226,30 @@ optimize Embla."
       '((cons "__module__" module)
         (cons "__component__" component)
         (cons "__content__" (mapconcat #'identity variable-init-content "\n"))))))
+
+(defun keybinding-extract-variable-content (keybindings key)
+  (when (assoc key keybindings)
+    (car (cdr (assoc key keybindings)))))
+
+(defun keybinding-build-content (keybindings state mode)
+  (setq keybindings (keybinding-extract-variable-content keybindings state))
+  (when keybindings
+    (replace-in-string template-evil-keybinding
+      '((cons "__state__" (substring (prin1-to-string state) 1))
+        (cons "__variable__" (prin1-to-string keybindings))
+        (cons "__mode__" (prin1-to-string mode))))))
+
+(defun variable-keybinding-in-module (module component)
+  (let* ((variable (concat module "-" component "-keybindings"))
+         (keybindings (intern variable))
+         (content))
+    (when (boundp keybindings)
+      (setq keybindings (symbol-value keybindings))
+      (let ((mode (keybinding-extract-variable-content keybindings :mode)))
+        (dolist (state '(:normal :visual))
+          (push (keybinding-build-content keybindings state mode)
+            content))))
+    (mapconcat #'identity content "\n")))
 
 (defun filename-pattern-in-module (module component)
   "Return autoload filename pattern statements by variable."
