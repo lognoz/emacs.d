@@ -73,8 +73,8 @@
     (delete-blank-lines)
     (buffer-string)))
 
-(defun define-keybinding-args-normalize (args)
-  "Return normalized `define-keybinding' arguments by allowed variables."
+(defun define-keybinding-state-normalize (args)
+  "Return normalized `define-keybinding' states by allowed variables."
   (let ((plist-grouped) (plist) (definition) (is-definition))
     (while args
       (let ((arg (car args)))
@@ -94,8 +94,9 @@
     plist-grouped))
 
 (defun define-keybinding (&rest args)
+  "Return normalized arguments."
   (let ((mode (plist-get args :mode))
-        (formated-args (define-keybinding-args-normalize args)))
+        (formated-args (define-keybinding-state-normalize args)))
     (setq formated-args (append `((:mode ,mode)) formated-args))
     formated-args))
 
@@ -228,10 +229,12 @@ optimize Embla."
         (cons "__content__" (mapconcat #'identity variable-init-content "\n"))))))
 
 (defun keybinding-extract-variable-content (keybindings key)
+  "Return list of keybinginds."
   (when (assoc key keybindings)
     (car (cdr (assoc key keybindings)))))
 
 (defun keybinding-build-content (keybindings state mode)
+  "Return keybinding content by evil state."
   (setq keybindings (keybinding-extract-variable-content keybindings state))
   (when keybindings
     (replace-in-string template-evil-keybinding
@@ -240,6 +243,7 @@ optimize Embla."
         (cons "__mode__" (prin1-to-string mode))))))
 
 (defun variable-keybinding-in-module (module component)
+  "Return merged content builded by module keybinding variable."
   (let* ((variable (concat module "-" component "-keybindings"))
          (keybindings (intern variable))
          (content))
