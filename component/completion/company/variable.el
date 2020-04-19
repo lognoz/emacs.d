@@ -1,4 +1,4 @@
-;;; config.el --- Company Component Config File
+;;; variable.el --- Company Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,18 +22,13 @@
 
 ;;; Code:
 
-(defun company-init-company ()
-  (setq company-minimum-prefix-length 1
-        company-idle-delay 0
-        company-selection-wrap-around t
-        company-tooltip-align-annotations t
-        company-tooltip-limit 14
-        company-dabbrev-downcase nil
-        company-dabbrev-ignore-case nil
-        company-dabbrev-code-other-buffers t
-        company-tooltip-align-annotations t
-        company-require-match 'never
-        company-frontends '(company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
+(defvar company-completion-loader-hooks '(pre-command-hook find-file-hook)
+  "The hook that load company completion.")
 
-  (global-company-mode 1))
+(defvar company-completion-keybindings
+  (define-keybinding
+    :mode 'company-active-map
+    :global
+      (kbd "<tab>") 'company-complete-selection
+      (kbd "C-n") 'company-select-next
+      (kbd "C-p") 'company-select-previous))
