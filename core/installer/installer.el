@@ -42,6 +42,9 @@
 (defconst template-evil-keybinding
   (template-content (concat embla-template-directory "evil-keybinding")))
 
+(defconst template-define-key
+  (template-content (concat embla-template-directory "define-key")))
+
 (defconst auto-install-components-alist
   ;; Extension              Word syntax   Require   Mode
   '(("\\.js\\'"             '("-" "_")    nil       js2-mode)
@@ -51,6 +54,9 @@
     ("Dockerfile\\'"        '("-" "_")    nil       dockerfile-mode)
     ("\\.yml\\'"            '("-" "_")    nil       yaml-mode)
     ("\\.json\\'"           '("-" "_")    nil       json-mode)
+    ("\\.rkt\\'"            '("-")        nil       racket-mode)
+    ("\\.md\\'"             '("-")        nil       markdown-mode)
+    ("\\.clj\\'"            '("-")        nil       clojure-mode)
     ("\\.tex\\'"            '("\\")       t         latex-mode)
     ("\\.editorconfig\\'"   '("-" "_")    t         editorconfig-conf-mode)))
 
@@ -79,7 +85,7 @@
     (while args
       (let ((arg (car args)))
         (setq is-definition nil)
-        (when (member arg '(:normal :visual))
+        (when (member arg '(:normal :visual :global))
           (when plist
             (add-to-list 'plist-grouped `(,definition ,plist) t))
           (setq plist nil)
@@ -233,7 +239,22 @@ optimize Embla."
   (when (assoc key keybindings)
     (car (cdr (assoc key keybindings)))))
 
-(defun keybinding-build-content (keybindings state mode)
+(defun keybinding-build-global-content (keybindings mode)
+  "Return list keybinding define into define-key statement."
+  (setq keybindings (keybinding-extract-variable-content keybindings :global))
+  (when keybindings
+    (let ((content))
+      (while keybindings
+        (push
+          (replace-in-string template-define-key
+            '((cons "__key__" (prin1-to-string (car keybindings)))
+              (cons "__function__" (prin1-to-string (cadr keybindings)))
+              (cons "__mode__" (prin1-to-string mode))))
+            content)
+        (setq keybindings (cddr keybindings)))
+      content)))
+
+(defun keybinding-build-evil-content (keybindings state mode)
   "Return keybinding content by evil state."
   (setq keybindings (keybinding-extract-variable-content keybindings state))
   (when keybindings
@@ -250,8 +271,10 @@ optimize Embla."
     (when (boundp keybindings)
       (setq keybindings (symbol-value keybindings))
       (let ((mode (keybinding-extract-variable-content keybindings :mode)))
+        (setq content
+          (append (keybinding-build-global-content keybindings mode)))
         (dolist (state '(:normal :visual))
-          (push (keybinding-build-content keybindings state mode)
+          (push (keybinding-build-evil-content keybindings state mode)
             content))))
     (mapconcat #'identity content "\n")))
 
