@@ -1,4 +1,4 @@
-;;; package.el - Snippet Packages Component File
+;;; package.el --- Snippet Packages Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

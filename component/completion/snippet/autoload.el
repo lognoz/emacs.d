@@ -1,4 +1,4 @@
-;;; config.el --- Snippet Component Config File
+;;; autoload.el --- Snippet Component Autoload File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,9 +22,9 @@
 
 ;;; Code:
 
-(defun snippet-init-yasnippet ()
-  (setq yas-verbosity 1
-        yas-wrap-around-region t
-        yas-snippet-dirs '(embla-snippet-directory))
-
-  (yas-global-mode 1))
+;;;###autoload
+(defun company-yasnippet-backend (backend)
+  (if (and (listp backend) (member 'company-yasnippet backend))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))

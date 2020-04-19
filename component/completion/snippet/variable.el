@@ -1,4 +1,4 @@
-;;; config.el --- Snippet Component Config File
+;;; variable.el --- Snippet Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,9 +22,5 @@
 
 ;;; Code:
 
-(defun snippet-init-yasnippet ()
-  (setq yas-verbosity 1
-        yas-wrap-around-region t
-        yas-snippet-dirs '(embla-snippet-directory))
-
-  (yas-global-mode 1))
+(defvar snippet-completion-loader-hooks '(text-mode-hook prog-mode-hook conf-mode-hook)
+  "The hook that load snippet.")
