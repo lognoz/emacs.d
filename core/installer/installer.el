@@ -214,6 +214,9 @@ optimize Embla."
     ;; Build keybinding variable.
     (push (variable-keybinding-in-module module component)
           variable-init-content)
+    ;; Build word syntax variable.
+    (push (variable-word-syntax-in-module module component)
+          variable-init-content)
     ;; Build hooks for the module.
     (push (hook-in-module module component)
           file-content)
@@ -224,10 +227,7 @@ optimize Embla."
     ;; function caller.
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat module "-init-" dependency)
-        (push (format "(%s)" func) variable-init-content))
-      (when-function-exists (concat module "-hook-" dependency)
-        (push (format template-simple-hook-statement (concat dependency "-hook") func)
-              file-content)))
+        (push (format "(%s)" func) variable-init-content)))
     (append-to-file file-to-write file-content)
     (replace-in-file file-to-write
       '((cons "__module__" module)
@@ -277,6 +277,17 @@ optimize Embla."
           (push (keybinding-build-evil-content keybindings state mode)
             content))))
     (mapconcat #'identity content "\n")))
+
+(defun variable-word-syntax-in-module (module component)
+  "Return content builded by module word syntax variable."
+  (let* ((variable (concat module "-" component "-word-syntax"))
+         (word-syntax (intern variable))
+         (content))
+    (when (boundp word-syntax)
+      (setq word-syntax (symbol-value word-syntax))
+      (setq content (format "(define-word-syntax '%s)" (prin1-to-string word-syntax))))
+    content))
+
 
 (defun filename-pattern-in-module (module component)
   "Return autoload filename pattern statements by variable."
