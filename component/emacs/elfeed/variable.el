@@ -1,9 +1,9 @@
-;;; autoload.el --- Isearch Autoload Component File
+;;; variable.el --- Elfeed Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: isearch
+;; Keywords: elfeed
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,21 +22,16 @@
 
 ;;; Code:
 
-;;;###autoload
-(progn
-  (global-set-key (kbd "M-s r") 'vr/query-replace)
-  (global-set-key (kbd "M-s M-r") 'vr/replace)
-  (global-set-key (kbd "M-s M-o") 'occur-project))
+(defvar elfeed-emacs-hook '(elfeed-search-mode-hook)
+  "The hook that load elfeed web module.")
 
-;;;###autoload
-(defun occur-project (keyword)
-  (interactive "sGrep for: ")
-  (let ((directory (projectile-project-root)))
-    (if directory
-      (noccur-project keyword 0 directory)
-      (noccur-project keyword))))
-
-;;;###autoload
-(defadvice isearch-exit (after my-goto-match-beginning activate)
-  (when (and isearch-forward isearch-other-end)
-    (goto-char isearch-other-end)))
+(defvar elfeed-emacs-keybinding
+  (define-keybinding
+    :mode 'elfeed-search-mode-map
+    :normal
+      (kbd "RET") 'elfeed-search-show-entry
+      (kbd "C-RET") 'elfeed-search-browse-url
+      "y" 'elfeed-search-yank
+      "s" 'elfeed-search-live-filter
+      "S" 'elfeed-search-set-filter
+      "q" 'quit-window))

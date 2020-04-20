@@ -24,7 +24,7 @@
 
 ;;; Contextual component variables.
 
-(defvar emacs-lisp-language-loader-hooks '(emacs-lisp-mode-hook)
+(defvar emacs-lisp-language-hook '(emacs-lisp-mode-hook)
   "The hook that load Emacs Lisp language.")
 
 ;;; Internal component functions.

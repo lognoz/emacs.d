@@ -22,4 +22,5 @@
 
 ;;; Code:
 
+(require-package 'evil)
 (require-package 'elfeed)

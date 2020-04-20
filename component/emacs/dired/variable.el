@@ -22,10 +22,10 @@
 
 ;;; Code:
 
-(defvar dired-emacs-loader-hooks '(dired-mode-hook)
+(defvar dired-emacs-hook '(dired-mode-hook)
   "The hook that load dired emacs module.")
 
-(defvar dired-emacs-keybindings
+(defvar dired-emacs-keybinding
   (define-keybinding
     :mode 'dired-mode-map
     :normal
@@ -36,31 +36,36 @@
       (kbd "<backtab>") 'dired-subtree-cycle
       (kbd "C-c C-r") 'dired-rsync
       (kbd "RET") 'dired-find-alternate-file
-      "q" 'quit-window
-      "o" 'dired-mouse-find-file-other-window
+      "+" 'dired-create-directory
+      "c" 'dired-do-compress-to
+      "d" 'dired-flag-file-deletion
+      "f" 'find-file
       "j" 'dired-next-line
       "k" 'dired-previous-line
+      "m" 'dired-mark
+      "o" 'dired-mouse-find-file-other-window
+      "q" 'quit-window
+      "t" 'dired-toggle-marks
+      "u" 'dired-unmark
+      "x" 'dired-do-flagged-delete
       "C" 'dired-do-copy
+      "D" 'dired-do-delete
+      "F" 'find-file
+      "K" 'dired-do-kill-lines
       "R" 'dired-do-rename
       "T" 'dired-do-touch
-      "D" 'dired-do-delete
-      "K" 'dired-do-kill-lines
-      "x" 'dired-do-flagged-delete
-      "+" 'dired-create-directory
       "Z" 'dired-do-compress
-      "c" 'dired-do-compress-to
-      "t" 'dired-toggle-marks
-      "m" 'dired-mark
-      "%u" 'dired-upcase
-      "%l" 'dired-downcase
-      "%d" 'dired-flag-files-regexp
-      "%g" 'dired-mark-files-containing-regexp
-      "%m" 'dired-mark-files-regexp
-      "%r" 'dired-do-rename-regexp
+      "%&" 'dired-flag-garbage-files
       "%C" 'dired-do-copy-regexp
       "%H" 'dired-do-hardlink-regexp
       "%R" 'dired-do-rename-regexp
       "%S" 'dired-do-symlink-regexp
-      "%&" 'dired-flag-garbage-files
+      "%d" 'dired-flag-files-regexp
+      "%g" 'dired-mark-files-containing-regexp
+      "%l" 'dired-downcase
+      "%m" 'dired-mark-files-regexp
+      "%r" 'dired-do-rename-regexp
+      "%u" 'dired-upcase
     :visual
-      "m" 'dired-mark-selection))
+      "m" 'dired-mark
+      "d" 'dired-flag-file-deletion))

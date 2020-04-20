@@ -22,10 +22,10 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-loader-hooks '(ibuffer-mode-hook)
+(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
   "The hook that load ibuffer emacs module.")
 
-(defvar ibuffer-emacs-keybindings
+(defvar ibuffer-emacs-keybinding
   (define-keybinding
     :mode 'ibuffer-mode-map
     :normal

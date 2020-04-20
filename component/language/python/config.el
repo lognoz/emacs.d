@@ -24,7 +24,7 @@
 
 ;;; Contextual component variables.
 
-(defvar python-language-loader-hooks '(python-mode-hook)
+(defvar python-language-hook '(python-mode-hook)
   "The hook that load python language.")
 
 ;;; Internal component functions.

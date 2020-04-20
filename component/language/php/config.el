@@ -24,7 +24,7 @@
 
 ;;; Contextual component variables.
 
-(defvar php-language-loader-hooks '(php-mode-hook)
+(defvar php-language-hook '(php-mode-hook)
   "The hook that load PHP language.")
 
 ;;; Internal component functions.

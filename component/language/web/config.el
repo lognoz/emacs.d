@@ -27,10 +27,10 @@
 (defvar web-language-major-mode 'web-mode
   "The Web language major mode.")
 
-(defvar web-language-loader-hooks '(web-mode-hook)
+(defvar web-language-hook '(web-mode-hook)
   "The hook that load Web language.")
 
-(defvar web-language-filename-patterns '("\\.html\\'" "\\.html.php\\'")
+(defvar web-language-filename-pattern '("\\.html\\'" "\\.html.php\\'")
   "The filename patterns that corresponding with Web major mode.")
 
 ;;; Internal component functions.

@@ -22,10 +22,10 @@
 
 ;;; Code:
 
-(defvar company-completion-loader-hooks '(pre-command-hook find-file-hook)
+(defvar company-completion-hook '(pre-command-hook find-file-hook)
   "The hook that load company completion.")
 
-(defvar company-completion-keybindings
+(defvar company-completion-keybinding
   (define-keybinding
     :mode 'company-active-map
     :global

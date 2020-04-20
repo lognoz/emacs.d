@@ -24,7 +24,7 @@
 
 ;;; Contextual core variables.
 
-(defvar isearch-emacs-loader-hooks '(isearch-mode-hook)
+(defvar isearch-emacs-loader-hooks '(isearch-mode-hook pre-command-hook)
   "The hook that load isearch emacs module.")
 
 ;;; Internal core functions.
@@ -43,3 +43,7 @@
 
   ;; Keybinding to search and replace.
   (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))
+
+(defun isearch-init-visual-regexp ()
+  ;; Disabled visual regexp help.
+  (setq vr/auto-show-help nil))

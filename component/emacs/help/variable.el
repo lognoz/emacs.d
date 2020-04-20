@@ -22,10 +22,10 @@
 
 ;;; Code:
 
-(defvar help-emacs-loader-hooks '(help-mode-hook)
+(defvar help-emacs-hook '(help-mode-hook)
   "The hook that load help emacs module.")
 
-(defvar help-emacs-keybindings
+(defvar help-emacs-keybinding
   (define-keybinding
     :mode 'help-mode-map
     :normal

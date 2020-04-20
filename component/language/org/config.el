@@ -24,7 +24,7 @@
 
 ;;; Contextual component variables.
 
-(defvar org-language-loader-hooks '(org-mode-hook)
+(defvar org-language-hook '(org-mode-hook)
   "The hook that load Org language.")
 
 ;;; Internal component functions.

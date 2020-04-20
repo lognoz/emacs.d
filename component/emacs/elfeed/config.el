@@ -22,13 +22,6 @@
 
 ;;; Code:
 
-;;; Contextual core variables.
-
-(defvar elfeed-emacs-loader-hooks '(elfeed-search-mode-hook)
-  "The hook that load elfeed web module.")
-
-;;; Internal core functions.
-
 (defun elfeed-init-elfeed ()
   (setq elfeed-use-curl t
         elfeed-curl-max-connections 10
@@ -40,5 +33,8 @@
         elfeed-show-truncate-long-urls t
         elfeed-show-unique-buffers t)
 
-  (evil-collection-elfeed-setup)
   (elfeed-update))
+
+(defun elfeed-init-evil ()
+  "Initialization of inital evil state."
+  (evil-set-initial-state 'elfeed-search-mode 'normal))

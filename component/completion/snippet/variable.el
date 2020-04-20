@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(defvar snippet-completion-loader-hooks '(text-mode-hook prog-mode-hook conf-mode-hook)
+(defvar snippet-completion-hook '(text-mode-hook prog-mode-hook conf-mode-hook)
   "The hook that load snippet.")

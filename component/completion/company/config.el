@@ -23,6 +23,7 @@
 ;;; Code:
 
 (defun company-init-company ()
+  (require 'company)
   (setq company-minimum-prefix-length 1
         company-idle-delay 0
         company-selection-wrap-around t
@@ -33,6 +34,7 @@
         company-dabbrev-code-other-buffers t
         company-tooltip-align-annotations t
         company-require-match 'never
+        company-backends (mapcar #'company-yasnippet-backend company-backends)
         company-frontends '(company-pseudo-tooltip-frontend
                             company-echo-metadata-frontend))
 
