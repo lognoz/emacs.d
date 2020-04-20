@@ -140,8 +140,8 @@ mainly used with mapconcat."
   "Set archives and refresh package repositories."
   (message "Download descriptions of configured ELPA packages")
   (setq embla-package-initialized t)
-  (package-set-archives)
-  (package-refresh-contents))
+  (package-set-archives))
+  ;;(package-refresh-contents))
 
 (defun create-startup-autoload-file ()
   "Scan component directory to extract all autoload files and
@@ -265,7 +265,7 @@ optimize Embla."
 
 (defun variable-keybinding-in-module (module component)
   "Return merged content builded by module keybinding variable."
-  (let* ((variable (concat module "-" component "-keybindings"))
+  (let* ((variable (concat module "-" component "-keybinding"))
          (keybindings (intern variable))
          (content))
     (when (boundp keybindings)
@@ -280,7 +280,7 @@ optimize Embla."
 
 (defun filename-pattern-in-module (module component)
   "Return autoload filename pattern statements by variable."
-  (let* ((extensions (intern (concat module "-" component "-filename-patterns")))
+  (let* ((extensions (intern (concat module "-" component "-filename-pattern")))
          (mode (intern (concat module "-" component "-major-mode")))
          (content))
     (when (and (boundp extensions) (boundp mode))
@@ -293,7 +293,7 @@ optimize Embla."
 
 (defun hook-in-module (module component)
   "Return autoload hook statements by variable."
-  (let* ((variable (concat module "-" component "-loader-hooks"))
+  (let* ((variable (concat module "-" component "-hook"))
          (reference (intern variable))
          (content))
     (when (boundp reference)
