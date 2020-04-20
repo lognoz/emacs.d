@@ -32,15 +32,6 @@
 
 ;;; External core functions.
 
-(defun define-word-syntax (word-syntax)
-  "Define word syntax entry by list of characters."
-  (dolist (character word-syntax)
-    (modify-syntax-entry
-      (cond ((string-equal character "_") ?_)
-            ((string-equal character "-") ?-)
-            ((string-equal character "\\") ?\\)
-            ((string-equal character "$") ?$)) "w")))
-
 (defun package-set-archives ()
   "Set package archives and initialize it."
   (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
