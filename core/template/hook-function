@@ -1,8 +1,5 @@
-(defvar component-__module__-__component__-initialized nil
-  "Component content has been initialized.")
-
 ;;;###autoload
 (defun component-__module__-__component__-hook ()
-  (unless component-__module__-__component__-initialized
-    (setq component-__module__-__component__-initialized t)
-    __content__))
+  __content__)
+
+__hook__
