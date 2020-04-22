@@ -22,9 +22,6 @@
 
 ;;; Code:
 
-(defun version-control-init-magit ()
-  (global-set-key (kbd "C-x g") 'magit))
-
 (defun version-control-init-git-gutter ()
   (global-git-gutter-mode t)
 

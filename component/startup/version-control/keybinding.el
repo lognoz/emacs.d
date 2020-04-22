@@ -26,4 +26,5 @@
   :mode 'embla-mode-map
   :define
     (kbd "<s-up>") 'git-gutter:previous-hunk
-    (kbd "<s-down>") 'git-gutter:next-hunk)
+    (kbd "<s-down>") 'git-gutter:next-hunk
+    (kbd "C-x g") 'magit)
