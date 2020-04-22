@@ -25,5 +25,31 @@
 (define-keybinding
   :mode 'embla-mode-map
   :define
+    (kbd "<s-left>") 'winner-undo
+    (kbd "<s-right>") 'winner-redo
     (kbd "C-'") 'er/expand-region
-    (kbd "C-M-'") 'er/contract-region)
+    (kbd "C-M-'") 'er/contract-region
+    (kbd "C-S-z") 'undo-tree-redo
+    (kbd "C-c C-e") 'eval-and-replace
+    (kbd "C-c C-j") 'counsel-imenu
+    (kbd "C-c p k") 'projectile-kill-buffers
+    (kbd "C-c p u") 'browse-project-source
+    (kbd "C-c p v") 'find-directory-local-variable-file
+    (kbd "C-h f") 'find-function
+    (kbd "C-h k") 'find-function-on-key
+    (kbd "C-x ,") 'pop-local-mark-ring
+    (kbd "C-x 4 t") 'open-terminal-other-window
+    (kbd "C-x <down>") 'sort-lines
+    (kbd "C-x =") 'align-regexp
+    (kbd "C-x C-b") 'ibuffer
+    (kbd "C-x C-r") 'revert-buffer
+    (kbd "C-x p") 'find-project
+    (kbd "C-x t") 'open-terminal
+    (kbd "C-x w") 'elfeed
+    (kbd "C-z") 'undo-tree-undo
+    (kbd "M-f") 'find-file-on-cursor
+    (kbd "s-1") 'delete-other-windows
+    (kbd "s-2") 'split-window-below
+    (kbd "s-3") 'split-window-right
+    (kbd "s-k") 'kill-current-buffer
+    (kbd "s-o") 'other-window)
