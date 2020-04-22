@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Version Control Component Keybinding File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: version-control git
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,8 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'embla-mode-map
+  :define
+    (kbd "<s-up>") 'git-gutter:previous-hunk
+    (kbd "<s-down>") 'git-gutter:next-hunk)

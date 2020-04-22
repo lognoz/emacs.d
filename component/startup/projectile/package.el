@@ -1,4 +1,4 @@
-;;; package.el - Projectile Packages Component File
+;;; package.el - Projectile Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

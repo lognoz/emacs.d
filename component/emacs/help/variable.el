@@ -24,11 +24,3 @@
 
 (defvar help-emacs-hook '(help-mode-hook)
   "The hook that load help emacs module.")
-
-(defvar help-emacs-keybinding
-  (define-keybinding
-    :mode 'help-mode-map
-    :normal
-      "<" 'help-go-back
-      ">" 'help-go-forward
-      "q" 'quit-window))

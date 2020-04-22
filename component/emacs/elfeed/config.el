@@ -23,6 +23,7 @@
 ;;; Code:
 
 (defun elfeed-init-elfeed ()
+  "Initialization of elfeed."
   (setq elfeed-use-curl t
         elfeed-curl-max-connections 10
         elfeed-search-clipboard-type 'CLIPBOARD

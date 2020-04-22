@@ -1,4 +1,4 @@
-;;; package.el --- Emacs Lisp Component File
+;;; package.el --- Emacs Lisp Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

@@ -1,4 +1,4 @@
-;;; package.el --- Python Package File
+;;; package.el --- Python Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

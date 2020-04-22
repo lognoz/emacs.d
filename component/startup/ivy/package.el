@@ -1,4 +1,4 @@
-;;; package.el --- Ivy Packages Component File
+;;; package.el --- Ivy Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

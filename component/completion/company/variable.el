@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -24,11 +24,3 @@
 
 (defvar company-completion-hook '(pre-command-hook find-file-hook)
   "The hook that load company completion.")
-
-(defvar company-completion-keybinding
-  (define-keybinding
-    :mode 'company-active-map
-    :global
-      (kbd "<tab>") 'company-complete-selection
-      (kbd "C-n") 'company-select-next
-      (kbd "C-p") 'company-select-previous))

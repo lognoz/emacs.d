@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; variable.el --- Org Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: org
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(defvar org-language-hook '(org-mode-hook)
+  "The hook that load Org language.")

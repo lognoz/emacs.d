@@ -23,12 +23,6 @@
 ;;; Code:
 
 ;;;###autoload
-(progn
-  (global-set-key (kbd "M-s r") 'vr/query-replace)
-  (global-set-key (kbd "M-s M-r") 'vr/replace)
-  (global-set-key (kbd "M-s M-o") 'occur-project))
-
-;;;###autoload
 (defun occur-project (keyword)
   (interactive "sGrep for: ")
   (let ((directory (projectile-project-root)))

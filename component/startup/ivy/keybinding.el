@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Ivy Component Keybinding File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: ivy counsel
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,18 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'embla-mode-map
+  :define
+    (kbd "M-x") 'counsel-M-x
+    (kbd "M-y") 'counsel-yank-pop
+    (kbd "C-x d") 'counsel-dired
+    (kbd "C-x f") 'counsel-recentf
+    (kbd "C-x C-f") 'counsel-find-file
+    (kbd "C-c C-j") 'counsel-imenu
+    (kbd "C-x r l") 'counsel-bookmark)
+
+(define-keybinding
+  :mode 'ivy-minibuffer-map
+  :define
+    (kbd "TAB") 'ivy-alt-done)

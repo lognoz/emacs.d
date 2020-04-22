@@ -1,4 +1,4 @@
-;;; config.el --- Ivy Component File
+;;; config.el --- Ivy Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -41,8 +41,6 @@
 
   ;; Change the maximum width of the Ivy window to 1/3
   (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
-
-  (ivy--setup-keybindings)
   (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook))
 
 (defun ivy-init-counsel ()
@@ -59,7 +57,6 @@
            counsel-find-file
            counsel-yank-pop
            ivy-switch-buffer)))
-  ;;(ivy-prescient-mode 1))
 
 (defun ivy-init-prescient ()
   (require 'prescient)
@@ -67,14 +64,3 @@
   (setq prescient-save-file (concat embla-temporary-directory "prescient"))
   (setq prescient-filter-method '(literal regexp))
   (prescient-persist-mode))
-
-(defun ivy--setup-keybindings ()
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "M-y") 'counsel-yank-pop)
-  (global-set-key (kbd "C-x d") 'counsel-dired)
-  (global-set-key (kbd "C-x f") 'counsel-recentf)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "C-c C-j") 'counsel-imenu)
-  (global-set-key (kbd "C-x r l") 'counsel-bookmark)
-
-  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))

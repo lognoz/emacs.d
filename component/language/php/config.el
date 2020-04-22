@@ -1,4 +1,4 @@
-;;; config.el --- PHP Config File
+;;; config.el --- PHP Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,16 +22,7 @@
 
 ;;; Code:
 
-;;; Contextual component variables.
-
-(defvar php-language-hook '(php-mode-hook)
-  "The hook that load PHP language.")
-
-;;; Internal component functions.
-
 (defun php-init-php-mode ()
-  ;; Modify PHP syntax entry.
-  (define-word-syntax '("_" "$"))
   ;; Reinitialize PHPDoc face to acts like commentary block.
   (setq php-phpdoc-font-lock-doc-comments nil)
   (face-remap-add-relative 'font-lock-doc-face 'font-lock-comment-face))

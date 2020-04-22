@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; variable.el --- Emacs Lisp Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: emacs lisp
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,8 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(defvar emacs-lisp-language-hook '(emacs-lisp-mode-hook)
+  "The hook that load Emacs Lisp language.")
+
+(defvar emacs-lisp-language-word-syntax '("-")
+  "The word syntax entry by list of characters.")

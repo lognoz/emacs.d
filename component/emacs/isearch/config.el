@@ -22,14 +22,8 @@
 
 ;;; Code:
 
-;;; Contextual core variables.
-
-(defvar isearch-emacs-loader-hooks '(isearch-mode-hook pre-command-hook)
-  "The hook that load isearch emacs module.")
-
-;;; Internal core functions.
-
 (defun isearch-init-isearch ()
+  "Initialization of isearch."
   (setq search-highlight t
         search-whitespace-regexp ".*?"
         isearch-lax-whitespace t
@@ -39,11 +33,9 @@
         lazy-count-prefix-format "(%s/%s) "
         lazy-count-suffix-format nil
         isearch-yank-on-move 'shif
-        isearch-allow-scroll 'unlimited)
-
-  ;; Keybinding to search and replace.
-  (define-key isearch-mode-map (kbd "M-s r") 'isearch-query-replace))
+        isearch-allow-scroll 'unlimited))
 
 (defun isearch-init-visual-regexp ()
+  "Initialization of visual-regexp package."
   ;; Disabled visual regexp help.
   (setq vr/auto-show-help nil))

@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; variable.el --- Python Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: python
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,8 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(defvar python-language-hook '(python-mode-hook)
+  "The hook that load python language.")
+
+(defvar python-language-word-syntax '("_")
+  "The word syntax entry by list of characters.")

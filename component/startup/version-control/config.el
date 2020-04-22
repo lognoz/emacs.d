@@ -1,4 +1,4 @@
-;;; config.el --- Version Control Component File
+;;; config.el --- Version Control Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -34,7 +34,4 @@
         git-gutter:deleted-sign "-"
         git-gutter:hide-gutter t
         git-gutter:ask-p nil
-        git-gutter:hide-gutter t)
-
-  (global-set-key (kbd "<s-up>") 'git-gutter:previous-hunk)
-  (global-set-key (kbd "<s-down>") 'git-gutter:next-hunk))
+        git-gutter:hide-gutter t))

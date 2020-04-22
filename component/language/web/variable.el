@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; variable.el --- Web Component Variable File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: web
 
 ;; This file is not part of GNU Emacs.
 
@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -22,5 +22,14 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(defvar web-language-major-mode 'web-mode
+  "The Web language major mode.")
+
+(defvar web-language-hook '(web-mode-hook)
+  "The hook that require Web language component.")
+
+(defvar web-language-filename-pattern '("\\.html\\'" "\\.html.php\\'")
+  "The filename patterns that corresponding with Web major mode.")
+
+(defvar web-language-word-syntax '("_" "-")
+  "The word syntax entry by list of characters.")

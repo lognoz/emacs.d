@@ -1,4 +1,4 @@
-;;; autoload.el --- Ivy Autoload Component File
+;;; autoload.el --- Ivy Component Autoload File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

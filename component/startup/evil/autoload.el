@@ -1,4 +1,4 @@
-;;; autoload.el --- Evil Autoload Component File
+;;; autoload.el --- Evil Component Autoload File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

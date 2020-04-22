@@ -1,4 +1,4 @@
-;;; config.el --- Ibuffer Config File
+;;; config.el --- Ibuffer Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

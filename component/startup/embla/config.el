@@ -1,4 +1,4 @@
-;;; config.el --- Embla Component File
+;;; config.el --- Embla Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -31,13 +31,3 @@
 
 (defun embla-init-orglink ()
   (global-orglink-mode))
-
-(defun embla-init-origami ()
-  (global-origami-mode)
-  (with-eval-after-load 'evil
-    (define-key evil-normal-state-map (kbd "TAB") 'origami-toggle-node)
-    (global-set-key (kbd "<s-tab>") 'origami-toggle-all-nodes)))
-
-(defun embla-init-expand-region ()
-  (global-set-key (kbd "C-'") 'er/expand-region)
-  (global-set-key (kbd "C-M-'") 'er/contract-region))

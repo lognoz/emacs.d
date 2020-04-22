@@ -24,14 +24,3 @@
 
 (defvar elfeed-emacs-hook '(elfeed-search-mode-hook)
   "The hook that load elfeed web module.")
-
-(defvar elfeed-emacs-keybinding
-  (define-keybinding
-    :mode 'elfeed-search-mode-map
-    :normal
-      (kbd "RET") 'elfeed-search-show-entry
-      (kbd "C-RET") 'elfeed-search-browse-url
-      "y" 'elfeed-search-yank
-      "s" 'elfeed-search-live-filter
-      "S" 'elfeed-search-set-filter
-      "q" 'quit-window))

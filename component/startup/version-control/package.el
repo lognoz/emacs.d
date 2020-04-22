@@ -1,4 +1,4 @@
-;;; package.el --- Version control Packages Component File
+;;; package.el --- Version control Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

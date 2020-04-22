@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Elfeed Component Keybinding File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: elfeed
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,12 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'elfeed-search-mode-map
+  :normal
+    (kbd "RET") 'elfeed-search-show-entry
+    (kbd "C-RET") 'elfeed-search-browse-url
+    "y" 'elfeed-search-yank
+    "s" 'elfeed-search-live-filter
+    "S" 'elfeed-search-set-filter
+    "q" 'quit-window)

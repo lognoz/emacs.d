@@ -1,4 +1,4 @@
-;;; package.el --- Ibuffer Package Mode File
+;;; package.el --- Ibuffer Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

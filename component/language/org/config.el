@@ -1,4 +1,4 @@
-;;; config.el --- Org Component File
+;;; config.el --- Org Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -22,20 +22,7 @@
 
 ;;; Code:
 
-;;; Contextual component variables.
-
-(defvar org-language-hook '(org-mode-hook)
-  "The hook that load Org language.")
-
-;;; Internal component functions.
-
 (defun org-init-org ()
-  (org-babel-do-load-languages 'org-babel-load-languages
-    '((shell . t)
-      (http . t)
-      (emacs-lisp . t)
-      (python . t)))
-
   (setq org-startup-indented t
         org-clock-idle-time 5
         org-bullets-bullet-list '("› ")
@@ -46,7 +33,14 @@
         org-fontify-done-headline t
         org-fontify-quote-and-verse-blocks t
         org-catch-invisible-edits 'show-and-error
-        org-cycle-separator-lines 0))
+        org-cycle-separator-lines 0)
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+    '((shell . t)
+      (http . t)
+      (emacs-lisp . t)
+      (python . t))))
+
 
 (defun org-init-org-bullets ()
   (org-bullets-mode))

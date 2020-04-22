@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -23,4 +23,4 @@
 ;;; Code:
 
 (defvar snippet-completion-hook '(text-mode-hook prog-mode-hook conf-mode-hook)
-  "The hook that load snippet.")
+  "The hook that load snippet component.")

@@ -1,6 +1,6 @@
-;;; package.el - Embla Packages Component File
+;;; package.el - Embla Component Package File
 
-;; Copyrght (c) Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Keywords: embla
@@ -26,9 +26,10 @@
 (require-package 'editorconfig)
 (require-package 'projectile)
 (require-package 'orglink)
-(require-package 'origami)
 (require-package 'pdf-tools)
 (require-package 'projectile)
 (require-package 'wgrep)
 (require-package 'which-key)
 (require-package 'expand-region)
+(require-package 'smartparens)
+(require-package 'evil-smartparens)

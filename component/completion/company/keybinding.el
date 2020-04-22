@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Company Component Keybinding File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: company
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,9 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'company-active-map
+  :define
+    (kbd "<tab>") 'company-complete-selection
+    (kbd "C-n") 'company-select-next
+    (kbd "C-p") 'company-select-previous)

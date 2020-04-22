@@ -1,4 +1,4 @@
-;;; package.el --- PHP Package File
+;;; package.el --- PHP Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

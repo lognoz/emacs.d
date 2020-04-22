@@ -1,4 +1,4 @@
-;;; config.el --- Projectile Component File
+;;; config.el --- Projectile Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

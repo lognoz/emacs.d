@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Help Component Keybinding File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: help
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,9 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'help-mode-map
+  :normal
+    "<" 'help-go-back
+    ">" 'help-go-forward
+    "q" 'quit-window)

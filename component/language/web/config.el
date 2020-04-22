@@ -1,4 +1,4 @@
-;;; config.el --- Web Component File
+;;; config.el --- Web Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -22,22 +22,9 @@
 
 ;;; Code:
 
-;;; Contextual component variables.
-
-(defvar web-language-major-mode 'web-mode
-  "The Web language major mode.")
-
-(defvar web-language-hook '(web-mode-hook)
-  "The hook that load Web language.")
-
-(defvar web-language-filename-pattern '("\\.html\\'" "\\.html.php\\'")
-  "The filename patterns that corresponding with Web major mode.")
-
-;;; Internal component functions.
-
 (defun web-init-company ()
   (set (make-local-variable 'company-backends)
        '(company-css company-web-html company-yasnippet company-files)))
 
-(defun web-init-emmet ()
+(defun web-init-emmet-mode ()
   (emmet-mode))

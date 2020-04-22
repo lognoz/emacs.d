@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; keybinding.el --- Isearch Keybinding Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: isearch
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,14 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(define-keybinding
+  :mode 'embla-mode-map
+  :define
+    (kbd "M-s r") 'vr/query-replace
+    (kbd "M-s M-r") 'vr/replace
+    (kbd "M-s M-o") 'occur-project)
+
+(define-keybinding
+  :mode 'isearch-mode-map
+  :define
+    (kbd "M-s r") 'isearch-query-replace)

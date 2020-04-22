@@ -1,4 +1,4 @@
-;;; package.el --- Evil Packages Component File
+;;; package.el --- Evil Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -24,7 +24,6 @@
 
 (require-package 'evil)
 (require-package 'evil-magit)
-(require-package 'evil-collection)
 (require-package 'evil-indent-plus)
 (require-package 'evil-smartparens)
 (require-package 'evil-surround)

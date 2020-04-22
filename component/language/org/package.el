@@ -1,4 +1,4 @@
-;;; package.el --- Org Component File
+;;; package.el --- Org Component Package File
 
 ;; Copyright (c) Marc-Antoine Loignon
 

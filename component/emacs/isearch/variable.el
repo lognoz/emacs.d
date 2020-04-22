@@ -1,9 +1,9 @@
-;;; variable.el --- Ibuffer Component Variable File
+;;; variable.el --- Isearch Variable Component File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: ibuffer
+;; Keywords: isearch
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,5 +22,5 @@
 
 ;;; Code:
 
-(defvar ibuffer-emacs-hook '(ibuffer-mode-hook)
-  "The hook that load ibuffer emacs module.")
+(defvar isearch-emacs-hook '(isearch-mode-hook pre-command-hook)
+  "The hook that isearch component.")

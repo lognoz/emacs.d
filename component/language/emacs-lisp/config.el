@@ -1,4 +1,4 @@
-;;; config.el --- Emacs Lisp Component File
+;;; config.el --- Emacs Lisp Component Config File
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -21,17 +21,6 @@
 ;; along with this Emacs config. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Code:
-
-;;; Contextual component variables.
-
-(defvar emacs-lisp-language-hook '(emacs-lisp-mode-hook)
-  "The hook that load Emacs Lisp language.")
-
-;;; Internal component functions.
-
-(defun emacs-lisp-init-elisp ()
-  ;; Modify Emacs Lisp syntax entry.
-  (define-word-syntax '("-")))
 
 (defun emacs-lisp-init-elisp-slime-nav ()
   (turn-on-elisp-slime-nav-mode))
