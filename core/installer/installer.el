@@ -22,7 +22,7 @@
 
 ;;; Code:
 
-;;; Contextual core variables.
+;;; Contextual installer constant.
 
 (defconst template-auto-mode-alist
   (template-content (concat embla-template-directory "auto-mode-alist")))
@@ -45,6 +45,9 @@
 (defconst template-define-key
   (template-content (concat embla-template-directory "define-key")))
 
+(defconst template-autoload-statement
+  (template-content (concat embla-template-directory "autoload-statement")))
+
 (defconst auto-install-components-alist
   ;; Extension              Word syntax   Require   Mode
   '(("\\.js\\'"             '("-" "_")    nil       js2-mode)
@@ -59,6 +62,11 @@
     ("\\.clj\\'"            '("-")        nil       clojure-mode)
     ("\\.tex\\'"            '("\\")       t         latex-mode)
     ("\\.editorconfig\\'"   '("-" "_")    t         editorconfig-conf-mode)))
+
+;;; Contextual installer variables.
+
+(defvar keybinding-component nil
+  "List of keybinding define in component.")
 
 ;;; Internal installer functions.
 
@@ -85,7 +93,7 @@
     (while args
       (let ((arg (car args)))
         (setq is-definition nil)
-        (when (member arg '(:normal :visual :global))
+        (when (member arg '(:normal :visual :define))
           (when plist
             (add-to-list 'plist-grouped `(,definition ,plist) t))
           (setq plist nil)
@@ -104,6 +112,8 @@
   (let ((mode (plist-get args :mode))
         (formated-args (define-keybinding-state-normalize args)))
     (setq formated-args (append `((:mode ,mode)) formated-args))
+    ;; Push value into `keybinding-component' variable.
+    (add-to-list 'keybinding-component formated-args)
     formated-args))
 
 (defun append-to-file (path content)
@@ -143,37 +153,6 @@ mainly used with mapconcat."
   (package-set-archives))
   ;;(package-refresh-contents))
 
-(defun create-startup-autoload-file ()
-  "Scan component directory to extract all autoload files and
-merge it into one file."
-  (let ((path-reference (concat embla-component-directory "/startup/"))
-        (file-content '("(provide 'embla-component)")))
-    ;; Extract all autoload.el in component directories to push it to
-    ;; `component-autoload-file-content' variable.
-    (dolist (path (directory-files-recursively path-reference ""))
-      (when (string-equal (file-name-base path) "autoload")
-        (push (file-content-without-header path)
-              file-content)))
-    (append-to-file embla-component-file file-content)))
-
-(defun create-startup-component-file ()
-  "Extract all content into subdirectories locate in startup
-component to write an unique file that contains it."
-  (let ((file-content '("(provide 'embla-startup)")))
-    (fetch-content (concat embla-component-directory "startup/")
-      ;; Put this variable to nil to know what package is install inside
-      ;; this component.
-      (setq embla-component-packages nil)
-      ;; Loop into packages installed in component to create init
-      ;; function caller.
-      (load-files path '("package" "config"))
-      (dolist (dependency embla-component-packages)
-        (when-function-exists (concat module "-init-" dependency)
-          (push (format "(%s)" func) file-content)))
-      (push (file-content-without-header (concat path "/config.el"))
-            file-content)
-      (append-to-file embla-startup-file file-content))))
-
 (defun create-autoload-file ()
   "This function parse magic comments locate in core and project
 directories and append it to autoload file locate. It will helps to
@@ -204,35 +183,44 @@ optimize Embla."
            (format "%scomponent-%s-%s.el"
                    embla-build-directory component module))
          (file-content (list template-hook-function provider))
-         (variable-init-content))
+         (function-content))
+    ;; Put these variables to nil to know what package is install
+    ;; and keybinding is define inside this component.
+    (setq embla-component-packages nil
+          keybinding-component nil)
     ;; Install packages and append content of autoload and config.
-    (load-files path '("package" "variable" "autoload" "config")
+    (load-files path '("package" "keybinding" "variable" "autoload" "config")
       (unless (or (equal f "package")
+                  (equal f "keybinding")
                   (equal f "variable"))
         (push (file-content-without-header (concat path f ".el"))
               file-content)))
-    ;; Build keybinding variable.
-    (push (variable-keybinding-in-module module component)
-          variable-init-content)
     ;; Build word syntax variable.
     (push (variable-word-syntax-in-module module component)
-          variable-init-content)
-    ;; Build hooks for the module.
-    (push (hook-in-module module component)
-          file-content)
+          function-content)
     ;; Build filename patterns for the module.
     (push (filename-pattern-in-module module component)
           file-content)
+    ;; Build keybindings statement.
+    (dolist (keybinding keybinding-component)
+      (let ((mode (keybinding-extract-variable-content keybinding :mode)))
+        (if (equal mode 'embla-mode-map)
+          (push (replace-in-string template-autoload-statement
+                  '((cons "__content__" (keybinding-in-module keybinding mode))))
+                file-content)
+          (push (keybinding-in-module keybinding mode) function-content))))
     ;; Loop into packages installed to add hooks and create init
     ;; function caller.
     (dolist (dependency embla-component-packages)
       (when-function-exists (concat module "-init-" dependency)
-        (push (format "(%s)" func) variable-init-content)))
+        (push (format "(%s)" func) function-content)))
+    ;; Append and replace variable in file.
     (append-to-file file-to-write file-content)
     (replace-in-file file-to-write
-      '((cons "__module__" module)
+      '((cons "__hook__" (hook-in-module module component))
+        (cons "__module__" module)
         (cons "__component__" component)
-        (cons "__content__" (mapconcat #'identity variable-init-content "\n"))))))
+        (cons "__content__" (mapconcat #'identity function-content "\n"))))))
 
 (defun keybinding-extract-variable-content (keybindings key)
   "Return list of keybinginds."
@@ -241,7 +229,7 @@ optimize Embla."
 
 (defun keybinding-build-global-content (keybindings mode)
   "Return list keybinding define into define-key statement."
-  (setq keybindings (keybinding-extract-variable-content keybindings :global))
+  (setq keybindings (keybinding-extract-variable-content keybindings :define))
   (when keybindings
     (let ((content))
       (while keybindings
@@ -263,19 +251,14 @@ optimize Embla."
         (cons "__variable__" (prin1-to-string keybindings))
         (cons "__mode__" (prin1-to-string mode))))))
 
-(defun variable-keybinding-in-module (module component)
-  "Return merged content builded by module keybinding variable."
-  (let* ((variable (concat module "-" component "-keybinding"))
-         (keybindings (intern variable))
-         (content))
-    (when (boundp keybindings)
-      (setq keybindings (symbol-value keybindings))
-      (let ((mode (keybinding-extract-variable-content keybindings :mode)))
-        (setq content
-          (append (keybinding-build-global-content keybindings mode)))
-        (dolist (state '(:normal :visual))
-          (push (keybinding-build-evil-content keybindings state mode)
-            content))))
+(defun keybinding-in-module (keybinding mode)
+  "Return merged content builded by module keybinding."
+  (let ((content))
+    (setq content
+      (append (keybinding-build-global-content keybinding mode)))
+    (dolist (state '(:normal :visual))
+      (push (keybinding-build-evil-content keybinding state mode)
+        content))
     (mapconcat #'identity content "\n")))
 
 (defun variable-word-syntax-in-module (module component)
@@ -287,7 +270,6 @@ optimize Embla."
       (setq word-syntax (symbol-value word-syntax))
       (setq content (format "(define-word-syntax '%s)" (prin1-to-string word-syntax))))
     content))
-
 
 (defun filename-pattern-in-module (module component)
   "Return autoload filename pattern statements by variable."
@@ -310,8 +292,11 @@ optimize Embla."
     (when (boundp reference)
       (dolist (mode (symbol-value reference))
         (push (format template-hook-statement (symbol-name mode))
-              content))
-      (mapconcat #'identity content "\n"))))
+              content)))
+    (if content
+      (mapconcat #'identity content "\n")
+      (replace-in-string template-autoload-statement
+        '((cons "__content__" (format "(component-%s)" variable)))))))
 
 ;;; External installer functions.
 
@@ -327,16 +312,10 @@ file, refresh package repositories and build Embla."
   (require-package 'atom-one-dark-theme)
   ;; Create component file with `auto-install-alist'.
   (create-auto-install-file)
-  ;; Create component file that contains the autoloads functions in
-  ;; component directory.
-  (create-startup-autoload-file)
-  ;; Create file that's load on Emacs startup.
-  (create-startup-component-file)
   ;; Create component files.
   (dolist (directory (directories-list embla-component-directory))
     (let ((component (directory-name directory)))
-      (unless (equal component "startup")
-        (make-component-files directory component))))
+      (make-component-files directory component)))
   ;; Scan core, component and project directories to create the
   ;; autoload file.
   (create-autoload-file))
