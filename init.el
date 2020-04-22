@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -22,8 +22,17 @@
 
 ;;; Code:
 
+;; Unset temporarily file-name-handler-alist for better performance.
+(defvar last-file-name-handler-alist file-name-handler-alist)
+
 ;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold 100000000
+      gc-cons-percentage 0.6
+      file-name-handler-alist nil)
+
+;; Don't auto-initialize package.
+(setq package-enable-at-startup nil
+      package--init-file-ensured t)
 
 ;; Show warning when opening files bigger than 100MB.
 (setq large-file-warning-threshold 100000000)
