@@ -24,13 +24,6 @@
 
 (require 'cl-lib)
 
-;;; Define Embla minor mode.
-
-(define-minor-mode embla-mode
-  "Minor mode to consolidate Emacs Embla extensions."
-  :global t
-  :keymap (make-sparse-keymap))
-
 ;;; Environmental constants.
 
 (defconst operating-system
@@ -85,6 +78,13 @@
 
 (defconst embla-autoload-file (concat embla-build-directory "embla-autoload.el")
   "The Embla autoload file.")
+
+;;; Define Embla minor mode.
+
+(define-minor-mode embla-mode
+  "Minor mode to consolidate Emacs Embla extensions."
+  :global t
+  :keymap (make-sparse-keymap))
 
 ;;; External macro functions.
 
@@ -171,8 +171,10 @@ component directory."
   ;; Define bookmark, minibuffer, history, place, undo-tree
   ;; and backup files.
   (add-hook 'pre-command-hook 'define-context-files)
-  ;; Clear initialization component message.
-  (message ""))
+  ;; Enable garbage collection.
+  (setq gc-cons-threshold 16777216
+        gc-cons-percentage 0.1
+        file-name-handler-alist last-file-name-handler-alist))
 
 (defun define-context-files ()
   "This function is used to set bookmark, minibuffer, history, place,
@@ -215,6 +217,6 @@ and autoload file to manage Emacs configuration."
   ;; Remove mode line for loading.
   (setq-default mode-line-format nil)
   ;; Add hook after Emacs init.
-  (add-hook 'after-init-hook 'embla-after-init-hook))
+  (add-hook 'emacs-startup-hook 'embla-after-init-hook))
 
 (provide 'core-embla)
