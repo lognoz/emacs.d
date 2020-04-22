@@ -74,6 +74,7 @@
                     :weight 'normal
                     :width 'normal)
 
+;; Change face for matching elements.
 (face-spec-set 'lazy-highlight
   '((t :foreground "#C678DD"
        :background "#20242B"
