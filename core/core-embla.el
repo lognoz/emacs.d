@@ -24,6 +24,13 @@
 
 (require 'cl-lib)
 
+;;; Define Embla minor mode.
+
+(define-minor-mode embla-mode
+  "Minor mode to consolidate Emacs Embla extensions."
+  :global t
+  :keymap (make-sparse-keymap))
+
 ;;; Environmental constants.
 
 (defconst operating-system
@@ -78,12 +85,6 @@
 
 (defconst embla-autoload-file (concat embla-build-directory "embla-autoload.el")
   "The Embla autoload file.")
-
-(defconst embla-component-file (concat embla-build-directory "embla-component.el")
-  "The Embla component file.")
-
-(defconst embla-startup-file (concat embla-build-directory "embla-startup.el")
-  "The Embla startup file.")
 
 ;;; External macro functions.
 
@@ -144,8 +145,7 @@ that can quickly execute action with it."
 if requirements is ensure."
   (import-core "core-editor" "core-package")
   ;; If Embla not installed, use execute installer.
-  (when (or (not (file-exists-p embla-component-file))
-            (not (file-exists-p embla-autoload-file)))
+  (when (not (file-exists-p embla-autoload-file))
     (import-core "functionality/functionality-editing"
                  "installer/installer")
     (embla-install-program))
@@ -155,13 +155,14 @@ if requirements is ensure."
 (defun embla-after-init-hook ()
   "This function is used to load packages and config files into
 component directory."
-  (import-core "core-mode-line" "core-keybinding")
+  (import-core "core-mode-line")
+  ;; Enable minor mode.
+  (embla-mode)
   ;; Initialize mode line.
   (mode-line-initialize)
   ;; Require autoload and startup files.
   (add-to-list 'load-path embla-build-directory)
   (require 'embla-autoload)
-  (require 'embla-startup)
   ;; Call private initialization file.
   (when (file-exists-p embla-private-init-file)
     (load embla-private-init-file nil 'nomessage))
