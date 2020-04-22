@@ -150,8 +150,8 @@ mainly used with mapconcat."
   "Set archives and refresh package repositories."
   (message "Download descriptions of configured ELPA packages")
   (setq embla-package-initialized t)
-  (package-set-archives))
-  ;;(package-refresh-contents))
+  (package-set-archives)
+  (package-refresh-contents))
 
 (defun create-autoload-file ()
   "This function parse magic comments locate in core and project
