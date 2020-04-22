@@ -13,7 +13,7 @@
 ;;; Code:
 
 ((nil
-  (mode . embla)
+  (mode . embla-editing)
   (project-sources .
     ("https://github.com/lognoz/embla"
      "https://github.com/lognoz/embla/issues")))
