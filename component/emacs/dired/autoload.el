@@ -27,13 +27,25 @@
 
 ;;;###autoload
 (defun dired-toogle-dotfile ()
-  "Provide functionality to toggle visibility of dotfiles lines."
+  "Toggle visibility of dotfiles lines."
   (interactive)
   (when (equal major-mode 'dired-mode)
     (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
-      (progn
-        (set (make-local-variable 'dired-dotfiles-show-p) nil)
-        (dired-mark-files-regexp "^\\\.")
-        (dired-do-kill-lines))
+        (progn
+          (set (make-local-variable 'dired-dotfiles-show-p) nil)
+          (dired-mark-files-regexp "^\\\.")
+          (dired-do-kill-lines))
       (progn (revert-buffer)
              (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+
+;;;###autoload
+(defun dired-grep-file-name (pattern)
+  "Search files in directory by name."
+  (interactive "sFind-name (filename wildcard): ")
+  (find-name-dired default-directory pattern))
+
+;;;###autoload
+(defun dired-grep-file-name-by-pattern (pattern)
+  "Search files in directory by pattern."
+  (interactive "sFind-grep (grep regexp): ")
+  (find-grep-dired default-directory pattern))

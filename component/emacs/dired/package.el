@@ -14,7 +14,7 @@
 
 ;; This Emacs config is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
@@ -24,5 +24,5 @@
 
 (require-package 'dired t)
 (require-package 'dired-x t)
-(require-package 'dired-rsync)
+(require-package 'dired-ranger)
 (require-package 'dired-subtree)
