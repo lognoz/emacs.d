@@ -22,12 +22,16 @@
 
 ;;; Code:
 
+(defun mode-line--current-keyboard-layout ()
+  (when (executable-find "xkblayout-state")
+    (concat (shell-command-to-string "xkblayout-state print %n") " ")))
+
 (defun mode-line--version-control ()
   (when (stringp vc-mode)
     (format "%s%s"
-      (char-to-string #xe0a0)
-      (replace-regexp-in-string
-        (format "^ %s[:-]" (vc-backend buffer-file-name)) " " vc-mode))))
+            (char-to-string #xe0a0)
+            (replace-regexp-in-string
+             (format "^ %s[:-]" (vc-backend buffer-file-name)) " " vc-mode))))
 
 (defun mode-line--buffer-name ()
   "Render a different buffer name if version control is active or not."
@@ -58,25 +62,27 @@
    mode-line-format
    '("%e"
      (:eval
-       (let* (
-         ;; Mode line at left position.
-         (left-content (concat
-           (face (mode-line--buffer-name))
-           (face (mode-line--column-line))))
+      (let*
+          ;; Mode line at left position.
+          ((left-content
+            (concat
+             (face (mode-line--buffer-name))
+             (face (mode-line--column-line))))
 
-         ;; Mode line at right position.
-         (right-content (concat
-           (face (concat (format-mode-line mode-name) " "))
-           (face (mode-line--version-control))))
+           ;; Mode line at right position.
+           (right-content
+            (concat
+             (face (concat (format-mode-line mode-name) " "))
+             (face (mode-line--current-keyboard-layout))
+             (face (mode-line--version-control))))
 
-         ;; Mode line at center position.
-         (center-fill
-           (mode-line--fill (+ (length right-content) 1))))
+           ;; Mode line at center position.
+           (center-fill (mode-line--fill (+ (length right-content) 1))))
 
-         ;; Concat contents
-         (concat left-content center-fill right-content)))))
+        ;; Concat contents
+        (concat left-content center-fill right-content)))))
 
   (setq-default mode-line-format
-    (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format)))
+                (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format)))
 
 (provide 'core-mode-line)
