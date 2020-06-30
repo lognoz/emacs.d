@@ -3,7 +3,7 @@
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Keywords: backup bookmark undo
+;; Keywords: backup undo
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,14 +25,14 @@
 ;;; Internal core function.
 
 (defun file-save-backup ()
-  "This function is used on `before-save-hook'. It create a
+  "Hook function is used on `before-save-hook'. It create a
 backup on each session and on save interval."
   ;; Make a special "per session" backup at the first save of each
   ;; Emacs session.
   (when (not buffer-backed-up)
     ;; Override the default parameters for per-session backups.
     (let* ((path (concat embla-temporary-directory "backup/session"))
-           (backup-directory-alist `((".*" .  ,path)))
+           (backup-directory-alist `((".*" . ,path)))
            (kept-new-versions 3))
       (backup-buffer)))
   ;; Make a "per save" backup on each save.  The first save results in
@@ -44,14 +44,14 @@ backup on each session and on save interval."
 ;;; External core functions.
 
 (defun file-set-undo-tree ()
-  "This function is used to configure undo tree module."
+  "Set undo tree module."
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
     (list (cons "." (expand-file-name "undo" embla-temporary-directory))))
   (global-undo-tree-mode 1))
 
 (defun file-set-backup ()
-  "This function is used to configure backup module."
+  "Set Emacs backup files."
   ;; Save every 20 characters typed
   (setq auto-save-interval 20)
   ;; Use version numbers for backups.
@@ -72,3 +72,5 @@ backup on each session and on save interval."
   (add-hook 'before-save-hook 'file-save-backup))
 
 (provide 'core-file)
+
+;;; core-file.el ends here
