@@ -49,8 +49,7 @@
             ((string-equal character "$") ?$)) "w")))
 
 (defun require-package (package &optional built-in)
-  "This function is the main Embla functionality used to
-pre-install package into installer.el."
+  "Main Embla package installer used to pre-install package."
   (interactive)
   (when (not built-in)
      ;; Add archive and initialize package.
