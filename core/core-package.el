@@ -34,7 +34,7 @@
 
 (defun package-set-archives ()
   "Set package archives and initialize it."
-  (setq package-archives '(("melpa" . "http://melpa.milkbox.net/packages/")
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                            ("org"   . "http://orgmode.org/elpa/")
                            ("gnu"   . "http://elpa.gnu.org/packages/")))
   (package-initialize))
