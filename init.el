@@ -40,8 +40,8 @@
 ;; Disabled local variable before to create autoload files.
 (setq enable-dir-local-variables nil)
 
-(if (version< emacs-version "27")
-  (error "Embla requires GNU Emacs 27 or newer, but you're running %s"
+(if (version< emacs-version "26")
+  (error "Embla requires GNU Emacs 26 or newer, but you're running %s"
          emacs-version)
   (setq user-emacs-directory (file-name-directory load-file-name))
   (load (concat user-emacs-directory "core/core-embla")
