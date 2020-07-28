@@ -33,3 +33,4 @@
 (require-package 'expand-region)
 (require-package 'smartparens)
 (require-package 'evil-smartparens)
+(require-package 'atom-one-dark-theme)
