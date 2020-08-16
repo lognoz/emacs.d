@@ -36,8 +36,15 @@
     (file-name-directory path))))
 
 ;;;###autoload
+(defmacro fetch-subdirectories (path &rest body)
+  "Fetch subdirectories located in a given PATH."
+  `(dolist (p (directories-list ,path))
+     (let ((directory (directory-name p)))
+       ,@body)))
+
+;;;###autoload
 (defun subdirectories (path)
-  "Return subdirectories in a reference PATH."
+  "Return subdirectories located in a given PATH."
   (let ((directories))
     (dolist (f (directory-files path))
       (let ((path (concat path f)))
