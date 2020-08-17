@@ -23,6 +23,29 @@
 
 ;;; Code:
 
+;;; --- Custom variables
+
+(defcustom embla-theme nil
+  "The symbol of a theme to be loaded at Emacs startup.
+
+If you want to change the default theme you need to redefine this
+variable. See example below:
+
+(setq embla-theme 'my-custom-theme)"
+  :group 'embla
+  :type 'symbol)
+
+(defcustom embla-font nil
+  "The default font to use in Embla.
+
+To change the Emacs font, you need to redefine this variable.
+See example below:
+
+(setq embla-font (font-spec :family \"Source Code Pro\" :height 100)"
+  :group 'embla
+  :type 'font-spec)
+
+
 ;;; --- Disabling UI elements
 
 (unless emacs-version-above-27-p
