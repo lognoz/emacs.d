@@ -1,4 +1,4 @@
-;;; core/autoload/files.el --- files autoload -*- lexical-binding: t; -*-
+;;; lisp/autoload/files.el --- files autoload -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -37,7 +37,7 @@
 
 ;;;###autoload
 (defmacro fetch-subdirectories (path &rest body)
-  "Fetch subdirectories located in a given PATH."
+  "Fetch subdirectories located in the given PATH."
   `(dolist (p (directories-list ,path))
      (let ((directory (directory-name p)))
        ,@body)))
