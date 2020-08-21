@@ -62,8 +62,11 @@
 (defconst embla-init-file (expand-file-name "init.el" user-emacs-directory)
   "The int file reference.")
 
-(defconst embla-core-directory (expand-file-name "core/" user-emacs-directory)
-  "The directory of core files.")
+(defconst embla-lisp-directory (expand-file-name "lisp/" user-emacs-directory)
+  "The directory of lisp files.")
+
+(defconst embla-autoload-directory (expand-file-name "autoload/" embla-lisp-directory)
+  "The directory of autoload files.")
 
 (defconst embla-private-directory (expand-file-name "private/" user-emacs-directory)
   "The directory of private files.")
@@ -71,13 +74,23 @@
 (defconst embla-temporary-directory (expand-file-name "temporary/" embla-private-directory)
   "The directory of temporary files.")
 
+(defconst embla-compile-directory (expand-file-name "compile/" embla-temporary-directory)
+  "The directory of compiled files.")
+
+(defconst embla-autoload-file (expand-file-name "embla-autoload.el" embla-compile-directory)
+  "The main autoload file.")
+
+(defconst embla-config-file (expand-file-name "embla-config.el" embla-compile-directory)
+  "The main config file.")
+
 (defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
   "The private initialization file.")
-
-(defconst embla-autoload-file (expand-file-name "embla-autoload.el" embla-temporary-directory)
-  "The main autoload file.")
 
 
 (provide 'const)
 
 ;;; const.el ends here
+
+  ;; (let ((generated-autoload-file embla-autoload-file))
+  ;;   (update-file-autoloads (expand-file-name "autoload/" embla-lisp-directory)
+  ;;                          t generated-autoload-file)))

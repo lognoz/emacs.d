@@ -25,6 +25,7 @@
 
 (require 'cl-lib)
 (require 'const)
+(require 'macro)
 
 ;;; --- Minor mode
 
@@ -65,6 +66,12 @@
 ;; Remove mode line on loading.
 (setq-default mode-line-format nil)
 
+;; Disabling UI elements.
+(unless emacs-version-above-27-p
+  (push '(menu-bar-lines . 0) default-frame-alist)
+  (push '(tool-bar-lines . 0) default-frame-alist)
+  (push '(vertical-scroll-bars) default-frame-alist))
+
 
 ;;; --- Internal functions
 
@@ -74,6 +81,25 @@
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
+
+(defun boot-components ()
+  (catch-component embla-autoload-directory embla-autoload-file
+    (make-autoload-file))
+  (add-to-list 'load-path embla-compile-directory)
+  (require 'embla-autoload)
+  (catch-component embla-lisp-directory embla-config-file
+    (make-config-file))
+  (load embla-config-file nil 'nomessage)
+  (boot-package))
+
+(defmacro catch-component (source destination &rest body)
+  `(when (file-newer-than-file-p ,source ,destination)
+    (require 'make)
+    ,@body))
+
+(defun load-private-init ()
+  "Include content loacted in user init."
+  (load embla-private-init-file nil 'nomessage))
 
 (defun restore-values ()
   "Restore default values after startup."

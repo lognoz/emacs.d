@@ -38,8 +38,8 @@
 ;;;###autoload
 (defmacro fetch-subdirectories (path &rest body)
   "Fetch subdirectories located in the given PATH."
-  `(dolist (p (directories-list ,path))
-     (let ((directory (directory-name p)))
+  `(dolist (directory (subdirectories ,path))
+     (let ((name (directory-name directory)))
        ,@body)))
 
 ;;;###autoload
