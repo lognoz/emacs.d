@@ -49,77 +49,85 @@
   "The directory of backup files on save.")
 
 
-;;; --- Internal functions
-
-(defun file-save-backup ()
-  "Hook function is used on `before-save-hook'.
-
-It create a backup on each session and on save interval."
-  ;; Make a special "per session" backup at the first save of each
-  ;; Emacs session.
-  (when (not buffer-backed-up)
-    ;; Override the default parameters for per-session backups.
-    (let* ((path embla-backup-save-directory)
-           (backup-directory-alist `((".*" . ,path)))
-           (kept-new-versions 3))
-      (backup-buffer)))
-  ;; Make a "per save" backup on each save.  The first save results in
-  ;; both a per-session and a per-save backup, to keep the numbering
-  ;; of per-save backups consistent.
-  (let ((buffer-backed-up nil))
-    (backup-buffer)))
-
-
 ;;; --- Backup configuration
 
-(setq auto-save-interval 20
-      version-control t
-      kept-new-versions 8
-      kept-old-versions 0
-      delete-old-versions t
-      backup-by-copying t
-      vc-make-backup-files t)
+(use-package emacs
+  :hook (before-save-hook . save-backup-file)
+  :config
+  (setq auto-save-interval 20)
+  (setq backup-by-copying t)
+  (setq delete-old-versions t)
+  (setq kept-new-versions 8)
+  (setq kept-old-versions 0)
+  (setq vc-make-backup-files t)
+  (setq version-control t)
 
-(let ((path embla-backup-session-directory))
-  (setq backup-directory-alist `((".*" .  ,path))))
+  (let ((path embla-backup-session-directory))
+    (setq backup-directory-alist `((".*" . ,path))))
 
-(add-hook 'before-save-hook 'file-save-backup)
+  (defun save-backup-file ()
+    "Create a backup on each session and on save interval.
+  This function is used as hook for `before-save-hook'."
+    ;; Make a special "per session" backup at the first save of each
+    ;; Emacs session.
+    (when (not buffer-backed-up)
+      ;; Override the default parameters for per-session backups.
+      (let* ((path embla-backup-save-directory)
+             (backup-directory-alist `((".*" . ,path)))
+             (kept-new-versions 3))
+        (backup-buffer)))
+    ;; Make a "per save" backup on each save. The first save results
+    ;; in both a per-session and a per-save backup, to keep the
+    ;; numbering of per-save backups consistent.
+    (let ((buffer-backed-up nil))
+      (backup-buffer))))
 
 
 ;;; --- Savehist configuration
 
-(setq savehist-file embla-savehist-file
-      history-length 200
-      savehist-autosave-interval 60)
-
-(setq savehist-additional-variables
+(use-package savehist
+  :hook (after-init-hook . savehist-mode)
+  :config
+  (setq savehist-file embla-savehist-file)
+  (setq history-length 200)
+  (setq savehist-autosave-interval 60)
+  (setq savehist-additional-variables
         '(mark-ring
           global-mark-ring
           search-ring
           regexp-search-ring
-          extended-command-history))
-
-(savehist-mode t)
+          extended-command-history)))
 
 
 ;;; --- Recentf configuration
 
-(global-set-key (kbd "C-x f") 'recentf-open-files)
-
-(setq recentf-save-file embla-recentf-file
-      recentf-max-menu-items 10
-      recentf-max-saved-items 200
-      recentf-auto-cleanup 'never
-      recentf-show-file-shortcuts-flag nil)
-
-(recentf-mode t)
+(use-package recentf
+  :config
+  (setq recentf-save-file embla-recentf-file)
+  (setq recentf-auto-cleanup 'never)
+  (setq recentf-max-menu-items 10)
+  (setq recentf-max-saved-items 200)
+  (setq recentf-show-file-shortcuts-flag nil)
+  (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
+  (recentf-mode t))
 
 
 ;;; --- Saveplace configuration
 
-(setq save-place-file embla-saveplace-file)
+(use-package saveplace
+  :config
+  (setq save-place-file embla-saveplace-file)
+  (save-place-mode t))
 
-(save-place-mode t)
+
+;;; --- Undo Tree configuration
+
+(use-package undo-tree
+  :hook (after-init-hook . global-undo-tree-mode)
+  :config
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist
+        (list (cons "." embla-undo-directory))))
 
 
 ;;; --- Bookmark configuration
@@ -127,10 +135,4 @@ It create a backup on each session and on save interval."
 (setq bookmark-default-file embla-bookmark-file)
 
 
-;;; --- Undo Tree configuration
-
-(setq undo-tree-auto-save-history t
-      undo-tree-history-directory-alist
-        (list (cons "." embla-undo-directory)))
-
-(global-undo-tree-mode t)
+;;; files.el ends here
