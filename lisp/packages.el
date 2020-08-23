@@ -48,12 +48,25 @@
 ;;; --- External functions
 
 (defun boot-package ()
-  "Set ELPA archives and initialize packages."
+  "Set ELPA archives and initialize packages.
+
+If `use-package' is not installed, we ensure it. This package
+macro is the best way to allows Embla to isolate package
+configuration."
   (setq package-archives embla-package-archives)
   (unless (bound-and-true-p package--initialized)
     (setq package-enable-at-startup nil)
     (setq embla-package-initialized t)
-    (package-initialize)))
+    (package-initialize)
+    (require-package 'use-package))
+  (eval-and-compile
+    (setq use-package-always-ensure nil
+          use-package-always-defer nil
+          use-package-always-demand nil
+          use-package-expand-minimally nil)
+    ;; Write real hooks names using instead of the shorter name.
+    ;; Example: `after-init-hook' instead of after-init.
+    (setq use-package-hook-name-suffix nil)))
 
 (defun boot-package-archives ()
   "Refresh package contents define in `embla-package-archives'."
