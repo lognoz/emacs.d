@@ -1,4 +1,4 @@
-;;; lisp/packages.el --- package configurations -*- lexical-binding: t; -*-
+;;; lisp/package.el --- package manager -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -25,15 +25,11 @@
 
 (require 'gnutls)
 
-;;; --- Global variables
-
 (defvar embla-package-initialize-p nil
   "Non-nil if package has been initialize.")
 
 (defvar embla-package-refresh-contents-p nil
   "Non-nil if package contents has been refreshed.")
-
-;;; --- Custom variables
 
 (defcustom embla-package-archives
   (let ((protocol (if gnutls-verify-error "https" "http")))
@@ -44,46 +40,30 @@
   :group 'embla
   :type 'cons)
 
-
-;;; --- External functions
-
-(defun boot-package ()
-  "Set ELPA archives and initialize packages.
-
-If `use-package' is not installed, we ensure it. This package
-macro is the best way to allows Embla to isolate package
-configuration."
-  (setq package-archives embla-package-archives)
-  (unless (bound-and-true-p package--initialized)
+;;;###autoload
+(defun package-bootstrap ()
+  "Set ELPA archives and initialize packages."
+  (unless embla-package-initialize-p
+    (setq package-archives embla-package-archives)
     (setq package-enable-at-startup nil)
-    (setq embla-package-initialized t)
-    (package-initialize)
-    (require-package 'use-package))
-  (eval-and-compile
-    (setq use-package-always-ensure nil
-          use-package-always-defer nil
-          use-package-always-demand nil
-          use-package-expand-minimally nil)
-    ;; Write real hooks names using instead of the shorter name.
-    ;; Example: `after-init-hook' instead of after-init.
-    (setq use-package-hook-name-suffix nil)))
+    (setq embla-package-initialize-p t)
+    (package-initialize)))
 
-(defun boot-package-archives ()
+(defun package-archives-bootstrap ()
   "Refresh package contents define in `embla-package-archives'."
   (unless embla-package-refresh-contents-p
     (package-refresh-contents)
     (setq embla-package-refresh-contents-p t)))
 
+;;;###autoload
 (defun require-package (&rest packages)
   "Ensure PACKAGES if it's not installed."
   (unless embla-package-initialize-p
-    (boot-package))
+    (package-bootstrap))
   (dolist (package packages)
     (unless (package-installed-p package)
-      (boot-package-archives)
+      (package-archives-bootstrap)
       (package-install package))))
 
 
-(provide 'packages)
-
-;;; packages.el ends here
+;;; package.el ends here

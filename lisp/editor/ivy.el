@@ -24,64 +24,98 @@
 ;;; Code:
 
 (require-package 'counsel
-                 'ivy
-                 'ivy-prescient
-                 'prescient)
+                 'ivy)
 
-;;; --- External functions
+
+;;;###autoload
+(defun counsel-initialize ()
+  "Sets counsel configurations."
+  (setq counsel-find-file-ignore-regexp
+        (concat
+          ;; File names beginning with # or .
+          "\\(?:\\`[#.]\\)"
+          ;; File names ending with # or ~
+          "\\|\\(?:\\`.+?[#~]\\'\\)")))
+
+;;;###autoload
+(defun ivy-initialize ()
+  "Sets ivy configurations."
+  (setq enable-recursive-minibuffers t)
+  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-wrap nil)
+  (setq ivy-on-del-error-function nil)
+  (setq ivy-initial-inputs-alist nil)
+  (setq ivy-display-style 'fancy)
+  (setq ivy-use-selectable-prompt t)
+  (setq ivy-fixed-height-minibuffer nil)
+
+  ;; Sets ivy with `projectile'.
+  (with-eval-after-load 'projectile
+    (setq projectile-completion-system 'ivy))
+
+  ;; Sets ivy with `magit'.
+  (with-eval-after-load 'magit
+    (setq magit-completing-read-function 'ivy-completing-read))
+
+  (ivy-mode t))
+
+;;;###autoload
+(defun ivy-format-initialize ()
+  "Changes the way to output ivy candidates."
+  (with-eval-after-load 'ivy
+    (setf (alist-get 't ivy-format-functions-alist) #'ivy-format-function-arrow)
+    (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
+    (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook)))
+
+(defun ivy-format-function-arrow (cands)
+  "Transforms CANDS into a string for minibuffer."
+  (ivy--format-function-generic
+   (lambda (str)
+     (concat "> " (ivy--add-face str 'ivy-current-match)))
+   (lambda (str)
+     (concat "  " str))
+   cands
+   "\n"))
 
 (defun ivy-resize-minibuffer-setup-hook ()
-  "Minibuffer setup hook."
+  "Sets local hook to when a minibuffer is open."
   (add-hook 'post-command-hook #'ivy-resize-post-commad-hook nil t))
 
 (defun ivy-resize-post-commad-hook ()
-  "Hook run every command in minibuffer."
+  "Resizes the minibuffer on `post-command-hook'."
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
 
-;;; --- Ivy configuration
+;;;###autoload
+(let ((map embla-mode-map))
+  (define-key map (kbd "M-x") 'counsel-M-x)
+  (define-key map (kbd "C-x C-f") 'counsel-find-file)
+  (define-key map (kbd "C-c g") 'counsel-git)
+  (define-key map (kbd "C-c j") 'counsel-git-grep)
+  (define-key map (kbd "C-c a") 'counsel-ag)
+  (define-key map (kbd "C-x l") 'counsel-locate)
+  (define-key map (kbd "M-y") 'counsel-yank-pop)
+  (define-key map (kbd "C-x d") 'counsel-dired)
+  (define-key map (kbd "C-x f") 'counsel-recentf)
+  (define-key map (kbd "C-x C-f") 'counsel-find-file)
+  (define-key map (kbd "C-c C-j") 'counsel-imenu)
+  (define-key map (kbd "C-x r l") 'counsel-bookmark))
 
-(setq enable-recursive-minibuffers t
-      ivy-initial-inputs-alist nil
-      ivy-count-format "(%d/%d) "
-      ivy-wrap nil
-      ivy-display-style 'fancy
-      ivy-use-selectable-prompt t
-      ivy-fixed-height-minibuffer nil)
-
-;; Change the maximum width of the Ivy window to 1/3
-(setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
-(add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook)
-
-(ivy-mode t)
-
-
-;;; --- Counsel configuration
-
-(setq counsel-find-file-at-point t
-      counsel-yank-pop-preselect-last t
-      counsel-yank-pop-separator "\n────────\n")
-
-(setq counsel-find-file-ignore-regexp
-      (concat
-        ;; File names beginning with # or .
-        "\\(?:\\`[#.]\\)"
-        ;; File names ending with # or ~
-        "\\|\\(?:\\`.+?[#~]\\'\\)"))
+;;;###autoload
+(with-eval-after-load 'ivy
+  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))
 
 
-;;; --- Ivy keybindings
+;;;###autoload
+(defer-loading
+  :event
+  pre-command-hook
+  :function
+  ivy-initialize
+  ivy-format-initialize
+  counsel-initialize)
 
-(set-keybindings
-  :map       ivy-minibuffer-map
-  "TAB"      ivy-alt-done
 
-  :map       embla-mode-map
-  "M-x"      counsel-M-x
-  "M-y"      counsel-yank-pop
-  "C-x d"    counsel-dired
-  "C-x f"    counsel-recentf
-  "C-x C-f"  counsel-find-file
-  "C-c C-j"  counsel-imenu
-  "C-x r l"  counsel-bookmark)
+;;; ivy.el ends here

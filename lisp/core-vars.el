@@ -1,10 +1,10 @@
-;;; lisp/const.el --- core constants -*- lexical-binding: t; -*-
+;;; lisp/core-vars.el --- core variables -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: constant
+;; Keywords: util variable
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,8 +22,6 @@
 ;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Code:
-
-;;; --- Environmental constants
 
 (defconst operating-system
   (cond ((eq system-type 'gnu/linux) "linux")
@@ -57,40 +55,10 @@
   "Non-nil if Emacs is 27 or above.")
 
 
-;;; --- Contextual Embla constants
+;; Local Variables:
+;; no-update-autoloads: t
+;; End:
 
-(defconst embla-init-file (expand-file-name "init.el" user-emacs-directory)
-  "The int file reference.")
+(provide 'core-vars)
 
-(defconst embla-lisp-directory (expand-file-name "lisp/" user-emacs-directory)
-  "The directory of lisp files.")
-
-(defconst embla-autoload-directory (expand-file-name "autoload/" embla-lisp-directory)
-  "The directory of autoload files.")
-
-(defconst embla-private-directory (expand-file-name "private/" user-emacs-directory)
-  "The directory of private files.")
-
-(defconst embla-temporary-directory (expand-file-name "temporary/" embla-private-directory)
-  "The directory of temporary files.")
-
-(defconst embla-compile-directory (expand-file-name "compile/" embla-temporary-directory)
-  "The directory of compiled files.")
-
-(defconst embla-autoload-file (expand-file-name "embla-autoload.el" embla-compile-directory)
-  "The main autoload file.")
-
-(defconst embla-config-file (expand-file-name "embla-config.el" embla-compile-directory)
-  "The main config file.")
-
-(defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
-  "The private initialization file.")
-
-
-(provide 'const)
-
-;;; const.el ends here
-
-  ;; (let ((generated-autoload-file embla-autoload-file))
-  ;;   (update-file-autoloads (expand-file-name "autoload/" embla-lisp-directory)
-  ;;                          t generated-autoload-file)))
+;;; core-vars.el ends here

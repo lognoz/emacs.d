@@ -23,87 +23,78 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-(require 'const)
-(require 'macro)
+(eval-when-compile
+  (require 'cl-lib))
 
-;;; --- Minor mode
+(require 'core-vars)
+(require 'core-macros)
+
+(defgroup embla nil
+  "Embla customizations."
+  :group 'convenience
+  :link '(url-link :tag "Homepage" "https://github.com/lognoz/embla"))
 
 (define-minor-mode embla-mode
   "Minor mode to consolidate Embla extensions."
   :global t
+  :group 'embla
   :keymap (make-sparse-keymap))
 
-(defgroup embla nil
-  "Embla customizations."
-  :group 'embla-mode
-  :link '(url-link :tag "Homepage" "https://github.com/lognoz/embla"))
-
-
-;;; --- Global variables
+(defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
+  "The private initialization file.")
 
 (defvar embla-init-p nil
   "Non-nil if Embla has been initialized.")
 
-(defvar embla-test-environment-p nil
-  "Non-nil if it's started in test environment.")
+(defvar embla-file-name-handler-alist file-name-handler-alist
+  "Last `file-name-handler-alist' used to restore its value after startup.")
 
+(defun embla-bootstrap ()
+  "Bootstrap Embla, if it hasn't already."
+  (unless embla-init-p
+    (require 'embla-autoloads)
+    (embla-optimize-startup)
+    (embla-set-coding-system)
+    (embla-initialize-custom-file)
+    (embla-initialize-private-init)
+    (package-bootstrap)
+    (embla-mode t)
+    (setq embla-init-p t)))
 
-;;; --- Emacs configuration
+(defun embla-set-coding-system ()
+  "Use UTF-8 as the default coding system."
+  (prefer-coding-system 'utf-8)
+  (setq locale-coding-system 'utf-8)
+  (when (fboundp 'set-charset-priority)
+    (set-charset-priority 'unicode)))
 
-;; Remove splash screen and reduce noice at startup.
-(setq inhibit-default-init t
-      inhibit-splash-screen t
-      inhibit-startup-message t
-      inhibit-startup-echo-area-message t)
+(defun embla-initialize-private-init ()
+  "Loads the init.el located in `embla-private-directory'."
+  (unless (file-exists-p embla-private-init-file)
+    (load embla-private-init-file nil 'nomessage)))
 
-;; Use UTF-8 as the default coding system.
-(prefer-coding-system 'utf-8)
-(setq locale-coding-system 'utf-8)
-(when (fboundp 'set-charset-priority)
-  (set-charset-priority 'unicode))
-
-;; Remove mode line on loading.
-(setq-default mode-line-format nil)
-
-;; Disabling UI elements.
-(unless emacs-version-above-27-p
-  (push '(menu-bar-lines . 0) default-frame-alist)
-  (push '(tool-bar-lines . 0) default-frame-alist)
-  (push '(vertical-scroll-bars) default-frame-alist))
-
-
-;;; --- Internal functions
-
-(defun create-custom-file ()
-  "Place the variables created by Emacs in custom file."
-  (setq custom-file (concat embla-temporary-directory "custom.el"))
+(defun embla-initialize-custom-file ()
+  "Loads the variables created by Emacs located in custom file."
+  (setq custom-file (expand-file-name "custom.el" embla-temporary-directory))
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
 
-(defun boot-components ()
-  (catch-component embla-autoload-directory embla-autoload-file
-    (make-autoload-file))
-  (add-to-list 'load-path embla-compile-directory)
-  (require 'embla-autoload)
-  (catch-component embla-lisp-directory embla-config-file
-    (make-config-file))
-  (load embla-config-file nil 'nomessage)
-  (boot-package))
-
-(defmacro catch-component (source destination &rest body)
-  `(when (file-newer-than-file-p ,source ,destination)
-    (require 'make)
-    ,@body))
-
-(defun load-private-init ()
-  "Include content loacted in user init."
-  (load embla-private-init-file nil 'nomessage))
+(defun embla-optimize-startup ()
+  "Changes somes defaults settings for better launch time."
+  ;; Disable auto-initialize package.
+  (setq package-enable-at-startup nil
+        package--init-file-ensured t)
+  ;; Change the frequency of garbage collection.
+  (setq gc-cons-threshold most-positive-fixnum
+        gc-cons-percentage 0.6
+        file-name-handler-alist nil)
+  ;; Disable local variable before to create autoload files.
+  (setq enable-dir-local-variables nil))
 
 (defun restore-values ()
-  "Restore default values after startup."
-  (setq file-name-handler-alist last-file-name-handler-alist
+  "Restores default values after startup."
+  (setq file-name-handler-alist embla-file-name-handler-alist
         gc-cons-threshold 16000000
         gc-cons-percentage 0.1))
 

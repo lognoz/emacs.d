@@ -1,4 +1,4 @@
-;;; lisp/editor/files.el --- files configurations -*- lexical-binding: t; -*-
+;;; lisp/files.el --- files configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -25,19 +25,9 @@
 
 (require-package 'undo-tree)
 
-;;; --- Contextual constants
-
-(defconst embla-savehist-file (expand-file-name "savehist" embla-temporary-directory)
-  "The savehist file.")
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
-
-(defconst embla-saveplace-file (expand-file-name "saveplace" embla-temporary-directory)
-  "The saveplace file.")
-
-(defconst embla-bookmark-file (expand-file-name "bookmark" embla-temporary-directory)
-  "The bookmark file.")
 
 (defconst embla-undo-directory (expand-file-name "undo" embla-temporary-directory)
   "The directory of undo files.")
@@ -49,11 +39,19 @@
   "The directory of backup files on save.")
 
 
-;;; --- Backup configuration
+;;;###autoload
+(setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
 
-(use-package emacs
-  :hook (before-save-hook . save-backup-file)
-  :config
+;;;###autoload
+(setq bookmark-default-file (expand-file-name "bookmark" embla-temporary-directory))
+
+;;;###autoload
+(setq save-place-file (expand-file-name "saveplace" embla-temporary-directory))
+
+
+;;;###autoload
+(defun files-initialize-backup ()
+  "Sets backup file and change `before-save-hook'."
   (setq auto-save-interval 20)
   (setq backup-by-copying t)
   (setq delete-old-versions t)
@@ -65,30 +63,29 @@
   (let ((path embla-backup-session-directory))
     (setq backup-directory-alist `((".*" . ,path))))
 
-  (defun save-backup-file ()
-    "Create a backup on each session and on save interval.
-  This function is used as hook for `before-save-hook'."
-    ;; Make a special "per session" backup at the first save of each
-    ;; Emacs session.
-    (when (not buffer-backed-up)
-      ;; Override the default parameters for per-session backups.
-      (let* ((path embla-backup-save-directory)
-             (backup-directory-alist `((".*" . ,path)))
-             (kept-new-versions 3))
-        (backup-buffer)))
-    ;; Make a "per save" backup on each save. The first save results
-    ;; in both a per-session and a per-save backup, to keep the
-    ;; numbering of per-save backups consistent.
-    (let ((buffer-backed-up nil))
-      (backup-buffer))))
+  (add-hook 'before-save-hook 'save-backup-file))
+
+(defun save-backup-file ()
+  "Create a backup on each session and on save interval.
+This function is used as hook for `before-save-hook'."
+  ;; Make a special "per session" backup at the first save of each
+  ;; Emacs session.
+  (when (not buffer-backed-up)
+    ;; Override the default parameters for per-session backups.
+    (let* ((path embla-backup-save-directory)
+           (backup-directory-alist `((".*" . ,path)))
+           (kept-new-versions 3))
+      (backup-buffer)))
+  ;; Make a "per save" backup on each save. The first save results
+  ;; in both a per-session and a per-save backup, to keep the
+  ;; numbering of per-save backups consistent.
+  (let ((buffer-backed-up nil))
+    (backup-buffer)))
 
 
-;;; --- Savehist configuration
-
-(use-package savehist
-  :hook (after-init-hook . savehist-mode)
-  :config
-  (setq savehist-file embla-savehist-file)
+;;;###autoload
+(defun files-initialize-savehist ()
+  "Sets savehist configurations."
   (setq history-length 200)
   (setq savehist-autosave-interval 60)
   (setq savehist-additional-variables
@@ -96,13 +93,12 @@
           global-mark-ring
           search-ring
           regexp-search-ring
-          extended-command-history)))
+          extended-command-history))
+  (savehist-mode t))
 
-
-;;; --- Recentf configuration
-
-(use-package recentf
-  :config
+;;;###autoload
+(defun files-initialize-recentf ()
+  "Sets recentf configurations."
   (setq recentf-save-file embla-recentf-file)
   (setq recentf-auto-cleanup 'never)
   (setq recentf-max-menu-items 10)
@@ -111,28 +107,25 @@
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
   (recentf-mode t))
 
-
-;;; --- Saveplace configuration
-
-(use-package saveplace
-  :config
-  (setq save-place-file embla-saveplace-file)
-  (save-place-mode t))
-
-
-;;; --- Undo Tree configuration
-
-(use-package undo-tree
-  :hook (after-init-hook . global-undo-tree-mode)
-  :config
+;;;###autoload
+(defun files-initialize-undo-tree ()
+  "Sets undo tree configurations."
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
-        (list (cons "." embla-undo-directory))))
+        (list (cons "." embla-undo-directory)))
+  (global-undo-tree-mode t))
 
 
-;;; --- Bookmark configuration
-
-(setq bookmark-default-file embla-bookmark-file)
-
+;;;###autoload
+(defer-loading
+  :event
+  after-find-file
+  dired-initial-position-hook
+  :function
+  files-initialize-backup
+  files-initialize-savehist
+  files-initialize-recentf
+  files-initialize-undo-tree
+  save-place-mode)
 
 ;;; files.el ends here
