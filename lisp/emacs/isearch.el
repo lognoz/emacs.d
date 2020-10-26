@@ -23,26 +23,43 @@
 
 ;;; Code:
 
-(with-eval-after-load 'core-autoloads
-  (require-package 'noccur))
+;;;###autoload
+(boot-packages 'visual-regexp)
 
 ;;;###autoload
-(defun isearch-initialize ()
-  "Sets isearch configurations."
-  (setq search-highlight t
-        search-whitespace-regexp ".*?"
-        isearch-lax-whitespace t
-        isearch-regexp-lax-whitespace nil
-        isearch-lazy-highlight t
-        isearch-lazy-count t
-        lazy-count-prefix-format "(%s/%s) "
-        lazy-count-suffix-format nil
-        isearch-yank-on-move 'shif
-        isearch-allow-scroll 'unlimited))
+(advice emacs-startup-hook
+        setup-isearch
+        setup-visual-regexp)
 
 ;;;###autoload
-(defer-loading
-  :event emacs-startup-hook
-  :function isearch-initialize)
+(bind-keys embla-mode-map
+  ("M-s r"   . vr/query-replace)
+  ("M-s M-r" . vr/replace))
+
+;;;###autoload
+(defun setup-isearch ()
+  "Setup isearch configurations."
+  (setq search-highlight t)
+  (setq search-whitespace-regexp ".*?")
+  (setq isearch-lax-whitespace t)
+  (setq isearch-regexp-lax-whitespace nil)
+  (setq isearch-lazy-highlight t)
+  (setq isearch-lazy-count t)
+  (setq lazy-count-prefix-format "(%s/%s) ")
+  (setq lazy-count-suffix-format nil)
+  (setq isearch-yank-on-move 'shif)
+  (setq isearch-allow-scroll 'unlimited)
+
+  (bind-keys isearch-mode-map
+    ("M-s r" . isearch-query-replace))
+
+  (defadvice isearch-exit (after my-goto-match-beginning activate)
+    (when (and isearch-forward isearch-other-end)
+      (goto-char isearch-other-end))))
+
+;;;###autoload
+(defun setup-visual-regexp ()
+  "Setup visual-regexp configurations."
+  (setq vr/auto-show-help nil))
 
 ;;; isearch.el ends here
