@@ -23,32 +23,57 @@
 
 ;;; Code:
 
-(with-eval-after-load 'core-autoloads
-  (require-package 'dired-ranger)
-  (require-package 'dired-subtree))
+;;;###autoload
+(boot-packages 'dired-ranger
+               'dired-subtree)
 
+;;;###autoload
+(advice dired-mode-hook
+        setup-dired
+        dired-hide-details-mode)
+
+;;;###autoload
 (setq dired-listing-switches "-aFlv --group-directories-first")
 
 ;;;###autoload
-(defun dired-initialize ()
-  "Sets dired configurations."
+(defun setup-dired ()
+  "Setup dired configurations."
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
-  (setq dired-dwim-target t))
+  (setq dired-dwim-target t)
 
-;;;###autoload
-(defun dired-hook-initialize ()
-  "Sets dired configurations on hook."
-  (dired-hide-details-mode 1))
+  (evil-collection-define-key 'normal 'dired-mode-map
+    (kbd "RET") 'dired-find-alternate-file
+    (kbd "<mouse-2>") 'dired-find-alternate-file
+    (kbd "<s-tab>") 'dired-hide-details-mode
+    (kbd "<M-tab>") 'dired-toggle-dotfile
+    (kbd "<tab>") 'dired-subtree-toggle
+    "o"  'dired-find-file-other-window
+    "/f" 'dired-grep-file-name
+    "/g" 'dired-grep-file-name-by-pattern))
 
-;;;###autoload
-(defer-loading
-  :event
-  dired-mode-hook
-  :function
-  dired-initialize
-  dired-hook-initialize)
+(defun dired-toggle-dotfile ()
+  "Switch visibility of dotfiles lines."
+  (interactive)
+  (when (equal major-mode 'dired-mode)
+    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p)
+        (progn
+          (set (make-local-variable 'dired-dotfiles-show-p) nil)
+          (dired-mark-files-regexp "^\\\.")
+          (dired-do-kill-lines))
+      (progn (revert-buffer)
+             (set (make-local-variable 'dired-dotfiles-show-p) t)))))
+
+(defun dired-grep-file-name (name)
+  "Search files in directory by name."
+  (interactive "sFind-name (filename wildcard): ")
+  (find-name-dired default-directory name))
+
+(defun dired-grep-file-name-by-pattern (pattern)
+  "Search files in directory by PATTERN."
+  (interactive "sFind-grep (grep regexp): ")
+  (find-grep-dired default-directory pattern))
 
 ;;; dired.el ends here
