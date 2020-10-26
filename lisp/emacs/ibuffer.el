@@ -23,19 +23,23 @@
 
 ;;; Code:
 
-(with-eval-after-load 'core-autoloads
-  (require-package 'ibuffer-projectile))
+;;;###autoload
+(boot-packages 'ibuffer-projectile)
 
 ;;;###autoload
-(defun ibuffer-initialize ()
-  "Sets ibuffer configurations."
-  (ibuffer-projectile-set-filter-groups)
-  (unless (equal ibuffer-sorting-mode 'alphabetic)
-    (ibuffer-do-sort-by-alphabetic)))
+(advice ibuffer-mode-hook
+        ibuffer-do-sort-by-alphabetic
+        ibuffer-projectile-set-filter-groups
+        setup-ibuffer)
 
 ;;;###autoload
-(defer-loading
-  :event ibuffer-mode-hook
-  :function ibuffer-initialize)
+(bind-keys embla-mode-map
+  ("C-x C-b" . ibuffer))
+
+;;;###autoload
+(defun setup-ibuffer ()
+  "Setup ibuffer configurations."
+  (evil-collection-define-key 'normal 'ibuffer-mode-map
+    (kbd "RET") 'ibuffer-visit-buffer))
 
 ;;; ibuffer.el ends here
