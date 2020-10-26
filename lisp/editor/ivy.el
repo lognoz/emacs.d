@@ -23,13 +23,45 @@
 
 ;;; Code:
 
-(require-package 'counsel
-                 'ivy)
+;;;###autoload
+(boot-packages 'projectile
+               'counsel
+               'ivy)
 
 
 ;;;###autoload
-(defun counsel-initialize ()
-  "Sets counsel configurations."
+(advice pre-command-hook
+        setup-ivy
+        setup-counsel
+        ivy-mode
+        after-boot-ivy)
+
+;;;###autoload
+(bind-keys embla-mode-map
+  ("M-x"     . counsel-M-x)
+  ("C-x C-f" . counsel-find-file)
+  ("C-c g"   . counsel-git)
+  ("C-c j"   . counsel-git-grep)
+  ("C-c a"   . counsel-ag)
+  ("C-x l"   . counsel-locate)
+  ("M-y"     . counsel-yank-pop)
+  ("C-x d"   . counsel-dired)
+  ("C-x f"   . counsel-recentf)
+  ("C-x C-f" . counsel-find-file)
+  ("C-c C-j" . counsel-imenu)
+  ("C-x r l" . counsel-bookmark))
+
+(defconst ivy-files-prompt
+  '(counsel-find-file
+    counsel-dired
+    counsel-dired-jump
+    counsel-file-jump)
+  "List of `ivy-state-caller' used for files management.")
+
+
+;;;###autoload
+(defun setup-counsel ()
+  "Setup counsel configurations."
   (setq counsel-find-file-ignore-regexp
         (concat
           ;; File names beginning with # or .
@@ -38,84 +70,99 @@
           "\\|\\(?:\\`.+?[#~]\\'\\)")))
 
 ;;;###autoload
-(defun ivy-initialize ()
-  "Sets ivy configurations."
+(defun setup-ivy ()
+  "Setup ivy configurations."
   (setq enable-recursive-minibuffers t)
   (setq ivy-initial-inputs-alist nil)
-  (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-count-format "")
   (setq ivy-wrap nil)
   (setq ivy-on-del-error-function nil)
   (setq ivy-initial-inputs-alist nil)
-  (setq ivy-display-style 'fancy)
   (setq ivy-use-selectable-prompt t)
   (setq ivy-fixed-height-minibuffer nil)
+  (setq ivy-display-style nil)
+  (setq ivy-virtual-abbreviate 'full)
+  (setq ivy-extra-directories nil)
 
-  ;; Sets ivy with `projectile'.
+  ;; Setup ivy with `projectile'.
   (with-eval-after-load 'projectile
     (setq projectile-completion-system 'ivy))
 
-  ;; Sets ivy with `magit'.
+  ;; Setup ivy with `magit'.
   (with-eval-after-load 'magit
     (setq magit-completing-read-function 'ivy-completing-read))
 
-  (ivy-mode t))
-
-;;;###autoload
-(defun ivy-format-initialize ()
-  "Changes the way to output ivy candidates."
+  ;; Setup the way to output ivy candidates.
   (with-eval-after-load 'ivy
-    (setf (alist-get 't ivy-format-functions-alist) #'ivy-format-function-arrow)
+    (setf (alist-get 't ivy-format-functions-alist) #'ivy-embla-format-function)
     (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
     (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook)))
 
-(defun ivy-format-function-arrow (cands)
-  "Transforms CANDS into a string for minibuffer."
+;;;###autoload
+(defun after-boot-ivy ()
+  "Setup ivy keybindings after it's started."
+  (bind-keys ivy-minibuffer-map
+    ("<tab>" . ivy-alt-done)
+    ("M-f"   . counsel-switch-to-jump)
+    ("M-."   . counsel-project-root)
+    ("C-."   . counsel-project-root)))
+
+(defun ivy-embla-format-function (cands)
+  "Transform CANDS into a string for minibuffer."
   (ivy--format-function-generic
    (lambda (str)
-     (concat "> " (ivy--add-face str 'ivy-current-match)))
+     (concat "-> " (ivy--add-face str (face-attribute 'bold :weight))))
    (lambda (str)
-     (concat "  " str))
+     (concat "   " str))
    cands
    "\n"))
 
 (defun ivy-resize-minibuffer-setup-hook ()
-  "Sets local hook to when a minibuffer is open."
+  "Attach local hook to when a minibuffer is open."
   (add-hook 'post-command-hook #'ivy-resize-post-commad-hook nil t))
 
 (defun ivy-resize-post-commad-hook ()
-  "Resizes the minibuffer on `post-command-hook'."
+  "Resize the minibuffer on `post-command-hook'."
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
+(defun counsel-project-root ()
+  "Navigate to project root on ivy minibuffer."
+  (interactive)
+  (unless (bound-and-true-p projectile-mode)
+    (projectile-mode t))
+  (let* ((ivy-caller (ivy-state-caller ivy-last))
+         (directory (if ivy--directory
+                        (directory-file-name (expand-file-name ivy--directory))
+                      default-directory))
+         (root (projectile-project-root directory)))
+    (when (and root (member ivy-caller ivy-files-prompt))
+      (ivy-quit-and-run
+        (cond ((equal ivy-caller 'counsel-find-file)
+               (counsel-find-file root))
+              ((equal ivy-caller 'counsel-dired)
+               (counsel-dired root))
+              ((equal ivy-caller 'counsel-file-jump)
+               (counsel-file-jump "" root))
+              ((equal ivy-caller 'counsel-dired-jump)
+               (counsel-dired-jump "" root)))))))
 
-;;;###autoload
-(let ((map embla-mode-map))
-  (define-key map (kbd "M-x") 'counsel-M-x)
-  (define-key map (kbd "C-x C-f") 'counsel-find-file)
-  (define-key map (kbd "C-c g") 'counsel-git)
-  (define-key map (kbd "C-c j") 'counsel-git-grep)
-  (define-key map (kbd "C-c a") 'counsel-ag)
-  (define-key map (kbd "C-x l") 'counsel-locate)
-  (define-key map (kbd "M-y") 'counsel-yank-pop)
-  (define-key map (kbd "C-x d") 'counsel-dired)
-  (define-key map (kbd "C-x f") 'counsel-recentf)
-  (define-key map (kbd "C-x C-f") 'counsel-find-file)
-  (define-key map (kbd "C-c C-j") 'counsel-imenu)
-  (define-key map (kbd "C-x r l") 'counsel-bookmark))
-
-;;;###autoload
-(with-eval-after-load 'ivy
-  (define-key ivy-minibuffer-map (kbd "TAB") 'ivy-alt-done))
-
-
-;;;###autoload
-(defer-loading
-  :event
-  pre-command-hook
-  :function
-  ivy-initialize
-  ivy-format-initialize
-  counsel-initialize)
-
+(defun counsel-switch-to-jump ()
+  "Switch prompt to its jump function."
+  (interactive)
+  (let ((ivy-caller (ivy-state-caller ivy-last))
+        (directory (if ivy--directory
+                       (directory-file-name (expand-file-name ivy--directory))
+                     default-directory)))
+    (when (member ivy-caller ivy-files-prompt)
+      (ivy-quit-and-run
+        (cond ((equal ivy-caller 'counsel-find-file)
+               (counsel-file-jump "" directory))
+              ((equal ivy-caller 'counsel-dired)
+               (counsel-dired-jump "" directory))
+              ((equal ivy-caller 'counsel-file-jump)
+               (counsel-find-file directory))
+              ((equal ivy-caller 'counsel-dired-jump)
+               (counsel-dired directory)))))))
 
 ;;; ivy.el ends here
