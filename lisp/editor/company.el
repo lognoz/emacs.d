@@ -23,13 +23,21 @@
 
 ;;; Code:
 
-(require-package 'company
-                 'company-prescient)
-
+;;;###autoload
+(boot-packages 'company
+               'company-prescient)
 
 ;;;###autoload
-(defun company-initialize ()
-  "Sets company configurations."
+(advice pre-command-hook
+        setup-company
+        global-company-mode
+        company-prescient-mode
+        after-boot-company)
+
+;;;###autoload
+(defun setup-company ()
+  "Setup company configurations."
+  (require 'company)
   (setq company-minimum-prefix-length 1)
   (setq company-idle-delay 0.25)
   (setq company-selection-wrap-around t)
@@ -40,22 +48,15 @@
   (setq company-dabbrev-code-other-buffers t)
   (setq company-tooltip-align-annotations t)
   (setq company-require-match 'never)
+  (setq company-backends (mapcar #'company-yasnippet-backend company-backends))
   (setq company-frontends '(company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend))
+                            company-echo-metadata-frontend)))
 
-  (global-company-mode t)
-  (company-prescient-mode t))
-
-;;;###autoload
-(with-eval-after-load 'company
-  (let ((map company-active-map))
-    (define-key map (kbd "<tab>") 'company-complete-selection)
-    (define-key map (kbd "C-n") 'company-select-next)
-    (define-key map (kbd "C-p") 'company-select-previous)))
-
-;;;###autoload
-(defer-loading
-  :event pre-command-hook
-  :function company-initialize)
+(defun after-boot-company ()
+  "Setup company keybindings after it's started."
+  (bind-keys company-active-map
+    ("<tab>" . company-complete-selection)
+    ("C-n"   . company-select-next)
+    ("C-p"   . company-select-previous)))
 
 ;;; company.el ends here
