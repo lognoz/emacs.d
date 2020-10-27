@@ -33,7 +33,7 @@
         setup-ivy
         setup-counsel
         ivy-mode
-        after-boot-ivy)
+        after-ivy-boot)
 
 ;;;###autoload
 (bind-keys embla-mode-map
@@ -90,7 +90,7 @@
     (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook)))
 
 ;;;###autoload
-(defun after-boot-ivy ()
+(defun after-ivy-boot ()
   "Setup ivy keybindings after it's started."
   (bind-keys ivy-minibuffer-map
     ("<tab>" . ivy-alt-done)
