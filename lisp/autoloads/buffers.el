@@ -58,7 +58,7 @@
 
 ;;;###autoload
 (defun kill-current-buffer ()
-  "Kills active buffer without asking confirmation."
+  "Kill current buffer without asking confirmation."
   (interactive)
   (kill-buffer (buffer-name)))
 
