@@ -23,8 +23,16 @@
 
 ;;; Code:
 
-(require-package 'undo-tree)
 
+;;;###autoload
+(boot-packages 'undo-tree)
+
+;;;###autoload
+(advice embla-first-file-hook
+        setup-backup
+        setup-savehist
+        setup-recentf
+        save-place-mode)
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
@@ -38,32 +46,14 @@
 (defconst embla-backup-save-directory (expand-file-name "backup/save" embla-temporary-directory)
   "The directory of backup files on save.")
 
-
 ;;;###autoload
 (setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
 
 ;;;###autoload
-(setq bookmark-default-file (expand-file-name "bookmark" embla-temporary-directory))
-
-;;;###autoload
 (setq save-place-file (expand-file-name "saveplace" embla-temporary-directory))
 
-
 ;;;###autoload
-(defun files-initialize-backup ()
-  "Sets backup file and change `before-save-hook'."
-  (setq auto-save-interval 20)
-  (setq backup-by-copying t)
-  (setq delete-old-versions t)
-  (setq kept-new-versions 8)
-  (setq kept-old-versions 0)
-  (setq vc-make-backup-files t)
-  (setq version-control t)
-
-  (let ((path embla-backup-session-directory))
-    (setq backup-directory-alist `((".*" . ,path))))
-
-  (add-hook 'before-save-hook 'save-backup-file))
+(setq bookmark-default-file (expand-file-name "bookmark" embla-temporary-directory))
 
 (defun save-backup-file ()
   "Create a backup on each session and on save interval.
@@ -76,16 +66,29 @@ This function is used as hook for `before-save-hook'."
            (backup-directory-alist `((".*" . ,path)))
            (kept-new-versions 3))
       (backup-buffer)))
-  ;; Make a "per save" backup on each save. The first save results
-  ;; in both a per-session and a per-save backup, to keep the
-  ;; numbering of per-save backups consistent.
+  ;; Make a "per save" backup on each save. The first save results in
+  ;; both a per-session and a per-save backup, to keep the numbering
+  ;; of per-save backups consistent.
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
+;;;###autoload
+(defun setup-backup ()
+  "Setup backup file and change `before-save-hook'."
+  (setq auto-save-interval 20)
+  (setq backup-by-copying t)
+  (setq delete-old-versions t)
+  (setq kept-new-versions 8)
+  (setq kept-old-versions 0)
+  (setq vc-make-backup-files t)
+  (setq version-control t)
+  (let ((path embla-backup-session-directory))
+    (setq backup-directory-alist `((".*" . ,path))))
+  (add-hook 'before-save-hook 'save-backup-file))
 
 ;;;###autoload
-(defun files-initialize-savehist ()
-  "Sets savehist configurations."
+(defun setup-savehist ()
+  "Setup savehist configurations."
   (setq history-length 200)
   (setq savehist-autosave-interval 60)
   (setq savehist-additional-variables
@@ -97,8 +100,8 @@ This function is used as hook for `before-save-hook'."
   (savehist-mode t))
 
 ;;;###autoload
-(defun files-initialize-recentf ()
-  "Sets recentf configurations."
+(defun setup-recentf ()
+  "Setup recentf configurations."
   (setq recentf-save-file embla-recentf-file)
   (setq recentf-auto-cleanup 'never)
   (setq recentf-max-menu-items 10)
@@ -108,24 +111,11 @@ This function is used as hook for `before-save-hook'."
   (recentf-mode t))
 
 ;;;###autoload
-(defun files-initialize-undo-tree ()
-  "Sets undo tree configurations."
+(defun setup-undo-tree ()
+  "Setup undo tree configurations."
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist
         (list (cons "." embla-undo-directory)))
   (global-undo-tree-mode t))
-
-
-;;;###autoload
-(defer-loading
-  :event
-  after-find-file
-  dired-initial-position-hook
-  :function
-  files-initialize-backup
-  files-initialize-savehist
-  files-initialize-recentf
-  files-initialize-undo-tree
-  save-place-mode)
 
 ;;; files.el ends here
