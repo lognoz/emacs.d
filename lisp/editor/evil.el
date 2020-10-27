@@ -23,13 +23,18 @@
 
 ;;; Code:
 
-(require-package 'evil
-                 'evil-magit
-                 'evil-indent-plus
-                 'evil-smartparens
-                 'evil-surround
-                 'evil-collection)
+;;;###autoload
+(boot-packages 'evil
+               'evil-magit
+               'evil-indent-plus
+               'evil-smartparens
+               'evil-surround
+               'evil-collection)
 
+;;;###autoload
+(advice emacs-startup-hook
+        setup-evil
+        setup-evil-collection)
 
 (defvar evil-collection-mode-list
   '(ag
@@ -40,67 +45,63 @@
     company
     debug
     dired
+    help
     ibuffer)
   "The list of `evil-collection' modes to be loaded automatically.")
 
 ;;;###autoload
-(defun evil-initialize ()
-  "Sets evil configurations."
+(defun setup-evil ()
+  "Setup evil configurations."
   (setq evil-toggle-key "C-`")
   (setq evil-want-keybinding nil)
+  (with-eval-after-load 'magit
+    (require 'evil-magit))
   (global-evil-surround-mode t)
   (evil-mode t)
 
-  (let ((map evil-inner-text-objects-map))
-    (define-key map "i" 'evil-indent-plus-i-indent)
-    (define-key map "I" 'evil-indent-plus-i-indent-up)
-    (define-key map "J" 'evil-indent-plus-i-indent-up-down))
+  (bind-keys evil-inner-text-objects-map
+    ("i" . evil-indent-plus-i-indent)
+    ("I" . evil-indent-plus-i-indent-up)
+    ("J" . evil-indent-plus-i-indent-up-down))
 
-  (let ((map evil-outer-text-objects-map))
-    (define-key map "i" 'evil-indent-plus-a-indent)
-    (define-key map "I" 'evil-indent-plus-a-indent-up)
-    (define-key map "J" 'evil-indent-plus-a-indent-up-down))
+  (bind-keys evil-outer-text-objects-map
+    ("i" . evil-indent-plus-a-indent)
+    ("I" . evil-indent-plus-a-indent-up)
+    ("J" . evil-indent-plus-a-indent-up-down))
 
-  (let ((map evil-normal-state-map))
-    (define-key map "j" 'evil-next-visual-line)
-    (define-key map "k" 'evil-previous-visual-line)
-    (define-key map "=" 'evil-indent-line)
-    (define-key map "<" 'evil-shift-left-line)
-    (define-key map ">" 'evil-shift-right-line)
+  (bind-keys evil-normal-state-map
+    ("j" . evil-next-visual-line)
+    ("k" . evil-previous-visual-line)
+    ("=" . evil-indent-line)
+    ("<" . evil-shift-left-line)
+    (">" . evil-shift-right-line))
 
-    ;; Unset vim reundo keybinding and use C-? to reundo.
-    (define-key map (kbd "C-r") nil)
+  (bind-keys evil-visual-state-map
+    ("=" . evil-visual-indent)
+    ("<" . evil-visual-shift-left)
+    (">" . evil-visual-shift-right))
 
-    ;; Unset vim keybinding to start a macro.
-    (define-key map "q" nil))
+  (bind-keys evil-motion-state-map
+    ("!" . shell-command)
+    (":" . goto-line))
 
-  (let ((map evil-visual-state-map))
-    (define-key map "=" 'evil-visual-indent)
-    (define-key map "<" 'evil-visual-shift-left)
-    (define-key map ">" 'evil-visual-shift-right))
+  ;; Remove the vim way to reundo to keep native Emacs backward
+  ;; search. Use C-? to reundo instead.
+  (clear-keys evil-normal-state-map "C-r")
 
-  (let ((map evil-motion-state-map))
-    (define-key map "!" 'shell-command)
-    (define-key map ":" 'goto-line)
+  ;; Remove the vim way to start a macro.
+  ;; Use Emacs binding instead.
+  (clear-keys evil-normal-state-map "q")
 
-    ;; Remove evil search and some motions.
-    (define-key map "}" nil)
-    (define-key map "{" nil)
-    (define-key map "/" nil)
-    (define-key map "*" nil))
-
-  ;; Sets evil keybindings by mode.
-  (dolist (mode evil-collection-mode-list)
-    (with-eval-after-load mode
-      (evil-collection-init (list mode))))
-
-  ;; Sets evil with `magit'.
-  (with-eval-after-load 'magit
-    (require 'evil-magit)))
+  ;; Remove evil search and some motions.
+  (clear-keys evil-motion-state-map "{" "}" "/" "*"))
 
 ;;;###autoload
-(defer-loading
-  :event emacs-startup-hook
-  :function evil-initialize)
+(defun setup-evil-collection ()
+  "Fetch `evil-collection-mode-list' to setup evil
+keybindings by mode."
+  (dolist (mode evil-collection-mode-list)
+    (with-eval-after-load mode
+      (evil-collection-init (list mode)))))
 
 ;;; evil.el ends here
