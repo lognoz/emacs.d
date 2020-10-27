@@ -28,7 +28,6 @@
                'counsel
                'ivy)
 
-
 ;;;###autoload
 (advice pre-command-hook
         setup-ivy
@@ -39,7 +38,6 @@
 ;;;###autoload
 (bind-keys embla-mode-map
   ("M-x"     . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
   ("C-c g"   . counsel-git)
   ("C-c j"   . counsel-git-grep)
   ("C-c a"   . counsel-ag)
@@ -49,15 +47,8 @@
   ("C-x f"   . counsel-recentf)
   ("C-x C-f" . counsel-find-file)
   ("C-c C-j" . counsel-imenu)
-  ("C-x r l" . counsel-bookmark))
-
-(defconst ivy-files-prompt
-  '(counsel-find-file
-    counsel-dired
-    counsel-dired-jump
-    counsel-file-jump)
-  "List of `ivy-state-caller' used for files management.")
-
+  ("C-x r l" . counsel-bookmark)
+  ("C-x f"   . counsel-project-find-file))
 
 ;;;###autoload
 (defun setup-counsel ()
@@ -103,9 +94,10 @@
   "Setup ivy keybindings after it's started."
   (bind-keys ivy-minibuffer-map
     ("<tab>" . ivy-alt-done)
-    ("M-f"   . counsel-switch-to-jump)
-    ("M-."   . counsel-project-root)
-    ("C-."   . counsel-project-root)))
+    ("M-j"   . counsel-switch-to-jump)
+    ("C-j"   . counsel-switch-to-jump)
+    ("M-."   . counsel-goto-project-root)
+    ("C-."   . counsel-goto-project-root)))
 
 (defun ivy-embla-format-function (cands)
   "Transform CANDS into a string for minibuffer."
@@ -126,43 +118,63 @@
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
-(defun counsel-project-root ()
-  "Navigate to project root on ivy minibuffer."
+(defconst counsel-files-symbols-alist
+  '(counsel-find-file
+    counsel-dired
+    counsel-dired-jump
+    counsel-file-jump)
+  "List of `ivy-state-caller' used for files management.")
+
+(defun counsel-directory-in-minibuffer ()
+  "Return the current directory in minibuffer."
+  (if ivy--directory
+      (directory-file-name (expand-file-name ivy--directory))
+    default-directory))
+
+(defun counsel-run-file-prompt (func dir)
+  "Quit and run file symbol FUNC dynamically.
+If there is a DIR, the function use it as default prompt value."
+  (ivy-quit-and-run
+    (if (string-match "-jump\\'" (symbol-name func))
+        (funcall func "" dir)
+      (funcall func dir))))
+
+(defun counsel-project-find-file ()
+  "Open `find-file' on project root."
   (interactive)
   (unless (bound-and-true-p projectile-mode)
     (projectile-mode t))
-  (let* ((ivy-caller (ivy-state-caller ivy-last))
-         (directory (if ivy--directory
-                        (directory-file-name (expand-file-name ivy--directory))
-                      default-directory))
-         (root (projectile-project-root directory)))
-    (when (and root (member ivy-caller ivy-files-prompt))
-      (ivy-quit-and-run
-        (cond ((equal ivy-caller 'counsel-find-file)
-               (counsel-find-file root))
-              ((equal ivy-caller 'counsel-dired)
-               (counsel-dired root))
-              ((equal ivy-caller 'counsel-file-jump)
-               (counsel-file-jump "" root))
-              ((equal ivy-caller 'counsel-dired-jump)
-               (counsel-dired-jump "" root)))))))
+  (let ((root (projectile-project-root default-directory)))
+    (counsel-find-file
+     (if root root default-directory))))
+
+(defun counsel-goto-project-root ()
+  "Change the current location to project root on ivy minibuffer."
+  (interactive)
+  (unless (bound-and-true-p projectile-mode)
+    (projectile-mode t))
+  (let* ((func (ivy-state-caller ivy-last))
+         (dir (counsel-directory-in-minibuffer))
+         (root (projectile-project-root dir)))
+    (when (and root (member func counsel-files-symbols-alist))
+      (counsel-run-file-prompt func root))))
 
 (defun counsel-switch-to-jump ()
   "Switch prompt to its jump function."
   (interactive)
-  (let ((ivy-caller (ivy-state-caller ivy-last))
-        (directory (if ivy--directory
-                       (directory-file-name (expand-file-name ivy--directory))
-                     default-directory)))
-    (when (member ivy-caller ivy-files-prompt)
-      (ivy-quit-and-run
-        (cond ((equal ivy-caller 'counsel-find-file)
-               (counsel-file-jump "" directory))
-              ((equal ivy-caller 'counsel-dired)
-               (counsel-dired-jump "" directory))
-              ((equal ivy-caller 'counsel-file-jump)
-               (counsel-find-file directory))
-              ((equal ivy-caller 'counsel-dired-jump)
-               (counsel-dired directory)))))))
+  (let ((func (ivy-state-caller ivy-last))
+        (dir (counsel-directory-in-minibuffer)))
+    (when (member func counsel-files-symbols-alist)
+      (setq func (symbol-name func))
+      (counsel-run-file-prompt
+        (intern
+          (if (string-match "-jump\\'" func)
+              (if (string-equal func "counsel-file-jump")
+                  "counsel-find-file"
+                (string-trim-right func "-jump\\'"))
+            (if (string-equal func "counsel-find-file")
+                "counsel-file-jump"
+              (concat func "-jump"))))
+        dir))))
 
 ;;; ivy.el ends here
