@@ -23,11 +23,8 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl-lib))
-
+(require 'cl-lib)
 (require 'core-vars)
-(require 'core-macros)
 
 (defgroup embla nil
   "Embla customizations."
@@ -40,26 +37,43 @@
   :group 'embla
   :keymap (make-sparse-keymap))
 
-(defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
-  "The private initialization file.")
-
 (defvar embla-init-p nil
   "Non-nil if Embla has been initialized.")
 
+(defvar embla-packages nil
+  "The list of packages Embla needs to install.")
+
+(defvar embla-first-file-hook nil
+  "The hooks run before the first interactively opened file.")
+
 (defvar embla-file-name-handler-alist file-name-handler-alist
-  "Last `file-name-handler-alist' used to restore its value after startup.")
+  "The Last `file-name-handler-alist' used to restore its value after startup.")
+
+(defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
+  "The private initialization file.")
 
 (defun embla-bootstrap ()
   "Bootstrap Embla, if it hasn't already."
   (unless embla-init-p
+    (load-package-file)
     (require 'embla-autoloads)
+    (setq embla-init-p t)
     (embla-optimize-startup)
+    (embla-enable-functions)
     (embla-set-coding-system)
-    (embla-initialize-custom-file)
-    (embla-initialize-private-init)
+    (embla-set-custom-file)
+    (embla-load-private-init)
+    (embla-set-hooks)
     (package-bootstrap)
-    (embla-mode t)
-    (setq embla-init-p t)))
+    (embla-mode t)))
+
+(defun embla-enable-functions ()
+  "Enable some usefull functions."
+  (put 'narrow-to-region 'disabled nil)
+  (put 'upcase-region 'disabled nil)
+  (put 'downcase-region 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
+  (put 'overwrite-mode 'disabled t))
 
 (defun embla-set-coding-system ()
   "Use UTF-8 as the default coding system."
@@ -68,20 +82,20 @@
   (when (fboundp 'set-charset-priority)
     (set-charset-priority 'unicode)))
 
-(defun embla-initialize-private-init ()
-  "Loads the init.el located in `embla-private-directory'."
-  (unless (file-exists-p embla-private-init-file)
+(defun embla-load-private-init ()
+  "Load the init.el located in `embla-private-directory'."
+  (when (file-exists-p embla-private-init-file)
     (load embla-private-init-file nil 'nomessage)))
 
-(defun embla-initialize-custom-file ()
-  "Loads the variables created by Emacs located in custom file."
+(defun embla-set-custom-file ()
+  "Load the variables created by Emacs located in custom file."
   (setq custom-file (expand-file-name "custom.el" embla-temporary-directory))
   (unless (file-exists-p custom-file)
     (write-region "" nil custom-file))
   (load custom-file nil 'nomessage))
 
 (defun embla-optimize-startup ()
-  "Changes somes defaults settings for better launch time."
+  "Change somes defaults settings for better launch time."
   ;; Disable auto-initialize package.
   (setq package-enable-at-startup nil
         package--init-file-ensured t)
@@ -92,12 +106,67 @@
   ;; Disable local variable before to create autoload files.
   (setq enable-dir-local-variables nil))
 
+(defun load-package-file ()
+  "Load package file located in `embla-lisp-directory'."
+  (load (expand-file-name "package" embla-lisp-directory)
+        nil 'nomessage))
+
 (defun restore-values ()
-  "Restores default values after startup."
+  "Restore default values after startup."
   (setq file-name-handler-alist embla-file-name-handler-alist
         gc-cons-threshold 16000000
         gc-cons-percentage 0.1))
 
+(defun start-emacs-server ()
+  "Start emacs server if it has not already been started."
+  (require 'server)
+  (unless (server-running-p)
+    (server-start)))
+
+(defun embla-set-hooks ()
+  "Attach `embla-first-file-hook' to functions."
+  (let ((fn `(lambda (&rest _)
+               (run-hooks 'embla-first-file-hook))))
+    (dolist (on (list 'after-find-file
+                      'dired-initial-position-hook))
+      (if (functionp on)
+          (advice-add on :before fn)
+        (add-hook on fn)))))
+
+(defmacro advice (event &rest functions)
+  "Attach FUNCTIONS to a hooks or another function.
+If the EVENT is not a variable hook it will execute an `advice-add'."
+  (let ((fn `(lambda (&rest _)
+               (mapcar #'funcall '(,@functions)))))
+    (if (functionp event)
+        `(advice-add ',event :before ,fn)
+      `(add-hook ',event ,fn))))
+
+(defmacro bind-keys (keymap &rest args)
+  "Bind multiple keys on KEYMAP."
+  `(cl-loop for (key-name . command) in '(,@args)
+            do (define-key ,keymap (kbd key-name) command)))
+
+(defun clear-keys (keymap &rest args)
+  "Unbind multiple keys on KEYMAP."
+  (dolist (key-name args)
+    (define-key keymap (kbd key-name) nil)))
+
+(defun boot-packages (&rest packages)
+  "Ensure PACKAGES if `embla-update-autoloads' is executed."
+  (with-eval-after-load 'core-autoloads
+    (unless embla-init-p
+      (dolist (package packages)
+        (require-package package)))))
+
+(defmacro define-syntax-entries (&rest word-syntax)
+  "Define word syntax entries by list of characters."
+  `(dolist (character '(,@word-syntax))
+     (modify-syntax-entry
+      (cond ((string-equal character "_") ?_)
+            ((string-equal character "-") ?-)
+            ((string-equal character "\\") ?\\)
+            ((string-equal character "$") ?$)) "w")))
 
 (provide 'embla)
 
