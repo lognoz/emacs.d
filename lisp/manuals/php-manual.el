@@ -1,4 +1,4 @@
-;;; lisp/manuals/php.el --- php manual configurations -*- lexical-binding: t; -*-
+;;; lisp/manuals/php-manual.el --- php manual configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -1460,4 +1460,4 @@
       (browse-url (concat php-mode-manual-path "function." function))
       (message "Browse '%s' in manual" entry))))
 
-;;; php.el ends here
+;;; php-manual.el ends here
