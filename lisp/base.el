@@ -40,6 +40,10 @@
     (unless path
       (setq buffer (downcase
                     (string-trim (string-trim (buffer-name)) "*" "*")))
-      (when (string-match "\\minibuf-" buffer)
-        (setq buffer (symbol-name (ivy-state-caller ivy-last)))))
+      (if (derived-mode-p 'sr-mode 'dired-mode)
+          (setq path (expand-file-name default-directory))
+        (when (string-match "\\minibuf-" buffer)
+          (setq buffer (symbol-name (ivy-state-caller ivy-last))))))
     (concat "Embla : " (if path path buffer))))
+
+;;; base.el ends here
