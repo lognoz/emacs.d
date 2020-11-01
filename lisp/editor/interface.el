@@ -25,12 +25,17 @@
 
 ;;;###autoload
 (boot-packages 'atom-one-dark-theme
-               'linum-relative)
+               'linum-relative
+               'which-key
+               'orglink)
 
 ;;;###autoload
 (advice emacs-startup-hook
         load-embla-theme
-        set-embla-font)
+        set-embla-font
+        which-key-mode
+        which-key-setup-minibuffer
+        global-orglink-mode)
 
 (defcustom embla-theme 'atom-one-dark
   "The symbol of a theme to be loaded at Emacs startup.
@@ -113,9 +118,15 @@ See example below:
       inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
-;;;###autoload
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
+
+
+;;; Shows vim-style tildes on the left fringe
+
+(setq-default indicate-empty-lines t)
+(define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
+(setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
 
 ;;; interface.el ends here
