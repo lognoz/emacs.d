@@ -35,7 +35,15 @@
   "Minor mode to consolidate Embla extensions."
   :global t
   :group 'embla
-  :keymap (make-sparse-keymap))
+  :keymap
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "s-1") 'delete-other-windows)
+    (define-key map (kbd "s-2") 'split-window-below)
+    (define-key map (kbd "s-3") 'split-window-right)
+    (define-key map (kbd "s-k") 'kill-current-buffer)
+    (define-key map (kbd "s-o") 'other-window)
+    (define-key map (kbd "s-d") 'dired-jump)
+    map))
 
 (defvar embla-init-p nil
   "Non-nil if Embla has been initialized.")
@@ -56,24 +64,16 @@
   "Bootstrap Embla, if it hasn't already."
   (unless embla-init-p
     (load-package-file)
-    (require 'embla-autoloads)
+    (require 'embla-lisp-autoloads)
     (setq embla-init-p t)
     (embla-optimize-startup)
-    (embla-enable-functions)
     (embla-set-coding-system)
     (embla-set-custom-file)
     (embla-load-private-init)
+    (embla-load-site-lisp-autoloads)
     (embla-set-hooks)
     (package-bootstrap)
     (embla-mode t)))
-
-(defun embla-enable-functions ()
-  "Enable some usefull functions."
-  (put 'narrow-to-region 'disabled nil)
-  (put 'upcase-region 'disabled nil)
-  (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
-  (put 'overwrite-mode 'disabled t))
 
 (defun embla-set-coding-system ()
   "Use UTF-8 as the default coding system."
@@ -81,6 +81,12 @@
   (setq locale-coding-system 'utf-8)
   (when (fboundp 'set-charset-priority)
     (set-charset-priority 'unicode)))
+
+(defun embla-load-site-lisp-autoloads ()
+  "Load autoloads located in `site-lisp' directory."
+  (unless (file-exists-p embla-site-lisp-autoloads-file)
+    (refresh-site-lisp-autoloads))
+  (require 'embla-site-lisp-autoloads))
 
 (defun embla-load-private-init ()
   "Load the init.el located in `embla-private-directory'."
@@ -167,6 +173,18 @@ If the EVENT is not a variable hook it will execute an `advice-add'."
             ((string-equal character "-") ?-)
             ((string-equal character "\\") ?\\)
             ((string-equal character "$") ?$)) "w")))
+
+(defun require-program (program)
+  "Check for system PROGRAM and printing error if not found."
+  (unless (executable-find program)
+    (user-error "Required program \"%s\" not found in your path" program)))
+
+(defun clone-repository (path &optional dest)
+  "Process git clone command on DEST directory with PATH."
+  (unless dest (setq dest embla-site-lisp-directory))
+  (require-program "git")
+  (let ((default-directory dest))
+    (shell-command (format "git clone %s" path))))
 
 (provide 'embla)
 
