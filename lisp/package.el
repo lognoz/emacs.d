@@ -56,14 +56,12 @@
     (setq embla-package-refresh-contents-p t)))
 
 ;;;###autoload
-(defun require-package (&rest packages)
+(defun require-package (package)
   "Ensure PACKAGES if it's not installed."
   (unless embla-package-initialize-p
     (package-bootstrap))
-  (dolist (package packages)
-    (unless (package-installed-p package)
-      (package-archives-bootstrap)
-      (package-install package))))
-
+  (unless (package-installed-p package)
+    (package-archives-bootstrap)
+    (package-install package)))
 
 ;;; package.el ends here
