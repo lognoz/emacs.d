@@ -23,10 +23,11 @@
 
 ;;; Code:
 
-(setq debug-on-error t)
-
 (defconst embla-lisp-directory (file-name-directory load-file-name)
   "The directory of lisp files.")
+
+(defconst embla-site-lisp-directory (expand-file-name "site-lisp/" user-emacs-directory)
+  "The directory of site-lisp packages.")
 
 (defconst embla-private-directory (expand-file-name "private/" user-emacs-directory)
   "The directory of private files.")
@@ -34,26 +35,33 @@
 (defconst embla-temporary-directory (expand-file-name "temporary/" embla-private-directory)
   "The directory of temporary files.")
 
-(defconst embla-autoloads-file (expand-file-name "embla-autoloads.el" embla-temporary-directory)
+(defconst embla-lisp-autoloads-file (expand-file-name "embla-lisp-autoloads.el" embla-temporary-directory)
   "The main autoloads file.")
+
+(defconst embla-site-lisp-autoloads-file (expand-file-name "embla-site-lisp-autoloads.el" embla-temporary-directory)
+  "The autoloads file for `site-lisp' directory.")
 
 (defvar embla-modules
   (list (expand-file-name "." embla-lisp-directory)
-        (expand-file-name "editor" embla-lisp-directory))
+        (expand-file-name "autoloads" embla-lisp-directory)
+        (expand-file-name "editor" embla-lisp-directory)
+        (expand-file-name "tools" embla-lisp-directory)
+        (expand-file-name "emacs" embla-lisp-directory)
+        (expand-file-name "languages" embla-lisp-directory))
   "The list of modules directories.")
 
 ;; Add subdirectories to the load-path for files that might get
 ;; autoloaded when bootstrapping.
 (setq load-path (append load-path embla-modules))
 
-;; Check if `embla-autoloads-file' is created, if it hasn't already,
+;; Check if `embla-lisp-autoloads-file' is created, if it hasn't already,
 ;; we ensure it.
-;; (unless (file-exists-p embla-autoloads-file)
-(require 'core-autoloads)
-(embla-update-autoloads embla-modules)
+(unless (file-exists-p embla-lisp-autoloads-file)
+  (require 'core-autoloads)
+  (refresh-lisp-autoloads))
 
 ;; Add temporary directory to load-path to require autoloads.
-(add-to-list 'load-path embla-temporary-directory)
+(push embla-temporary-directory load-path)
 
 ;; Bootstrap Embla configurations.
 (require 'embla)
