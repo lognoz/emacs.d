@@ -89,12 +89,18 @@
   ;; search. Use C-? to reundo instead.
   (clear-keys evil-normal-state-map "C-r")
 
-  ;; Remove the vim way to start a macro.
-  ;; Use Emacs binding instead.
+  ;; Remove the vim way to start a macro. Use Emacs binding instead.
   (clear-keys evil-normal-state-map "q")
 
   ;; Remove evil search and some motions.
-  (clear-keys evil-motion-state-map "{" "}" "/" "*"))
+  (clear-keys evil-motion-state-map "{" "}" "/" "*")
+
+  ;; Remove C-y binding because it's already reserved to paste
+  ;; kill ring.
+  (clear-keys evil-motion-state-map "C-y")
+
+  ;; Remove the evil way to consult a manual. Use C-h M instead.
+  (clear-keys evil-motion-state-map "K"))
 
 ;;;###autoload
 (defun setup-evil-collection ()
