@@ -26,20 +26,7 @@
 ;;;###autoload
 (bind-keys embla-mode-map
   ("C-h M" . woman)
-  ("C-h l" . language-man)
   ("C-h s" . stackoverflow-search))
-
-;;;###autoload
-(defun language-man ()
-  "Launch manual by `major-mode'."
-  (interactive)
-  (if (derived-mode-p 'emacs-lisp-mode)
-      (find-function-read)
-    (let* ((mode (symbol-name major-mode))
-           (manual (intern (concat mode "-manual"))))
-      (if (fboundp manual)
-          (funcall-interactively manual)
-        (message "No manual found for '%s'" mode)))))
 
 ;;;###autoload
 (defun stackoverflow-search ()
@@ -49,6 +36,5 @@
         (page "https://stackoverflow.com/search?q=%s"))
     (browse-url (format page keywords))
     (message "Browse '%s' in stackoverflow" keywords)))
-
 
 ;;; help.el ends here
