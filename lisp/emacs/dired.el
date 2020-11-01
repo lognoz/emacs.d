@@ -33,6 +33,9 @@
         dired-hide-details-mode)
 
 ;;;###autoload
+(put 'dired-find-alternate-file 'disabled nil)
+
+;;;###autoload
 (setq dired-listing-switches "-aFlv --group-directories-first")
 
 ;;;###autoload
@@ -48,13 +51,16 @@
     (kbd "RET") 'dired-find-alternate-file
     (kbd "<mouse-2>") 'dired-find-alternate-file
     (kbd "<s-tab>") 'dired-hide-details-mode
-    (kbd "<M-tab>") 'dired-toggle-dotfile
+    (kbd "<M-tab>") 'dired-switch-dotfile
     (kbd "<tab>") 'dired-subtree-toggle
+    (kbd "C-_") 'dired-undo
+    "S"  'dired-do-slugify
+    "F"  'dired-open-marked
     "o"  'dired-find-file-other-window
     "/f" 'dired-grep-file-name
     "/g" 'dired-grep-file-name-by-pattern))
 
-(defun dired-toggle-dotfile ()
+(defun dired-switch-dotfile ()
   "Switch visibility of dotfiles lines."
   (interactive)
   (when (equal major-mode 'dired-mode)
@@ -75,5 +81,45 @@
   "Search files in directory by PATTERN."
   (interactive "sFind-grep (grep regexp): ")
   (find-grep-dired default-directory pattern))
+
+(defun dired-open-marked ()
+  "Open marked files in dired."
+  (interactive)
+  (mapc 'find-file (dired-get-marked-files)))
+
+(defmacro dired-fetch-marked-file (&rest body)
+  "Fetch marked files and execute `slugify'."
+  `(mapc (lambda (marked-file)
+           (let* ((extension (file-name-extension marked-file))
+                  (dired-file (file-name-nondirectory marked-file))
+                  (regexp (regexp-quote dired-file))
+                  (file-name
+                    (if (not (file-directory-p marked-file))
+                        (file-name-sans-extension dired-file)
+                      dired-file))
+                  (new-name
+                    (concat (string-trim (shell-command-to-string (format "slugify \"%s\"" file-name)))
+                            (when (and (not (file-directory-p marked-file)) extension)
+                              (concat "." extension)))))
+             ,@body))
+         (dired-get-marked-files)))
+
+(defun dired-do-slugify ()
+  "Rename current file or all marked files."
+  (interactive)
+  (require-program "slugify")
+  (if (equal (length (dired-get-marked-files)) 1)
+      (dired-fetch-marked-file
+        (setq new-name (read-file-name "Rename to: " new-name))
+        (dired-rename-file marked-file new-name t)
+        (revert-buffer))
+    (wdired-change-to-wdired-mode)
+    (save-excursion
+      (beginning-of-buffer)
+      (dired-fetch-marked-file
+        (call-interactively 'dired-next-marked-file)
+        (re-search-forward regexp nil t)
+        (replace-match new-name)))
+    (wdired-finish-edit)))
 
 ;;; dired.el ends here
