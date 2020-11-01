@@ -55,10 +55,10 @@
   "Non-nil if Emacs is 27 or above.")
 
 
+(provide 'core-vars)
+
 ;; Local Variables:
 ;; no-update-autoloads: t
 ;; End:
-
-(provide 'core-vars)
 
 ;;; core-vars.el ends here
