@@ -23,31 +23,26 @@
 
 ;;; Code:
 
-(defun embla-auto-install-packages ()
-  "Fetchs `embla-modules' directories and loads up files."
-  (fetch-embla-files embla-modules
-    (unless (string-match "\\load-up.el\\'" file)
-      (load file nil 'nomessage))))
+(defun refresh-autoloads (dir autoload)
+  "Refresh autoloads for files defines in lisp directories."
+  (let ((generated-autoload-file autoload))
+    (delete-file generated-autoload-file)
+    (dolist (file (directory-files-recursively dir ""))
+      (when (string-match "\\.el\\'" file)
+        (update-file-autoloads file t generated-autoload-file))))
+  (push embla-temporary-directory load-path))
 
-(defmacro fetch-embla-files (dirs &rest body)
-  "Fetchs files in the given DIRS and execute BODY on it.
-This function only fetch emacs lisp files."
-  `(dolist (dir ,dirs)
-     (dolist (file (directory-files-recursively dir ""))
-       (when (string-match "\\.el\\'" file)
-         ,@body))))
+;;;###autoload
+(defun refresh-site-lisp-autoloads ()
+  "Refresh autoloads located in `embla-site-lisp-directory'."
+  (interactive)
+  (refresh-autoloads embla-site-lisp-directory embla-site-lisp-autoloads-file))
 
-(defun embla-update-autoloads ()
-  "Updates autoloads for files defines in lisp directories.
-This function fetch `embla-modules' directories."
-  (let ((generated-autoload-file embla-autoloads-file))
-    (fetch-embla-files embla-modules
-      (update-file-autoloads file t generated-autoload-file)))
-  (push embla-temporary-directory load-path)
-  (require 'embla)
-  (embla-bootstrap)
-  (embla-auto-install-packages))
-
+;;;###autoload
+(defun refresh-lisp-autoloads ()
+  "Refresh autoloads located in `embla-lisp-directory'."
+  (interactive)
+  (refresh-autoloads embla-lisp-directory embla-lisp-autoloads-file))
 
 (provide 'core-autoloads)
 
