@@ -24,8 +24,10 @@
 ;;; Code:
 
 ;;;###autoload
-(advice emacs-startup-hook
-        setup-frame-title)
+(define-component embla-base ()
+  "Setup base component configurations."
+  (setup-frame-title)
+  (restore-garbage-collection))
 
 ;;;###autoload
 (defun setup-frame-title ()
@@ -45,5 +47,12 @@
         (when (string-match "\\minibuf-" buffer)
           (setq buffer (symbol-name (ivy-state-caller ivy-last))))))
     (concat "Embla : " (if path path buffer))))
+
+;;;###autoload
+(defun restore-garbage-collection ()
+  "Restore garbage collection after startup."
+  (setq file-name-handler-alist embla-file-name-handler-alist)
+  (setq gc-cons-threshold 16000000)
+  (setq gc-cons-percentage 0.1))
 
 ;;; base.el ends here
