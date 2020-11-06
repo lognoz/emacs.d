@@ -23,16 +23,18 @@
 
 ;;; Code:
 
+;;;###autoload
+(eval-before-init
+  (require-package 'undo-tree)
+  (require-package 'evil))
 
 ;;;###autoload
-(boot-packages 'undo-tree)
-
-;;;###autoload
-(advice embla-first-file-hook
-        setup-backup
-        setup-savehist
-        setup-recentf
-        save-place-mode)
+(define-component embla-files (after-find-file dired-initial-position-hook)
+  "Setup files component configurations."
+  (setup-backup)
+  (setup-savehist)
+  (setup-recentf)
+  (save-place-mode t))
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
