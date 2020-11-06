@@ -43,6 +43,9 @@
     (define-key map (kbd "C-x c a") 'langtool-correct-buffer)
     map))
 
+(defvar ctl-x-c-map (make-sparse-keymap)
+  "Keymap for subcommands of C-x c.")
+
 (define-minor-mode embla-correcting-mode
   "Minor mode that make documentation correction."
   :global nil
@@ -53,9 +56,6 @@
         (add-hook 'after-save-hook 'langtool-check nil 'make-it-local))
     (langtool-check-done)
     (remove-hook 'after-save-hook 'langtool-check)))
-
-(defvar ctl-x-c-map (make-sparse-keymap)
-  "Keymap for subcommands of C-x c.")
 
 (defalias 'ctl-x-c-prefix ctl-x-c-map)
 (define-key ctl-x-map "c" 'ctl-x-c-prefix)
