@@ -24,39 +24,57 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'company
-               'company-prescient)
+(eval-before-init
+  (require-package 'company)
+  (require-package 'company-box))
 
 ;;;###autoload
-(advice pre-command-hook
-        setup-company
-        global-company-mode
-        company-prescient-mode
-        after-boot-company)
+(define-component embla-company (pre-command-hook)
+  "Setup company component configurations."
+  (setup-company)
+  (global-company-mode t))
+
+;;;###autoload
+(define-component embla-on-company (company-mode-hook)
+  "Setup company hook component configurations."
+  (setup-company-box)
+  (after-booting-company))
 
 ;;;###autoload
 (defun setup-company ()
   "Setup company configurations."
-  (require 'company)
   (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0.25)
-  (setq company-selection-wrap-around t)
-  (setq company-tooltip-align-annotations t)
-  (setq company-tooltip-limit 14)
-  (setq company-dabbrev-downcase nil)
-  (setq company-dabbrev-ignore-case nil)
-  (setq company-dabbrev-code-other-buffers t)
-  (setq company-tooltip-align-annotations t)
-  (setq company-require-match 'never)
-  (setq company-backends (mapcar #'company-yasnippet-backend company-backends))
-  (setq company-frontends '(company-pseudo-tooltip-frontend
-                            company-echo-metadata-frontend)))
+  (setq company-idle-delay 0.1)
+  (setq company-tooltip-align-annotations t))
 
-(defun after-boot-company ()
+;;;###autoload
+(defun after-booting-company ()
   "Setup company keybindings after it's started."
   (bind-keys company-active-map
-    ("<tab>" . company-complete-selection)
+    ("<tab>" . company-confirm-selection)
     ("C-n"   . company-select-next)
     ("C-p"   . company-select-previous)))
+
+(defun setup-company-box ()
+  "Setup company box configurations."
+  (when (display-graphic-p)
+    (company-box-mode t)
+    (setq company-box-enable-icon nil)
+    (setq company-box-backends-colors nil)
+    (advice-add #'company-box--update-scrollbar :around #'company-box-hide-scrollbar)))
+
+(defun company-box-hide-scrollbar (orig-fn &rest args)
+  "Hide scrollbar when `company-box-mode' is actived."
+  (cl-letf (((symbol-function #'display-buffer-in-side-window)
+             (symbol-function #'ignore)))
+    (apply orig-fn args)))
+
+(defun company-confirm-selection (&optional arg)
+  "Confirm the selected candidate on company mode.
+If there's no selection, this function will choose the first one."
+  (interactive "p")
+  (unless company-selection
+    (company-select-next))
+  (company-complete-selection))
 
 ;;; company.el ends here
