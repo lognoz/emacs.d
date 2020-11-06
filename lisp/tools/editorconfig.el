@@ -24,9 +24,11 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'editorconfig)
+(eval-before-init
+  (require-package 'editorconfig))
 
-;;;###autoload
-(advice embla-first-file-hook editorconfig-mode)
+(define-component embla-editorconfig (after-find-file dired-initial-position-hook)
+  "Setup editorconfig component configurations."
+  (editorconfig-mode t))
 
 ;;; editorconfig.el ends here

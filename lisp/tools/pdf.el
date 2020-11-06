@@ -24,7 +24,8 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'pdf-tools)
+(eval-before-init
+  (require-package 'pdf-tools))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))

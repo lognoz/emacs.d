@@ -24,7 +24,9 @@
 ;;; Code:
 
 ;;;###autoload
-(advice emacs-startup-hook winner-mode)
+(define-component embla-files ()
+  "Setup winner component configurations."
+  (winner-mode t))
 
 ;;;###autoload
 (bind-keys embla-mode-map

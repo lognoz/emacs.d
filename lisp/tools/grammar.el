@@ -27,7 +27,7 @@
 (eval-before-init
   ;; Use this emacs langtool version instead of the one in melpa
   ;; because we can use the program in `prog-mode' and `org-mode'.
-  (unless (clone-in-site-p "Emacs-langtool")
+  (unless (directory-in-site-p "Emacs-langtool")
     (clone-repository "https://github.com/redguardtoo/Emacs-langtool")))
 
 ;;;###autoload
@@ -36,15 +36,17 @@
   :group 'embla
   :type 'boolean)
 
-(define-minor-mode embla-correcting-mode
-  "Minor mode that make documentation correction."
-  :global nil
-  :keymap
+(defvar embla-correcting-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-x c d") 'langtool-check-done)
     (define-key map (kbd "C-x c c") 'langtool-check)
     (define-key map (kbd "C-x c a") 'langtool-correct-buffer)
-    map)
+    map))
+
+(define-minor-mode embla-correcting-mode
+  "Minor mode that make documentation correction."
+  :global nil
+  :keymap 'embla-correcting-mode-map
   (if embla-correcting-mode
       (progn
         (langtool-check)
