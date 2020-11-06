@@ -24,15 +24,17 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'yasnippet)
+(eval-before-init
+  (require-package 'yasnippet))
 
 ;;;###autoload
-(advice pre-command-hook setup-snippet)
+(define-component embla-snippet (company-mode-hook)
+  "Setup snippet component configurations."
+  (setup-snippet))
 
-;;;###autoload
-(progn (advice text-mode-hook yas-global-mode)
-       (advice prog-mode-hook yas-global-mode)
-       (advice conf-mode-hook yas-global-mode))
+(define-component embla-snippet-mode (text-mode-hook prog-mode-hook conf-mode-hook)
+  "Load up yasnippet mode."
+  (yas-global-mode t))
 
 (defconst embla-snippet-directory (expand-file-name "snippet" embla-private-directory)
   "The directory of snippet files.")
@@ -40,15 +42,17 @@
 ;;;###autoload
 (defun setup-snippet ()
   "Setup snippet configurations."
-  (setq yas-verbosity 1
-        yas-wrap-around-region t
-        yas-snippet-dirs '(embla-snippet-directory)))
+  (setq yas-verbosity 1)
+  (setq yas-wrap-around-region t)
+  (setq yas-snippet-dirs '(embla-snippet-directory))
+  (setq company-backends (mapcar #'company-yasnippet-backend company-backends)))
 
 ;;;###autoload
-(defun company-yasnippet-backend (backend)
-  (if (and (listp backend) (member 'company-yasnippet backend))
-      backend
-    (append (if (consp backend) backend (list backend))
+(defun company-yasnippet-backend (backends)
+  "Append yasnippet to company BACKENDS if it's not part of it."
+  (if (and (listp backends) (member 'company-yasnippet backends))
+      backends
+    (append (if (consp backends) backends (list backends))
             '(:with company-yasnippet))))
 
 ;;; snippet.el ends here
