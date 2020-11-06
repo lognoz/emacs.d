@@ -5,6 +5,8 @@
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
 ;; Keywords: core
+;; Version: 0.1.1
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,12 +26,19 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'gnutls)
 (require 'core-vars)
+(require 'core-funcs)
 
 (defgroup embla nil
   "Embla customizations."
   :group 'convenience
   :link '(url-link :tag "Homepage" "https://github.com/lognoz/embla"))
+
+(defconst embla-version
+  (eval-when-compile
+    (lm-version (or load-file-name buffer-file-name)))
+  "The current version of Embla.")
 
 (define-minor-mode embla-mode
   "Minor mode to consolidate Embla extensions."
@@ -45,14 +54,23 @@
     (define-key map (kbd "s-d") 'dired-jump)
     map))
 
+(defcustom embla-package-archives
+  (let ((protocol (if gnutls-verify-error "https" "http")))
+    (list (cons "melpa" (concat protocol "://melpa.org/packages/"))
+          (cons "org"   (concat protocol "://orgmode.org/elpa/"))
+          (cons "gnu"   (concat protocol "://elpa.gnu.org/packages/"))))
+  "The alist of package archives used as repository."
+  :group 'embla
+  :type 'cons)
+
 (defvar embla-init-p nil
   "Non-nil if Embla has been initialized.")
 
-(defvar embla-packages nil
-  "The list of packages Embla needs to install.")
+(defvar embla-package-initialize-p nil
+  "Non-nil if package has been initialize.")
 
-(defvar embla-first-file-hook nil
-  "The hooks run before the first interactively opened file.")
+(defvar embla-package-refresh-contents-p nil
+  "Non-nil if package contents has been refreshed.")
 
 (defvar embla-file-name-handler-alist file-name-handler-alist
   "The Last `file-name-handler-alist' used to restore its value after startup.")
@@ -60,20 +78,33 @@
 (defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
   "The private initialization file.")
 
+(defconst embla-font-lock-keywords
+  (eval-when-compile
+    `((,(regexp-font-lock '("define-component"))
+        (1 font-lock-keyword-face)
+        (2 font-lock-function-name-face nil t))
+      (,(regexp-font-lock '("require-package"))
+        (1 font-lock-keyword-face)
+        (2 font-lock-constant-face nil t)))))
+
+(font-lock-add-keywords 'emacs-lisp-mode embla-font-lock-keywords)
+
+(defun embla-display-version ()
+  "Display the current `embla-version' in the minibuffer."
+  (interactive)
+  (message "embla (version %s)" embla-version))
+
 (defun embla-bootstrap ()
   "Bootstrap Embla, if it hasn't already."
-  (unless embla-init-p
-    (load-package-file)
-    (require 'embla-lisp-autoloads)
-    (setq embla-init-p t)
-    (embla-optimize-startup)
-    (embla-set-coding-system)
-    (embla-set-custom-file)
-    (embla-load-private-init)
-    (embla-load-site-lisp-autoloads)
-    (embla-set-hooks)
-    (package-bootstrap)
-    (embla-mode t)))
+  (require 'embla-lisp-autoloads)
+  (setq embla-init-p t)
+  (embla-mode t)
+  (embla-optimize-startup)
+  (embla-set-coding-system)
+  (embla-set-custom-file)
+  (embla-load-private-init)
+  (embla-require-site-lisp-autoloads)
+  (package-bootstrap))
 
 (defun embla-set-coding-system ()
   "Use UTF-8 as the default coding system."
@@ -82,8 +113,8 @@
   (when (fboundp 'set-charset-priority)
     (set-charset-priority 'unicode)))
 
-(defun embla-load-site-lisp-autoloads ()
-  "Load autoloads located in `site-lisp' directory."
+(defun embla-require-site-lisp-autoloads ()
+  "Require autoloads located in `site-lisp' directory."
   (unless (file-exists-p embla-site-lisp-autoloads-file)
     (refresh-site-lisp-autoloads))
   (require 'embla-site-lisp-autoloads))
@@ -102,89 +133,26 @@
 
 (defun embla-optimize-startup ()
   "Change somes defaults settings for better launch time."
-  ;; Disable auto-initialize package.
-  (setq package-enable-at-startup nil
-        package--init-file-ensured t)
-  ;; Change the frequency of garbage collection.
-  (setq gc-cons-threshold most-positive-fixnum
-        gc-cons-percentage 0.6
-        file-name-handler-alist nil)
-  ;; Disable local variable before to create autoload files.
+  (disable-initialize-package)
+  (fix-garbage-collection-for-startup)
   (setq enable-dir-local-variables nil))
 
-(defun load-package-file ()
-  "Load package file located in `embla-lisp-directory'."
-  (load (expand-file-name "package" embla-lisp-directory)
-        nil 'nomessage))
+(defun disable-initialize-package ()
+  "Disable auto-initialize package."
+  (setq package-enable-at-startup nil)
+  (setq package--init-file-ensured t))
 
-(defun restore-values ()
-  "Restore default values after startup."
-  (setq file-name-handler-alist embla-file-name-handler-alist
-        gc-cons-threshold 16000000
-        gc-cons-percentage 0.1))
+(defun fix-garbage-collection-for-startup ()
+  "Change the frequency of garbage collection."
+  (setq gc-cons-threshold most-positive-fixnum)
+  (setq gc-cons-percentage 0.6)
+  (setq file-name-handler-alist nil))
 
 (defun start-emacs-server ()
   "Start emacs server if it has not already been started."
   (require 'server)
   (unless (server-running-p)
     (server-start)))
-
-(defun embla-set-hooks ()
-  "Attach `embla-first-file-hook' to functions."
-  (let ((fn `(lambda (&rest _)
-               (run-hooks 'embla-first-file-hook))))
-    (dolist (on (list 'after-find-file
-                      'dired-initial-position-hook))
-      (if (functionp on)
-          (advice-add on :before fn)
-        (add-hook on fn)))))
-
-(defmacro advice (event &rest functions)
-  "Attach FUNCTIONS to a hooks or another function.
-If the EVENT is not a variable hook it will execute an `advice-add'."
-  (let ((fn `(lambda (&rest _)
-               (mapcar #'funcall '(,@functions)))))
-    (if (functionp event)
-        `(advice-add ',event :before ,fn)
-      `(add-hook ',event ,fn))))
-
-(defmacro bind-keys (keymap &rest args)
-  "Bind multiple keys on KEYMAP."
-  `(cl-loop for (key-name . command) in '(,@args)
-            do (define-key ,keymap (kbd key-name) command)))
-
-(defun clear-keys (keymap &rest args)
-  "Unbind multiple keys on KEYMAP."
-  (dolist (key-name args)
-    (define-key keymap (kbd key-name) nil)))
-
-(defun boot-packages (&rest packages)
-  "Ensure PACKAGES if `embla-update-autoloads' is executed."
-  (with-eval-after-load 'core-autoloads
-    (unless embla-init-p
-      (dolist (package packages)
-        (require-package package)))))
-
-(defmacro define-syntax-entries (&rest word-syntax)
-  "Define word syntax entries by list of characters."
-  `(dolist (character '(,@word-syntax))
-     (modify-syntax-entry
-      (cond ((string-equal character "_") ?_)
-            ((string-equal character "-") ?-)
-            ((string-equal character "\\") ?\\)
-            ((string-equal character "$") ?$)) "w")))
-
-(defun require-program (program)
-  "Check for system PROGRAM and printing error if not found."
-  (unless (executable-find program)
-    (user-error "Required program \"%s\" not found in your path" program)))
-
-(defun clone-repository (path &optional dest)
-  "Process git clone command on DEST directory with PATH."
-  (unless dest (setq dest embla-site-lisp-directory))
-  (require-program "git")
-  (let ((default-directory dest))
-    (shell-command (format "git clone %s" path))))
 
 (provide 'embla)
 
