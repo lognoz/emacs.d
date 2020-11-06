@@ -24,16 +24,18 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'projectile
-               'counsel
-               'ivy)
+(eval-before-init
+  (require-package 'projectile)
+  (require-package 'counsel)
+  (require-package 'ivy))
 
 ;;;###autoload
-(advice pre-command-hook
-        setup-ivy
-        setup-counsel
-        ivy-mode
-        after-ivy-boot)
+(define-component embla-ivy (pre-command-hook)
+  "Setup ivy component configurations."
+  (setup-ivy)
+  (setup-counsel)
+  (ivy-mode t)
+  (after-ivy-boot))
 
 ;;;###autoload
 (bind-keys embla-mode-map
