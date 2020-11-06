@@ -24,18 +24,20 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'atom-one-dark-theme
-               'linum-relative
-               'which-key
-               'orglink)
+(eval-before-init
+  (require-package 'atom-one-dark-theme)
+  (require-package 'linum-relative)
+  (require-package 'which-key)
+  (require-package 'orglink))
 
 ;;;###autoload
-(advice emacs-startup-hook
-        load-embla-theme
-        set-embla-font
-        which-key-mode
-        which-key-setup-minibuffer
-        global-orglink-mode)
+(define-component embla-interface ()
+  "Setup interface component configurations."
+  (load-embla-theme)
+  (set-embla-font)
+  (which-key-mode t)
+  (which-key-setup-minibuffer)
+  (global-orglink-mode t))
 
 (defcustom embla-theme 'atom-one-dark
   "The symbol of a theme to be loaded at Emacs startup.
@@ -56,18 +58,6 @@ See example below:
 (setq embla-font (font-spec :family \"Source Code Pro\" :height 100)"
   :group 'embla
   :type 'font-spec)
-
-;;;###autoload
-(defun load-embla-theme ()
-  "Load theme by its definition in `embla-theme' variable."
-  (when embla-theme
-    (load-theme embla-theme t)))
-
-;;;###autoload
-(defun set-embla-font ()
-  "Set default font by its definition in `embla-font' variable."
-  (when embla-font
-    (set-frame-font embla-font 'keep-size t)))
 
 
 ;;; Mouse and smooth scroll
@@ -128,5 +118,18 @@ See example below:
 (setq-default indicate-empty-lines t)
 (define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
 (setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
+
+
+;;;###autoload
+(defun load-embla-theme ()
+  "Load theme by its definition in `embla-theme' variable."
+  (when embla-theme
+    (load-theme embla-theme t)))
+
+;;;###autoload
+(defun set-embla-font ()
+  "Set default font by its definition in `embla-font' variable."
+  (when embla-font
+    (set-frame-font embla-font 'keep-size t)))
 
 ;;; interface.el ends here
