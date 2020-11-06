@@ -23,26 +23,28 @@
 
 ;;; Code:
 
-(defun refresh-autoloads (dir autoload)
-  "Refresh autoloads for files defines in lisp directories."
-  (let ((generated-autoload-file autoload))
+(defun refresh-autoloads (dir outfile)
+  "Update the autoloads for DIR.
+Make sure to give an absolute path as OUTFILE."
+  (let ((generated-autoload-file outfile))
     (delete-file generated-autoload-file)
     (dolist (file (directory-files-recursively dir ""))
       (when (string-match "\\.el\\'" file)
-        (update-file-autoloads file t generated-autoload-file))))
-  (push embla-temporary-directory load-path))
+        (update-file-autoloads file t generated-autoload-file)))))
 
 ;;;###autoload
 (defun refresh-site-lisp-autoloads ()
-  "Refresh autoloads located in `embla-site-lisp-directory'."
+  "Update the autoloads located in `embla-site-lisp-directory'."
   (interactive)
-  (refresh-autoloads embla-site-lisp-directory embla-site-lisp-autoloads-file))
+  (refresh-autoloads embla-site-lisp-directory
+                     embla-site-lisp-autoloads-file))
 
 ;;;###autoload
 (defun refresh-lisp-autoloads ()
-  "Refresh autoloads located in `embla-lisp-directory'."
+  "Update the autoloads located in `embla-lisp-directory'."
   (interactive)
-  (refresh-autoloads embla-lisp-directory embla-lisp-autoloads-file))
+  (refresh-autoloads embla-lisp-directory
+                     embla-lisp-autoloads-file))
 
 (provide 'core-autoloads)
 
