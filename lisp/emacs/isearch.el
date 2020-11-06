@@ -24,12 +24,14 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'visual-regexp)
+(eval-before-init
+  (require-package 'visual-regexp))
 
 ;;;###autoload
-(advice emacs-startup-hook
-        setup-isearch
-        setup-visual-regexp)
+(define-component isearch-dired ()
+  "Setup isearch component configurations."
+  (setup-isearch)
+  (setup-visual-regexp))
 
 ;;;###autoload
 (bind-keys embla-mode-map

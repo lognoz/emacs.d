@@ -24,13 +24,15 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'dired-ranger
-               'dired-subtree)
+(eval-before-init
+  (require-package 'dired-ranger)
+  (require-package 'dired-subtree))
 
 ;;;###autoload
-(advice dired-mode-hook
-        setup-dired
-        dired-hide-details-mode)
+(define-component embla-dired (dired-mode-hook)
+  "Setup dired component configurations."
+  (setup-dired)
+  (dired-hide-details-mode t))
 
 ;;;###autoload
 (put 'dired-find-alternate-file 'disabled nil)

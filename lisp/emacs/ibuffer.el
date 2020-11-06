@@ -24,13 +24,15 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'ibuffer-projectile)
+(eval-before-init
+  (require-package 'ibuffer-projectile))
 
 ;;;###autoload
-(advice ibuffer-mode-hook
-        ibuffer-do-sort-by-alphabetic
-        ibuffer-projectile-set-filter-groups
-        setup-ibuffer)
+(define-component ibuffer-dired (ibuffer-mode-hook)
+  "Setup ibuffer component configurations."
+  (ibuffer-do-sort-by-alphabetic)
+  (ibuffer-projectile-set-filter-groups)
+  (setup-ibuffer))
 
 ;;;###autoload
 (bind-keys embla-mode-map
