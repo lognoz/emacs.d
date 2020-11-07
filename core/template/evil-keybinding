@@ -1,1 +1,0 @@
-(apply #'evil-define-key* '__state__ __mode__ '__variable__)
