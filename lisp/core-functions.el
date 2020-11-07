@@ -39,7 +39,7 @@ This function will do nothing if embla is already initialize."
   `(cl-loop for (key-name . command) in '(,@args)
             do (define-key ,keymap (kbd key-name) command)))
 
-(defmacro define-syntax-entries (&rest word-syntax)
+(defun define-syntax-entries (&rest word-syntax)
   "Define word syntax entries by list of characters."
   `(dolist (character '(,@word-syntax))
      (modify-syntax-entry
@@ -52,6 +52,11 @@ This function will do nothing if embla is already initialize."
   "Unbind multiple keys on KEYMAP."
   (dolist (key-name args)
     (define-key keymap (kbd key-name) nil)))
+
+(defun bind-patterns (mode patterns)
+  "Add PATTERNS to corresponding major MODE functions."
+  (dolist (regex patterns)
+    (add-to-list 'auto-mode-alist (cons regex mode))))
 
 (defun require-package (package)
   "Ensure PACKAGE if it's not installed."
