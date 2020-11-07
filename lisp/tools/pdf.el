@@ -28,6 +28,6 @@
   (require-package 'pdf-tools))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.pdf\\'" . pdf-tools-install))
+(bind-patterns 'pdf-tools-install '("\\.pdf\\'"))
 
 ;;; pdf.el ends here
