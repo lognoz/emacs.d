@@ -24,17 +24,19 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'evil
-               'evil-magit
-               'evil-indent-plus
-               'evil-smartparens
-               'evil-surround
-               'evil-collection)
+(eval-before-init
+  (require-package 'evil)
+  (require-package 'evil-magit)
+  (require-package 'evil-indent-plus)
+  (require-package 'evil-smartparens)
+  (require-package 'evil-surround)
+  (require-package 'evil-collection))
 
 ;;;###autoload
-(advice emacs-startup-hook
-        setup-evil
-        setup-evil-collection)
+(define-component embla-evil ()
+  "Setup evil component configurations."
+  (setup-evil)
+  (setup-evil-collection))
 
 (defvar evil-collection-mode-list
   '(ag
