@@ -27,7 +27,8 @@
 (bind-keys embla-mode-map
   ("M-DEL" . cycle-spacing)
   ("s-y"   . copy-whole-bufer)
-  ("C-x h" . mark-whole-buffer))
+  ("C-x h" . mark-whole-buffer)
+  ("C-x ," . pop-local-mark-ring))
 
 ;;;###autoload
 (defun copy-whole-buffer ()
@@ -35,5 +36,11 @@
   (interactive)
   (copy-region-as-kill 1 (point-max))
   (message "The entire buffer is copied to the kill-ring."))
+
+;;;###autoload
+(defun pop-local-mark-ring ()
+  "Jump to precedent mark ring."
+  (interactive)
+  (set-mark-command t))
 
 ;;; simple.el ends here
