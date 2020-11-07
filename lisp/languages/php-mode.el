@@ -1,4 +1,4 @@
-;;; lisp/languages/php.el --- php configurations -*- lexical-binding: t; -*-
+;;; lisp/languages/php-mode.el --- php configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -24,18 +24,20 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'ac-php
-               'company
-               'company-php
-               'company-phpactor
-               'php-mode
-               'phpactor)
+(eval-before-init
+  (require-package 'ac-php)
+  (require-package 'company)
+  (require-package 'company-php)
+  (require-package 'company-phpactor)
+  (require-package 'php-mode)
+  (require-package 'phpactor))
 
 ;;;###autoload
-(advice php-mode-hook
-        setup-php
-        setup-ac-php
-        setup-company-php)
+(define-component embla-php-mode (php-mode-hook)
+  "Setup php component configurations."
+  (setup-php)
+  (setup-ac-php)
+  (setup-company-php))
 
 ;;;###autoload
 (defun setup-php ()
@@ -56,8 +58,8 @@
 (defun setup-company-php ()
   "Setup company configurations."
   (set (make-local-variable 'company-backends)
-    '((company-ac-php-backend
-       company-phpactor
-       company-files))))
+       '(company-ac-php-backend
+         company-phpactor
+         company-files)))
 
-;;; php.el ends here
+;;; php-mode.el ends here
