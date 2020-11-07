@@ -4,7 +4,7 @@
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: util variable
+;; Keywords: core variables
 
 ;; This file is not part of GNU Emacs.
 
@@ -37,6 +37,10 @@
 (defconst bsd-p
   (string-equal "bsd" operating-system)
   "Non-nil if it's BSD system.")
+
+(defconst linux-p
+  (string-equal "linux" operating-system)
+  "Non-nil if it's Linux system.")
 
 (defconst xorg-p
   (eq window-system 'x)
