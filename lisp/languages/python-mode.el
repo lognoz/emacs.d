@@ -1,4 +1,4 @@
-;;; lisp/languages/python.el --- python configurations -*- lexical-binding: t; -*-
+;;; lisp/languages/python-mode.el --- python configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -24,20 +24,17 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'company
-               'company-jedi)
+(eval-before-init
+  (require-package 'company)
+  (require-package 'company-jedi))
 
 ;;;###autoload
-(advice python-mode-hook
-        setup-python)
-
-;;;###autoload
-(defun setup-python ()
-  "Setup python configurations."
+(define-component embla-python-mode (python-mode-hook)
+  "Setup python component configurations."
   (define-syntax-entries "_")
   (set (make-local-variable 'company-backends)
-    '((company-jedi)))
+       '(company-jedi))
   (bind-keys python-mode-map
     ("C-c C-j" . counsel-imenu)))
 
-;;; python.el ends here
+;;; python-mode.el ends here
