@@ -30,6 +30,12 @@
   (require-package 'git-gutter+))
 
 ;;;###autoload
+(bind-keys embla-mode-map
+  ("<s-up>"   . git-gutter:previous-hunk)
+  ("<s-down>" . git-gutter:next-hunk)
+  ("C-x g"    . magit))
+
+;;;###autoload
 (define-component embla-version-control ()
   "Setup version control configurations."
   (global-git-gutter-mode t)
