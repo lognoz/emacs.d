@@ -24,7 +24,7 @@
 ;;; Code:
 
 ;;;###autoload
-(define-component embla-files ()
+(define-component embla-winner ()
   "Setup winner component configurations."
   (winner-mode t))
 
