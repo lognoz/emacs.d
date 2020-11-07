@@ -1,4 +1,4 @@
-;;; lisp/core-autoloads.el --- autoloads generator -*- lexical-binding: t; -*-
+;;; lisp/autoloads.el --- autoloads generator -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -46,6 +46,6 @@ Make sure to give an absolute path as OUTFILE."
   (refresh-autoloads embla-lisp-directory
                      embla-lisp-autoloads-file))
 
-(provide 'core-autoloads)
+(provide 'autoloads)
 
-;;; core-autoloads.el ends here
+;;; autoloads.el ends here
