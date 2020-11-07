@@ -1,10 +1,10 @@
-;;; lisp/languages/lisp.el --- lisp configurations -*- lexical-binding: t; -*-
+;;; lisp/languages/web-mode.el --- web configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: lisp
+;; Keywords: web
 
 ;; This file is not part of GNU Emacs.
 
@@ -25,12 +25,27 @@
 
 ;;;###autoload
 (eval-before-init
-  (require-package 'parinfer))
+  (require-package 'company)
+  (require-package 'company-web)
+  (require-package 'web-mode)
+  (require-package 'emmet-mode))
 
 ;;;###autoload
-(defun setup-lisp ()
-  "Setup lisp configurations."
-  (setq parinfer-extensions '(defaults evil))
-  (parinfer-mode))
+(define-component embla-web-mode (web-mode-hook)
+  "Setup web component configurations."
+  (setup-web))
 
-;;; lisp.el ends here
+;;;###autoload
+(bind-patterns 'web-mode '("\\.html\\'" "\\.html.php\\'"))
+
+;;;###autoload
+(defun setup-web ()
+  "Setup web configurations."
+  (define-syntax-entries "_" "-")
+  (set (make-local-variable 'company-backends)
+       '(company-css
+         company-web-html
+         company-yasnippet
+         company-files)))
+
+;;; web-mode.el ends here

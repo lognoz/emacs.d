@@ -1,10 +1,10 @@
-;;; lisp/languages/web.el --- web configurations -*- lexical-binding: t; -*-
+;;; lisp/languages/elisp-mode.el --- Emacs lisp configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: web
+;; Keywords: emacs lisp
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,28 +24,9 @@
 ;;; Code:
 
 ;;;###autoload
-(boot-packages 'company
-               'company-web
-               'web-mode
-               'emmet-mode)
+(define-component embla-elisp-mode (emacs-lisp-mode-hook)
+  "Setup emacs lisp mode component configurations."
+  (setup-lisp))
 
-;;;###autoload
-(advice web-mode-hook
-        setup-web
-        emmet-mode)
+;;; elisp-mode.el ends here
 
-;;;###autoload
-(progn
-  (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html.php\\'" . web-mode)))
-
-;;;###autoload
-(defun setup-web ()
-  "Setup web configurations."
-  (set (make-local-variable 'company-backends)
-       '(company-css
-         company-web-html
-         company-yasnippet
-         company-files)))
-
-;;; web.el ends here
