@@ -45,19 +45,19 @@
   (list (expand-file-name "." embla-lisp-directory)
         (expand-file-name "autoloads" embla-lisp-directory)
         (expand-file-name "editor" embla-lisp-directory)
-        (expand-file-name "tools" embla-lisp-directory)
         (expand-file-name "emacs" embla-lisp-directory)
-        (expand-file-name "languages" embla-lisp-directory))
+        (expand-file-name "languages" embla-lisp-directory)
+        (expand-file-name "tools" embla-lisp-directory))
   "The list of modules directories.")
 
-;; Add subdirectories to the load-path for files that might get
+;; Add sub-directories to the load-path for files that might get
 ;; autoloaded when bootstrapping.
 (setq load-path (append load-path embla-modules))
 
 ;; Check if `embla-lisp-autoloads-file' is created, if it hasn't already,
 ;; we ensure it.
 (unless (file-exists-p embla-lisp-autoloads-file)
-  (require 'core-autoloads)
+  (require 'autoloads)
   (refresh-lisp-autoloads))
 
 ;; Add temporary directory to load-path to require autoloads.
