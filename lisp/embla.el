@@ -28,16 +28,15 @@
 (require 'cl-lib)
 (require 'gnutls)
 (require 'core-vars)
-(require 'core-funcs)
+(require 'core-functions)
+(require 'core-component)
 
 (defgroup embla nil
   "Embla customizations."
   :group 'convenience
   :link '(url-link :tag "Homepage" "https://github.com/lognoz/embla"))
 
-(defconst embla-version
-  (eval-when-compile
-    (lm-version (or load-file-name buffer-file-name)))
+(defconst embla-version "0.1.1"
   "The current version of Embla.")
 
 (define-minor-mode embla-mode
@@ -73,7 +72,7 @@
   "Non-nil if package contents has been refreshed.")
 
 (defvar embla-file-name-handler-alist file-name-handler-alist
-  "The Last `file-name-handler-alist' used to restore its value after startup.")
+  "The last `file-name-handler-alist' used to restore its value after startup.")
 
 (defconst embla-private-init-file (expand-file-name "init.el" embla-private-directory)
   "The private initialization file.")
@@ -132,7 +131,7 @@
   (load custom-file nil 'nomessage))
 
 (defun embla-optimize-startup ()
-  "Change somes defaults settings for better launch time."
+  "Change some defaults settings for better launch time."
   (disable-initialize-package)
   (fix-garbage-collection-for-startup)
   (setq enable-dir-local-variables nil))
