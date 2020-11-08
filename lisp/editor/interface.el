@@ -26,7 +26,6 @@
 ;;;###autoload
 (eval-before-init
   (require-package 'atom-one-dark-theme)
-  (require-package 'linum-relative)
   (require-package 'which-key)
   (require-package 'orglink))
 
@@ -78,11 +77,6 @@ See example below:
 
 ;; Highlight current line.
 (global-hl-line-mode t)
-
-;; Show hybride line numbers.
-(setq linum-relative-backend 'display-line-numbers-mode)
-(global-display-line-numbers-mode t)
-(linum-relative-mode t)
 
 
 ;;; Cursor configuration
