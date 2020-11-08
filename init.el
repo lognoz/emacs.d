@@ -22,28 +22,8 @@
 
 ;;; Code:
 
-;; Unset temporarily file-name-handler-alist for better performance.
-(defvar last-file-name-handler-alist file-name-handler-alist)
-
-;; Change the frequency of garbage collection for better launch time.
-(setq gc-cons-threshold 100000000
-      gc-cons-percentage 0.6
-      file-name-handler-alist nil)
-
-;; Don't auto-initialize package.
-(setq package-enable-at-startup nil
-      package--init-file-ensured t)
-
-;; Show warning when opening files bigger than 100MB.
-(setq large-file-warning-threshold 100000000)
-
-;; Disabled local variable before to create autoload files.
-(setq enable-dir-local-variables nil)
-
-(if (version< emacs-version "26")
-  (error "Embla requires GNU Emacs 26 or newer, but you're running %s"
-         emacs-version)
+(if (version< emacs-version "25.1")
+    (error "Embla requires GNU Emacs 25.1 or newer, but you're running %s"
+           emacs-version)
   (setq user-emacs-directory (file-name-directory load-file-name))
-  (load (concat user-emacs-directory "core/core-embla")
-        nil 'nomessage)
-  (embla-initialize))
+  (load (expand-file-name "lisp/load-up" user-emacs-directory) nil 'nomessage))
