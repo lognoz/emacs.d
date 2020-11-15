@@ -38,7 +38,12 @@
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;;;###autoload
-(setq dired-listing-switches "-aFlv --group-directories-first")
+(let ((listing-switches (list "-ahl" "-v" "--group-directories-first")))
+  (when bsd-p
+    (if-let (gls (executable-find "gls"))
+            (setq insert-directory-program gls)
+      (setq listing-switches (list (car listing-switches)))))
+  (setq dired-listing-switches (string-join listing-switches " ")))
 
 ;;;###autoload
 (defun setup-dired ()
