@@ -41,8 +41,8 @@ This function will do nothing if embla is already initialize."
 
 (defun define-syntax-entries (&rest word-syntax)
   "Define word syntax entries by list of characters."
-  `(dolist (character '(,@word-syntax))
-     (modify-syntax-entry
+  (dolist (character word-syntax)
+    (modify-syntax-entry
       (cond ((string-equal character "_") ?_)
             ((string-equal character "-") ?-)
             ((string-equal character "\\") ?\\)
