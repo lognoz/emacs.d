@@ -30,6 +30,7 @@
 ;;;###autoload
 (defun setup-lisp ()
   "Setup lisp configurations."
+  (define-syntax-entries "-")
   (setq parinfer-extensions '(defaults evil))
   (parinfer-mode))
 
