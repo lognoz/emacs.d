@@ -27,6 +27,7 @@
 (eval-before-init
   (require-package 'editorconfig))
 
+;;;###autoload
 (define-component embla-editorconfig (after-find-file dired-initial-position-hook)
   "Setup editorconfig component configurations."
   (editorconfig-mode t))
