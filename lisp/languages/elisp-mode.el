@@ -29,4 +29,3 @@
   (setup-lisp))
 
 ;;; elisp-mode.el ends here
-
