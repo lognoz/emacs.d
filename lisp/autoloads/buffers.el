@@ -57,6 +57,13 @@
         (message "File '%s' successfully removed" filename)))))
 
 ;;;###autoload
+(defun buffer-file-name-body (&optional filename)
+  "Return the base name of the filename: no directory, no extension.
+The default FILENAME is the `buffer-file-name'."
+  (file-name-sans-extension
+    (file-name-nondirectory (or filename (buffer-file-name)))))
+
+;;;###autoload
 (defun kill-current-buffer ()
   "Kill current buffer without asking confirmation."
   (interactive)
