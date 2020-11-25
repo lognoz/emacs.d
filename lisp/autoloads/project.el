@@ -26,7 +26,7 @@
 ;;;###autoload
 (defun git-remote-url ()
   "Return project remote origin url."
-  (shell-command-to-string "git config --get remote.origin.url"))
+  (string-trim (shell-command-to-string "git config --get remote.origin.url")))
 
 ;;;###autoload
 (defun git-project-root (&optional filename)
@@ -41,7 +41,7 @@ The default FILENAME is the `buffer-file-name'."
   "Return project full path relative to the project root.
 The default FILENAME is the `buffer-file-name'."
   (setq filename (or filename (buffer-file-name)))
-  (let ((root (git-project-root filename))) 
+  (let ((root (git-project-root filename)))
     (if root
         (substring filename (length root))
       buffer-file-name)))
