@@ -23,13 +23,24 @@
 
 ;;; Code:
 
-;;;###autoload
-(defun sudo ()
-  "Use TRAMP to `sudo' the current buffer"
-  (interactive)
+(defun su (program)
+  "Use superior user on the current buffer."
+  (require-program program)
   (when buffer-file-name
     (find-alternate-file
-     (concat "/sudo:root@localhost:"
+     (concat "/" program ":root@localhost:"
              buffer-file-name))))
+
+;;;###autoload
+(defun sudo ()
+  "Use TRAMP to `sudo' the current buffer."
+  (interactive)
+  (su "sudo"))
+
+;;;###autoload
+(defun doas ()
+  "Use TRAMP to `doas' the current buffer."
+  (interactive)
+  (su "doas"))
 
 ;;; tramp.el ends here
