@@ -24,7 +24,7 @@
 ;;; Code:
 
 (defun su (program)
-  "Use superior user on the current buffer."
+  "Use root on the current buffer."
   (require-program program)
   (when buffer-file-name
     (find-alternate-file
