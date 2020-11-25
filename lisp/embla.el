@@ -55,9 +55,10 @@
 
 (defcustom embla-package-archives
   (let ((protocol (if gnutls-verify-error "https" "http")))
-    (list (cons "melpa" (concat protocol "://melpa.org/packages/"))
-          (cons "org"   (concat protocol "://orgmode.org/elpa/"))
-          (cons "gnu"   (concat protocol "://elpa.gnu.org/packages/"))))
+    (list (cons "melpa"  (concat protocol "://melpa.org/packages/"))
+          (cons "stable" (concat protocol "://stable.melpa.org/packages/"))
+          (cons "org"    (concat protocol "://orgmode.org/elpa/"))
+          (cons "gnu"    (concat protocol "://elpa.gnu.org/packages/"))))
   "The alist of package archives used as repository."
   :group 'embla
   :type 'cons)
@@ -96,14 +97,14 @@
 (defun embla-bootstrap ()
   "Bootstrap Embla, if it hasn't already."
   (require 'embla-lisp-autoloads)
-  (setq embla-init-p t)
   (embla-mode t)
   (embla-optimize-startup)
   (embla-set-coding-system)
   (embla-set-custom-file)
   (embla-load-private-init)
   (embla-require-site-lisp-autoloads)
-  (package-bootstrap))
+  (package-bootstrap)
+  (setq embla-init-p t))
 
 (defun embla-set-coding-system ()
   "Use UTF-8 as the default coding system."
