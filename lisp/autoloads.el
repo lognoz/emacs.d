@@ -36,15 +36,13 @@ Make sure to give an absolute path as OUTFILE."
 (defun refresh-site-lisp-autoloads ()
   "Update the autoloads located in `embla-site-lisp-directory'."
   (interactive)
-  (refresh-autoloads embla-site-lisp-directory embla-site-lisp-autoloads-file)
-  (load embla-site-lisp-autoloads-file nil 'nomessage))
+  (refresh-autoloads embla-site-lisp-directory embla-site-lisp-autoloads-file))
 
 ;;;###autoload
 (defun refresh-lisp-autoloads ()
   "Update the autoloads located in `embla-lisp-directory'."
   (interactive)
-  (refresh-autoloads embla-lisp-directory embla-lisp-autoloads-file)
-  (load embla-lisp-autoloads-file nil 'nomessage))
+  (refresh-autoloads embla-lisp-directory embla-lisp-autoloads-file))
 
 (provide 'autoloads)
 
