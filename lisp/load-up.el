@@ -32,7 +32,7 @@
 (defconst embla-private-directory (expand-file-name "private/" user-emacs-directory)
   "The directory of private files.")
 
-(defconst embla-temporary-directory (expand-file-name "temporary/" embla-private-directory)
+(defconst embla-temporary-directory (expand-file-name "temporary/" user-emacs-directory)
   "The directory of temporary files.")
 
 (defconst embla-lisp-autoloads-file (expand-file-name "embla-lisp-autoloads.el" embla-temporary-directory)
@@ -54,18 +54,10 @@
 ;; autoloaded when bootstrapping.
 (setq load-path (append load-path embla-modules))
 
-;; Check if `embla-lisp-autoloads-file' is created, if it hasn't already,
-;; we ensure it.
-(unless (file-exists-p embla-lisp-autoloads-file)
-  (require 'autoloads)
-  (refresh-lisp-autoloads))
-
-;; Add temporary directory to load-path to require autoloads.
-(push embla-temporary-directory load-path)
-
 ;; Bootstrap Embla configurations.
 (require 'embla)
 (embla-bootstrap)
+
 
 ;; Local Variables:
 ;; no-byte-compile: t
