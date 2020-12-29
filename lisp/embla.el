@@ -66,8 +66,11 @@
 (defvar embla-init-p nil
   "Non-nil if Embla has been initialized.")
 
+(defvar embla-developer-mode-p nil
+  "Non-nil if Embla is in developer mode.")
+
 (defvar embla-package-initialize-p nil
-  "Non-nil if package has been initialize.")
+  "Non-nil if package has been initialized.")
 
 (defvar embla-package-refresh-contents-p nil
   "Non-nil if package contents has been refreshed.")
@@ -96,13 +99,16 @@
 
 (defun embla-bootstrap ()
   "Bootstrap Embla, if it hasn't already."
-  (require 'embla-lisp-autoloads)
+  (unless (file-exists-p embla-temporary-directory)
+    (make-directory embla-temporary-directory))
+  (push embla-temporary-directory load-path)
+  (require-lisp-autoloads)
+  (require-site-lisp-autoloads)
   (embla-mode t)
   (embla-optimize-startup)
   (embla-set-coding-system)
   (embla-set-custom-file)
   (embla-load-private-init)
-  (embla-require-site-lisp-autoloads)
   (package-bootstrap)
   (setq embla-init-p t))
 
@@ -112,12 +118,6 @@
   (setq locale-coding-system 'utf-8)
   (when (fboundp 'set-charset-priority)
     (set-charset-priority 'unicode)))
-
-(defun embla-require-site-lisp-autoloads ()
-  "Require autoloads located in `site-lisp' directory."
-  (unless (file-exists-p embla-site-lisp-autoloads-file)
-    (refresh-site-lisp-autoloads))
-  (require 'embla-site-lisp-autoloads))
 
 (defun embla-load-private-init ()
   "Load the init.el located in `embla-private-directory'."
@@ -136,6 +136,22 @@
   (disable-initialize-package)
   (fix-garbage-collection-for-startup)
   (setq enable-dir-local-variables nil))
+
+(defun require-lisp-autoloads ()
+  "Require autoloads located in `lisp' directory."
+  (when (or (not (file-exists-p embla-lisp-autoloads-file))
+            embla-developer-mode-p)
+    (require 'autoloads)
+    (refresh-lisp-autoloads))
+  (require 'embla-lisp-autoloads))
+
+(defun require-site-lisp-autoloads ()
+  "Require autoloads located in `site-lisp' directory."
+  (when (or (not (file-exists-p embla-site-lisp-autoloads-file))
+            embla-developer-mode-p)
+    (require 'autoloads)
+    (refresh-site-lisp-autoloads))
+  (require 'embla-site-lisp-autoloads))
 
 (defun disable-initialize-package ()
   "Disable auto-initialize package."
