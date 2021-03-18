@@ -1,0 +1,6 @@
+{
+  "/init.el": "Init: ",
+  "/lisp/": "Lisp: ",
+  "/site-lisp/": "Site: ",
+  "/": "Build: "
+}
