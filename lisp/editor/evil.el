@@ -56,8 +56,10 @@
   "Setup evil configurations."
   (setq evil-toggle-key "C-`")
   (setq evil-want-keybinding nil)
+
   (with-eval-after-load 'magit
     (require 'evil-magit))
+
   (global-evil-surround-mode t)
   (evil-mode t)
 
@@ -111,5 +113,26 @@ keybindings by mode."
   (dolist (mode evil-collection-mode-list)
     (with-eval-after-load mode
       (evil-collection-init (list mode)))))
+
+(defun evil-visual-indent (beg end)
+  "Indent text form BEG to END."
+  (interactive "r")
+  (evil-indent beg end)
+  (evil-normal-state)
+  (evil-visual-restore))
+
+(defun evil-visual-shift-left (beg end)
+  "Shift text from BEG to END to the left."
+  (interactive "r")
+  (evil-shift-left beg end)
+  (evil-normal-state)
+  (evil-visual-restore))
+
+(defun evil-visual-shift-right (beg end)
+  "Shift text from BEG to END to the right."
+  (interactive "r")
+  (evil-shift-right beg end)
+  (evil-normal-state)
+  (evil-visual-restore))
 
 ;;; evil.el ends here
