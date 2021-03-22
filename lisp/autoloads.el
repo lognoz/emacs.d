@@ -26,11 +26,10 @@
 (defun refresh-autoloads (dir outfile)
   "Update the autoloads for DIR.
 Make sure to give an absolute path as OUTFILE."
-  (let ((generated-autoload-file outfile))
-    (delete-file generated-autoload-file)
-    (dolist (file (directory-files-recursively dir ""))
-      (when (string-match "\\.el\\'" file)
-        (update-file-autoloads file t generated-autoload-file)))))
+  (delete-file outfile)
+  (dolist (file (directory-files-recursively dir ""))
+    (when (string-match "\\.el\\'" file)
+      (update-file-autoloads file t outfile))))
 
 ;;;###autoload
 (defun refresh-site-lisp-autoloads ()
@@ -43,6 +42,7 @@ Make sure to give an absolute path as OUTFILE."
   "Update the autoloads located in `embla-lisp-directory'."
   (interactive)
   (refresh-autoloads embla-lisp-directory embla-lisp-autoloads-file))
+
 
 (provide 'autoloads)
 
