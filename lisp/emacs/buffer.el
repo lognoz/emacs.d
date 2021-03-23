@@ -1,10 +1,10 @@
-;;; lisp/autoloads/buffers.el --- buffers autoloads -*- lexical-binding: t; -*-
+;;; lisp/emacs/buffer.el --- buffer autoloads -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: buffers
+;; Keywords: buffer
 
 ;; This file is not part of GNU Emacs.
 
@@ -22,6 +22,9 @@
 ;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Code:
+
+;;;###autoload
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;;;###autoload
 (defun rename-current-buffer-file ()
@@ -69,4 +72,4 @@ The default FILENAME is the `buffer-file-name'."
   (interactive)
   (kill-buffer (buffer-name)))
 
-;;; buffers.el ends here
+;;; buffer.el ends here
