@@ -1,4 +1,4 @@
-;;; lisp/emacs/buffer.el --- buffer autoloads -*- lexical-binding: t; -*-
+;;; lisp/buffer.el --- buffer configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

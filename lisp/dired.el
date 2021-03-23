@@ -1,4 +1,4 @@
-;;; lisp/emacs/dired.el --- dired configurations -*- lexical-binding: t; -*-
+;;; lisp/dired.el --- dired configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

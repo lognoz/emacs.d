@@ -1,4 +1,4 @@
-;;; lisp/emacs/ibuffer.el --- ibuffer configurations -*- lexical-binding: t; -*-
+;;; lisp/ibuffer.el --- ibuffer configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

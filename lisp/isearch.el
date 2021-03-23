@@ -1,4 +1,4 @@
-;;; lisp/emacs/isearch.el --- isearch configurations -*- lexical-binding: t; -*-
+;;; lisp/isearch.el --- isearch configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
