@@ -1,4 +1,4 @@
-;;; lisp/narrow.el --- narrow configurations -*- lexical-binding: t; -*-
+;;; lisp/emacs/narrow.el --- narrow configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
