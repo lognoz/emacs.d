@@ -117,9 +117,9 @@
   (require-program "slugify")
   (if (equal (length (dired-get-marked-files)) 1)
       (dired-fetch-marked-file
-        (setq new-name (read-file-name "Rename to: " new-name))
-        (dired-rename-file marked-file new-name t)
-        (revert-buffer))
+        (when (y-or-n-p (format "Rename to '%s'" new-name))
+          (dired-rename-file marked-file new-name t)
+          (revert-buffer)))
     (wdired-change-to-wdired-mode)
     (save-excursion
       (beginning-of-buffer)
