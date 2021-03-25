@@ -125,7 +125,7 @@ This function is used as hook for `before-save-hook'."
 ;;;###autoload
 (defun find-contextual-file ()
   "Find file under cursor.
-If no file is found, it will prompt contextual `counsel-find-file'."
+If none found, it will prompt contextual `counsel-find-file'."
   (interactive)
   (unless (bound-and-true-p projectile-mode)
     (projectile-mode t))
