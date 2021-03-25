@@ -26,7 +26,7 @@
 ;;;###autoload
 (eval-before-init
   (require-package 'undo-tree)
-  (require-package 'evil))
+  (require-package 'find-file-in-project))
 
 ;;;###autoload
 (define-component embla-files (after-find-file dired-initial-position-hook)
@@ -127,16 +127,14 @@ This function is used as hook for `before-save-hook'."
   "Find file under cursor.
 If none found, it will prompt contextual `counsel-find-file'."
   (interactive)
-  (unless (bound-and-true-p projectile-mode)
-    (projectile-mode t))
   (let* ((file (ffap-file-at-point))
          (string (ffap-string-at-point))
-         (root (projectile-project-root default-directory))
+         (root (ffip-project-root))
          (relative-path (expand-file-name (string-trim-left string "/") root)))
     (cond ((and file (file-exists-p file))
            (find-file file))
           ((and string (not (string-equal string "")) (file-exists-p relative-path))
            (find-file relative-path))
-          (t (counsel-find-file (if root root default-directory))))))
+          (t (counsel-find-file root)))))
 
 ;;; files.el ends here
