@@ -1,4 +1,4 @@
-;;; lisp/tools/grammar.el --- grammar configurations -*- lexical-binding: t; -*-
+;;; lisp/text-modes/grammar.el --- grammar configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

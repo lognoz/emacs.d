@@ -46,11 +46,10 @@
   ("C-x l"   . counsel-locate)
   ("M-y"     . counsel-yank-pop)
   ("C-x d"   . counsel-dired)
-  ("C-x f"   . counsel-recentf)
+  ("C-x f"   . counsel-find-contextual-file)
   ("C-x C-f" . counsel-find-file)
   ("C-c C-j" . counsel-imenu)
-  ("C-x r l" . counsel-bookmark)
-  ("C-x f"   . counsel-project-find-file))
+  ("C-x r l" . counsel-bookmark))
 
 ;;;###autoload
 (defun setup-counsel ()
@@ -178,5 +177,28 @@ If there is a DIR, the function use it as default prompt value."
                 "counsel-file-jump"
               (concat func "-jump"))))
         dir))))
+
+
+;;; Commands
+
+(autoload 'find-file-at-point "ffap.el")
+(autoload 'ffap-file-at-point "ffap.el")
+(autoload 'ffap-string-at-point "ffap.el")
+
+;;;###autoload
+(defun counsel-find-contextual-file ()
+  "Open `find-file' on project root."
+  (interactive)
+  (unless (bound-and-true-p projectile-mode)
+    (projectile-mode t))
+  (let* ((file (ffap-file-at-point))
+         (string (ffap-string-at-point))
+         (root (projectile-project-root default-directory))
+         (relative-path (expand-file-name (string-trim-left string "/") root)))
+    (cond (and file (file-exists-p file)
+           (find-file file))
+          ((and string (not (string-equal string "")) (file-exists-p relative-path))
+           (find-file relative-path))
+          (t (counsel-find-file (if root root default-directory))))))
 
 ;;; ivy.el ends here

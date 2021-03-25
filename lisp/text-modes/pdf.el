@@ -1,10 +1,10 @@
-;;; lisp/tools/winner.el --- winner configurations -*- lexical-binding: t; -*-
+;;; lisp/text-modes/pdf.el --- pdf configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: winner
+;; Keywords: pdf
 
 ;; This file is not part of GNU Emacs.
 
@@ -24,13 +24,10 @@
 ;;; Code:
 
 ;;;###autoload
-(define-component embla-winner ()
-  "Setup winner component configurations."
-  (winner-mode t))
+(eval-before-init
+  (require-package 'pdf-tools))
 
 ;;;###autoload
-(bind-keys embla-mode-map
-  ("<s-left>"  . winner-undo)
-  ("<s-right>" . winner-redo))
+(bind-patterns 'pdf-tools-install '("\\.pdf\\'"))
 
-;;; winner.el ends here
+;;; pdf.el ends here

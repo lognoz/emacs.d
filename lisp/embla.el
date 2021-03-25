@@ -139,10 +139,10 @@
 
 (defun require-lisp-autoloads ()
   "Require autoloads located in `lisp' directory."
-  (when (or (not (file-exists-p embla-lisp-autoloads-file))
-            embla-developer-mode-p)
-    (require 'autoloads)
-    (refresh-lisp-autoloads))
+  ;; (when (or (not (file-exists-p embla-lisp-autoloads-file))
+  ;;           embla-developer-mode-p)
+  (require 'autoloads)
+  (refresh-lisp-autoloads)
   (require 'embla-lisp-autoloads))
 
 (defun require-site-lisp-autoloads ()

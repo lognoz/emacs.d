@@ -1,4 +1,4 @@
-;;; lisp/help.el --- help configurations -*- lexical-binding: t; -*-
+;;; lisp/help-mode.el --- help configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

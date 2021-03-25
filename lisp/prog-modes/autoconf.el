@@ -1,10 +1,10 @@
-;;; lisp/languages/auto-install.el --- auto install  -*- lexical-binding: t -*-
+;;; lisp/languages/autoconf.el --- auto configurations  -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 ;;
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; Homepage: https://github.com/lognoz/embla
-;; Keywords: auto-install
+;; Keywords: auto configuration
 
 ;; This file is not part of GNU Emacs.
 

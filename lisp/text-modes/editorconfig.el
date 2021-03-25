@@ -1,4 +1,4 @@
-;;; lisp/tools/editorconfig.el --- editorconfig configurations -*- lexical-binding: t; -*-
+;;; lisp/text-modes/editorconfig.el --- editorconfig configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

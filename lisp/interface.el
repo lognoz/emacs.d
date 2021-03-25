@@ -1,4 +1,4 @@
-;;; lisp/editor/interface.el --- user interface -*- lexical-binding: t; -*-
+;;; lisp/interface.el --- user interface -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 

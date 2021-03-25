@@ -1,4 +1,4 @@
-;;; lisp/tools/version-control.el --- version control configurations -*- lexical-binding: t; -*-
+;;; lisp/editor/version-control.el --- version control configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
