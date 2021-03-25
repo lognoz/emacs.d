@@ -31,10 +31,20 @@
 ;;;###autoload
 (define-component embla-files (after-find-file dired-initial-position-hook)
   "Setup files component configurations."
+  (setq bookmark-default-file (expand-file-name "bookmark" embla-temporary-directory))
+  (setq save-place-file (expand-file-name "saveplace" embla-temporary-directory))
   (setup-backup)
   (setup-savehist)
   (setup-recentf)
   (save-place-mode t))
+
+;;;###autoload
+(bind-keys embla-mode-map
+  ("C-x f" . find-contextual-file))
+
+;;;###autoload
+(autoloads
+  ("ffap" find-file-at-point ffap-file-at-point ffap-string-at-point))
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
@@ -47,15 +57,6 @@
 
 (defconst embla-backup-save-directory (expand-file-name "backup/save" embla-temporary-directory)
   "The directory of backup files on save.")
-
-;;;###autoload
-(setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
-
-;;;###autoload
-(setq save-place-file (expand-file-name "saveplace" embla-temporary-directory))
-
-;;;###autoload
-(setq bookmark-default-file (expand-file-name "bookmark" embla-temporary-directory))
 
 (defun save-backup-file ()
   "Create a backup on each session and on save interval.
@@ -91,6 +92,7 @@ This function is used as hook for `before-save-hook'."
 ;;;###autoload
 (defun setup-savehist ()
   "Setup savehist configurations."
+  (setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
   (setq history-length 200)
   (setq savehist-autosave-interval 60)
   (setq savehist-additional-variables
@@ -119,5 +121,22 @@ This function is used as hook for `before-save-hook'."
   (setq undo-tree-history-directory-alist
         (list (cons "." embla-undo-directory)))
   (global-undo-tree-mode t))
+
+;;;###autoload
+(defun find-contextual-file ()
+  "Find file under cursor.
+If no file is found, it will prompt contextual `counsel-find-file'."
+  (interactive)
+  (unless (bound-and-true-p projectile-mode)
+    (projectile-mode t))
+  (let* ((file (ffap-file-at-point))
+         (string (ffap-string-at-point))
+         (root (projectile-project-root default-directory))
+         (relative-path (expand-file-name (string-trim-left string "/") root)))
+    (cond ((and file (file-exists-p file))
+           (find-file file))
+          ((and string (not (string-equal string "")) (file-exists-p relative-path))
+           (find-file relative-path))
+          (t (counsel-find-file (if root root default-directory))))))
 
 ;;; files.el ends here

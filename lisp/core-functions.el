@@ -23,6 +23,14 @@
 
 ;;; Code:
 
+(defmacro autoloads (&rest args)
+  "Execute multiple autoloads with only one statement."
+  `(dolist (arg '(,@args))
+    (let* ((reference (car arg))
+           (funcs (remove reference arg)))
+      (dolist (func funcs)
+        (autoload func reference)))))
+
 (defun regexp-font-lock (strings)
   "Return font lock regex with STRINGS."
   (concat "(" (regexp-opt strings t) "\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"))
