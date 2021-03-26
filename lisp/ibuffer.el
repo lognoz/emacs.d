@@ -42,6 +42,22 @@
 (defun setup-ibuffer ()
   "Setup ibuffer configurations."
   (evil-collection-define-key 'normal 'ibuffer-mode-map
-    (kbd "RET") 'ibuffer-visit-buffer))
+    (kbd "RET") 'ibuffer-visit-buffer)
+
+  ;; Set size format for more human-friendly readability.
+  (define-ibuffer-column size-h
+    (:name "Size" :inline t)
+    (cond
+      ((> (buffer-size) 1000000) (format "%7.1fM" (/ (buffer-size) 1000000.0)))
+      ((> (buffer-size) 1000) (format "%7.1fk" (/ (buffer-size) 1000.0)))
+      (t (format "%8d" (buffer-size)))))
+
+  ;; Change ibuffer format.
+  (setq ibuffer-formats
+    '((mark modified read-only " "
+        (name 50 50 :left :nil) " "
+        (size-h 9 -1 :right) " "
+        (mode 16 16 :left :elide) " "
+        filename-and-process))))
 
 ;;; ibuffer.el ends here
