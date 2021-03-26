@@ -32,8 +32,14 @@
   ("M-DEL" . cycle-spacing)
   ("s-y"   . copy-whole-bufer)
   ("C-x h" . mark-whole-buffer)
-  ("C-x ," . pop-local-mark-ring)
-  ("C-/"   . undo))
+  ("C-x ," . pop-local-mark-ring))
+
+;;;###autoload
+(bind-keys embla-mode-map
+  ("C-/" . undo)
+  ("C-?" . (if (version< emacs-version "28.0")
+               undo-fu-only-redo
+             undo-redo)))
 
 ;;;###autoload
 (if (version< emacs-version "28.0")
