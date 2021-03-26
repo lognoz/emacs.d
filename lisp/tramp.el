@@ -1,4 +1,4 @@
-;;; lisp/autoloads/tramp.el --- tramp autoloads -*- lexical-binding: t; -*-
+;;; lisp/tramp.el --- tramp configurations -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
