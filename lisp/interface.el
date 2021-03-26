@@ -48,7 +48,10 @@ variable. See example below:
   :group 'embla
   :type 'symbol)
 
-(defcustom embla-font nil
+(defcustom embla-font
+  (cond
+    ((find-font (font-spec :name  "Hasklug Nerd Font Mono")) "Hasklug Nerd Font Mono")
+    ((find-font (font-spec :name  "Droid Sans Mono")) "Droid Sans Mono"))
   "The default font to use in Embla.
 
 To change the Emacs font, you need to redefine this variable.
