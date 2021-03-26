@@ -24,11 +24,21 @@
 ;;; Code:
 
 ;;;###autoload
+(eval-before-init
+  (require-package 'undo-fu))
+
+;;;###autoload
 (bind-keys embla-mode-map
   ("M-DEL" . cycle-spacing)
   ("s-y"   . copy-whole-bufer)
   ("C-x h" . mark-whole-buffer)
-  ("C-x ," . pop-local-mark-ring))
+  ("C-x ," . pop-local-mark-ring)
+  ("C-/"   . undo))
+
+;;;###autoload
+(if (version< emacs-version "28.0")
+    (bind-keys embla-mode-map ("C-?" . undo-fu-only-redo))
+  (bind-keys embla-mode-map ("C-?" . undo-redo)))
 
 ;;;###autoload
 (defun copy-whole-buffer ()
