@@ -76,7 +76,7 @@ See example below:
 ;;; Line configuration
 
 ;; Change the line spacing for a better visibility.
-(setq-default line-spacing 2)
+(setq-default line-spacing 4)
 
 ;; Highlight current line.
 (global-hl-line-mode t)
