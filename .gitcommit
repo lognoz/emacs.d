@@ -1,0 +1,21 @@
+#!/usr/bin/env racket
+
+#|
+  This file is to standardizing the commit messages
+  https://github.com/lognoz/gitcommit
+|#
+
+(require gitcommit)
+
+(define use-substitutions #t)
+
+(define markers default-markers)
+
+(define default-component "Build")
+
+(define components
+  (append (generate-components '("lisp/**.el" "lisp/*/"))
+          '(("Init" . "init.el")
+            ("Doc" . "README.md")
+            ("Lisp" . "lisp/**")
+            ("Site" . "site-lisp/**"))))
