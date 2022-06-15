@@ -1,4 +1,4 @@
-;;; lisp/load-up.el --- load up embla files -*- lexical-binding: t; -*-
+;;; lisp/load-up.el --- Load up -*- lexical-binding: t; -*-
 
 ;; Copyright (c) Marc-Antoine Loignon
 
@@ -21,42 +21,40 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+;;; Commentary:
+
 ;;; Code:
 
-(defconst embla-lisp-directory (file-name-directory load-file-name)
-  "The directory of lisp files.")
+(defmacro embla-autoload (file &rest events)
+  (declare (indent 1))
+  `(let* ((file (expand-file-name (concat "lisp/" ,file) user-emacs-directory))
+          (events ',events)
+          (self-loader (lambda (&rest _)
+                         (load file nil 'nomessage))))
+     (when (null events)
+       (setq events '(emacs-startup-hook)))
+     (mapcar (lambda (event)
+               (if (functionp event)
+                   (advice-add event :before self-loader)
+                 (add-hook event self-loader)))
+             events)))
 
-(defconst embla-site-lisp-directory (expand-file-name "site-lisp/" user-emacs-directory)
-  "The directory of site-lisp packages.")
+(defmacro embla-builtin-package (package &rest body)
+  (declare (indent 1))
+  `(progn
+     (unless (require ,package nil 'noerror)
+       (display-warning 'embla-emacs (format "Loading `%s' failed" ,package) :warning))
+     ,@body))
 
-(defconst embla-private-directory (expand-file-name "private/" user-emacs-directory)
-  "The directory of private files.")
+(defmacro embla-elpa-package (package &rest body)
+  (declare (indent 1))
+  `(progn
+     (when (not (package-installed-p ,package))
+       (package-install ,package))
+     (if (require ,package nil 'noerror)
+         (progn ,@body)
+       (display-warning 'embla-emacs (format "Loading `%s' failed" ,package) :warning))))
 
-(defconst embla-temporary-directory (expand-file-name "temporary/" user-emacs-directory)
-  "The directory of temporary files.")
-
-(defconst embla-lisp-autoloads-file (expand-file-name "embla-lisp-autoloads.el" embla-temporary-directory)
-  "The main autoloads file.")
-
-(defconst embla-site-lisp-autoloads-file (expand-file-name "embla-site-lisp-autoloads.el" embla-temporary-directory)
-  "The autoloads file for `site-lisp' directory.")
-
-(defvar embla-modules
-  (list (expand-file-name "." embla-lisp-directory)
-        (expand-file-name "autoloads" embla-lisp-directory)
-        (expand-file-name "editor" embla-lisp-directory)
-        (expand-file-name "emacs" embla-lisp-directory)
-        (expand-file-name "languages" embla-lisp-directory)
-        (expand-file-name "tools" embla-lisp-directory))
-  "The list of modules directories.")
-
-;; Add sub-directories to the load-path for files that might get
-;; autoloaded when bootstrapping.
-(setq load-path (append load-path embla-modules))
-
-;; Bootstrap Embla configurations.
-(require 'embla)
-(embla-bootstrap)
 
 
 ;; Local Variables:

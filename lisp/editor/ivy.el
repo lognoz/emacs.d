@@ -1,58 +1,41 @@
-;;; lisp/editor/ivy.el --- ivy configurations -*- lexical-binding: t; -*-
+;;; ivy.el --- Extensions to ivy -*- lexical-binding: t -*-
 
-;; Copyright (c) Marc-Antoine Loignon
+;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Homepage: https://github.com/lognoz/embla
-;; Keywords: ivy
+;; URL: https://github.com/lognoz/embla
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+;;; Commentary:
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program. If not, see <https://www.gnu.org/licenses/>.
+;; This is an extension for better ivy configuration.
 
 ;;; Code:
 
 ;;;###autoload
-(eval-before-init
-  (require-package 'projectile)
-  (require-package 'counsel)
-  (require-package 'ivy))
+(embla-autoload "editor/ivy" pre-command-hook)
 
-;;;###autoload
-(define-component embla-ivy (pre-command-hook)
-  "Setup ivy component configurations."
-  (setup-ivy)
-  (setup-counsel)
-  (ivy-mode t)
-  (after-ivy-boot))
 
-;;;###autoload
-(bind-keys embla-mode-map
-  ("M-x"     . counsel-M-x)
-  ("C-c g"   . counsel-git)
-  ("C-c j"   . counsel-git-grep)
-  ("C-c a"   . counsel-ag)
-  ("C-x l"   . counsel-locate)
-  ("M-y"     . counsel-yank-pop)
-  ("C-x d"   . counsel-dired)
-  ("C-x C-f" . counsel-find-file)
-  ("C-c C-j" . counsel-imenu)
-  ("C-x r l" . counsel-bookmark))
+;;;; Ivy configurations
 
-;;;###autoload
-(defun setup-counsel ()
-  "Setup counsel configurations."
+(embla-elpa-package 'counsel
   (setq counsel-find-file-ignore-regexp
         (concat
           ;; File names beginning with # or .
@@ -60,9 +43,7 @@
           ;; File names ending with # or ~
           "\\|\\(?:\\`.+?[#~]\\'\\)")))
 
-;;;###autoload
-(defun setup-ivy ()
-  "Setup ivy configurations."
+(embla-elpa-package 'ivy
   (setq enable-recursive-minibuffers t)
   (setq ivy-initial-inputs-alist nil)
   (setq ivy-count-format "")
@@ -75,31 +56,39 @@
   (setq ivy-virtual-abbreviate 'full)
   (setq ivy-extra-directories nil)
 
-  ;; Setup ivy with `projectile'.
-  (with-eval-after-load 'projectile
-    (setq projectile-completion-system 'ivy))
-
   ;; Setup ivy with `magit'.
   (with-eval-after-load 'magit
-    (setq magit-completing-read-function 'ivy-completing-read))
-
-  ;; Setup the way to output ivy candidates.
-  (with-eval-after-load 'ivy
-    (setf (alist-get 't ivy-format-functions-alist) #'ivy-embla-format-function)
-    (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
-    (add-hook 'minibuffer-setup-hook 'ivy-resize-minibuffer-setup-hook)))
+    (setq magit-completing-read-function 'ivy-completing-read)))
 
 ;;;###autoload
-(defun after-ivy-boot ()
-  "Setup ivy keybindings after it's started."
-  (bind-keys ivy-minibuffer-map
-    ("<tab>" . ivy-alt-done)
-    ("M-j"   . counsel-switch-to-jump)
-    ("C-j"   . counsel-switch-to-jump)
-    ("M-."   . counsel-goto-project-root)
-    ("C-."   . counsel-goto-project-root)))
+(let ((map global-map))
+  (define-key map (kbd "M-x") #'counsel-M-x)
+  (define-key map (kbd "C-c g") #'counsel-git)
+  (define-key map (kbd "C-c j") #'counsel-git-grep)
+  (define-key map (kbd "C-c a") #'counsel-ag)
+  (define-key map (kbd "C-x l") #'counsel-locate)
+  (define-key map (kbd "M-y") #'counsel-yank-pop)
+  (define-key map (kbd "C-x d") #'counsel-dired)
+  (define-key map (kbd "C-x C-f") #'counsel-find-file)
+  (define-key map (kbd "C-c C-j") #'counsel-imenu)
+  (define-key map (kbd "C-x r l") #'counsel-bookmark))
 
-(defun ivy-embla-format-function (cands)
+(let ((map ivy-minibuffer-map))
+  (define-key map (kbd "<tab>") #'ivy-alt-done)
+  (define-key map (kbd "M-j") #'embla-counsel-switch-to-jump)
+  (define-key map (kbd "C-j") #'embla-counsel-switch-to-jump)
+  (define-key map (kbd "M-.") #'embla-counsel-goto-project-root)
+  (define-key map (kbd "C-.") #'embla-counsel-goto-project-root))
+
+
+;;;; Minibuffer
+
+(with-eval-after-load 'ivy
+  (setf (alist-get 't ivy-format-functions-alist) #'embla-ivy-format-function)
+  (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
+  (add-hook 'minibuffer-setup-hook #'embla-ivy-resize-minibuffer-setup-hook))
+
+(defun embla-ivy-format-function (cands)
   "Transform CANDS into a string for minibuffer."
   (ivy--format-function-generic
    (lambda (str)
@@ -109,29 +98,32 @@
    cands
    "\n"))
 
-(defun ivy-resize-minibuffer-setup-hook ()
+(defun embla-ivy-resize-minibuffer-setup-hook ()
   "Attach local hook to when a minibuffer is open."
-  (add-hook 'post-command-hook #'ivy-resize-post-commad-hook nil t))
+  (add-hook 'post-command-hook #'embla-ivy-resize-post-commad-hook nil t))
 
-(defun ivy-resize-post-commad-hook ()
+(defun embla-ivy-resize-post-commad-hook ()
   "Resize the minibuffer on `post-command-hook'."
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
-(defconst counsel-files-symbols-alist
+
+;;;; Jump function support in `find-file'
+
+(defconst embla-counsel-files-symbols-alist
   '(counsel-find-file
     counsel-dired
     counsel-dired-jump
     counsel-file-jump)
   "List of `ivy-state-caller' used for files management.")
 
-(defun counsel-directory-in-minibuffer ()
+(defun embla--counsel-directory-in-minibuffer ()
   "Return the current directory in minibuffer."
   (if ivy--directory
       (directory-file-name (expand-file-name ivy--directory))
     default-directory))
 
-(defun counsel-run-file-prompt (func dir)
+(defun embla--counsel-run-file-prompt (func dir)
   "Quit and run file symbol FUNC dynamically.
 If there is a DIR, the function use it as default prompt value."
   (ivy-quit-and-run
@@ -139,7 +131,7 @@ If there is a DIR, the function use it as default prompt value."
         (funcall func "" dir)
       (funcall func dir))))
 
-(defun counsel-project-find-file ()
+(defun embla-counsel-project-find-file ()
   "Open `find-file' on project root."
   (interactive)
   (unless (bound-and-true-p projectile-mode)
@@ -148,25 +140,14 @@ If there is a DIR, the function use it as default prompt value."
     (counsel-find-file
      (if root root default-directory))))
 
-(defun counsel-goto-project-root ()
-  "Change the current location to project root on ivy minibuffer."
-  (interactive)
-  (unless (bound-and-true-p projectile-mode)
-    (projectile-mode t))
-  (let* ((func (ivy-state-caller ivy-last))
-         (dir (counsel-directory-in-minibuffer))
-         (root (projectile-project-root dir)))
-    (when (and root (member func counsel-files-symbols-alist))
-      (counsel-run-file-prompt func root))))
-
-(defun counsel-switch-to-jump ()
+(defun embla-counsel-switch-to-jump ()
   "Switch prompt to its jump function."
   (interactive)
   (let ((func (ivy-state-caller ivy-last))
-        (dir (counsel-directory-in-minibuffer)))
-    (when (member func counsel-files-symbols-alist)
+        (dir (embla--counsel-directory-in-minibuffer)))
+    (when (member func embla-counsel-files-symbols-alist)
       (setq func (symbol-name func))
-      (counsel-run-file-prompt
+      (embla--counsel-run-file-prompt
         (intern
           (if (string-match "-jump\\'" func)
               (if (string-equal func "counsel-file-jump")
@@ -178,26 +159,17 @@ If there is a DIR, the function use it as default prompt value."
         dir))))
 
 
-;;; Commands
+;;;; Go back to project root
 
-;; (autoload 'find-file-at-point "ffap.el")
-;; (autoload 'ffap-file-at-point "ffap.el")
-;; (autoload 'ffap-string-at-point "ffap.el")
-
-;; ;;;###autoload
-;; (defun counsel-find-contextual-file ()
-;;   "Open `find-file' on project root."
-;;   (interactive)
-;;   (unless (bound-and-true-p projectile-mode)
-;;     (projectile-mode t))
-;;   (let* ((file (ffap-file-at-point))
-;;          (string (ffap-string-at-point))
-;;          (root (projectile-project-root default-directory))
-;;          (relative-path (expand-file-name (string-trim-left string "/") root)))
-;;     (cond (and file (file-exists-p file)
-;;            (find-file file))
-;;           ((and string (not (string-equal string "")) (file-exists-p relative-path))
-;;            (find-file relative-path))
-;;           (t (counsel-find-file (if root root default-directory))))))
+(defun embla-counsel-goto-project-root ()
+  "Change the current location to project root on ivy minibuffer."
+  (interactive)
+  (unless (bound-and-true-p projectile-mode)
+    (projectile-mode t))
+  (let* ((func (ivy-state-caller ivy-last))
+         (dir (counsel-directory-in-minibuffer))
+         (root (projectile-project-root dir)))
+    (when (and root (member func embla-counsel-files-symbols-alist))
+      (embla--counsel-run-file-prompt func root))))
 
 ;;; ivy.el ends here
