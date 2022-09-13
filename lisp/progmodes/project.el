@@ -28,7 +28,7 @@
 (require 'project)
 
 
-;;;; --- Project focus mode
+;;; --- Project focus mode
 
 ;;;###autoload (define-key embla-mode-map (kbd "s-p") #'embla-project-focus-mode)
 ;;;###autoload
@@ -45,7 +45,29 @@
   :keymap embla-project-focus-mode-map)
 
 
-;;;; --- Project utilities
+;;; --- Execute last command prompt
+
+;;;###autoload (define-key embla-mode-map (kbd "M-`") #'embla-project-execute-last-prompt-command)
+;;;###autoload
+(defun embla-project-execute-last-prompt-command ()
+  (interactive)
+  (save-window-excursion
+    (let* ((shell-window)
+          (default-directory (project-root (project-current t)))
+          (default-project-shell-name (concat "vterm " default-directory)))
+      (dolist (window (window-list))
+        (message default-project-shell-name)
+        (message (buffer-name (window-buffer window)))
+        (when (equal default-project-shell-name (buffer-name (window-buffer window)))
+          (setq shell-window window)))
+      (if (not shell-window)
+          (message "No prompt window is opened.")
+        (select-window shell-window)
+        (embla-prompt-execute-previous)))))
+
+
+
+;;; --- Prompt in foreground
 
 (defvar embla-foreground-buffer nil
   "The active buffer before to execute `embla-project-prompt'.")
