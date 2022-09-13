@@ -43,6 +43,7 @@
   (define-key map (kbd "M-.") #'embla-prompt-goto-project-root)
   (define-key map (kbd "`") #'embla-prompt-execute-previous))
 
+;;;###autoload
 (defun embla-prompt-execute-previous ()
   "Execute previous prompt command."
   (interactive)
