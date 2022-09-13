@@ -1,10 +1,11 @@
 ;;; lisp/load-up.el --- Load up -*- lexical-binding: t; -*-
 
-;; Copyright (c) Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Homepage: https://github.com/lognoz/embla
-;; Keywords: embla
+;; URL: https://github.com/lognoz/embla
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -21,14 +22,12 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-;;; Commentary:
-
 ;;; Code:
 
 (require 'gnutls)
 
 
-;;; Constant contexts
+;;; --- Constant contexts
 
 (defconst embla-site-lisp-directory (expand-file-name "site-lisp/" user-emacs-directory)
   "The directory of site lisp files.")
@@ -46,7 +45,7 @@
   "The autoloads file for `site-lisp' directory.")
 
 
-;;; Embla mode
+;;; --- Embla mode
 
 (defgroup embla nil
   "Embla customizations."
@@ -64,7 +63,7 @@
   :keymap (make-sparse-keymap))
 
 
-;;; Packages extension
+;;; --- Packages extension
 
 (defvar embla-package-initialize-p nil
   "Non-nil if package has been initialized.")
@@ -119,7 +118,7 @@
       ,@body))
 
 
-;;; Modules autoload
+;;; --- Modules autoload
 
 (defmacro embla-autoload (file &rest events)
   "Autoload lisp component FILE based on their EVENTS."

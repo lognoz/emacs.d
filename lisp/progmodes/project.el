@@ -1,10 +1,11 @@
 ;;; lisp/progmodes/project.el --- Extensions to project -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
-;; Keywords: project
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -22,13 +23,12 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
-;;; Commentary:
-
 ;;; Code:
 
 (require 'project)
 
-;;; Project focus mode
+
+;;;; --- Project focus mode
 
 ;;;###autoload (define-key embla-mode-map (kbd "s-p") #'embla-project-focus-mode)
 ;;;###autoload
@@ -45,7 +45,7 @@
   :keymap embla-project-focus-mode-map)
 
 
-;;; Project utilities
+;;;; --- Project utilities
 
 (defvar embla-foreground-buffer nil
   "The active buffer before to execute `embla-project-prompt'.")

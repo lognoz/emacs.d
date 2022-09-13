@@ -1,6 +1,6 @@
 ;;; lisp/interface.el --- User interface -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
@@ -25,7 +25,13 @@
 
 ;;; Code:
 
-(embla-elpa-package 'atom-one-dark-theme)
+(embla-elpa-package 'atom-one-dark-theme
+  (let ((colors '(("atom-one-dark-border" . "#000000")
+                  ("atom-one-dark-black" . "#000000")
+                  ("atom-one-dark-bg" . "#000000")
+                  ("atom-one-dark-bg-hl" . "#0d0d0d"))))
+    (setq atom-one-dark-colors-alist
+      (append atom-one-dark-colors-alist colors))))
 
 (embla-elpa-package 'which-key
   (which-key-mode t)
@@ -94,6 +100,12 @@ See example below:
   (embla-set-frame-title))
 
 
+;;; --- Mode line
+
+(setq-default mode-line-format
+  (cons (propertize "\u200b" 'display '((raise -0.3) (height 1.8))) mode-line-format))
+
+
 ;;; --- Mouse and smooth scroll
 
 (when (display-graphic-p)
@@ -105,7 +117,7 @@ See example below:
 (setq scroll-conservatively 100000)
 
 
-;;; Line configuration
+;;; --- Line configuration
 
 ;; Change the line spacing for a better visibility.
 (setq-default line-spacing 4)
@@ -114,7 +126,7 @@ See example below:
 (global-hl-line-mode t)
 
 
-;;; Cursor configuration
+;;; --- Cursor configuration
 
 ;; The blinking cursor is distracting.
 (blink-cursor-mode -1)
@@ -129,7 +141,7 @@ See example below:
 (setq x-stretch-cursor nil)
 
 
-;;; Disable splash screen and UI elements
+;;; --- Disable splash screen and UI elements
 
 ;;;###autoload
 (setq inhibit-default-init t
@@ -142,7 +154,7 @@ See example below:
 (push '(vertical-scroll-bars) default-frame-alist)
 
 
-;;; Shows vim-style tildes on the left fringe
+;;; --- Shows vim-style tildes on the left fringe
 
 (setq-default indicate-empty-lines t)
 (define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)

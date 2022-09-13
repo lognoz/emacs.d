@@ -92,7 +92,7 @@ The default FILENAME is the `buffer-file-name'."
   (kill-buffer (buffer-name)))
 
 
-;;;; Manages buffers recently closed
+;;; --- Manages buffers recently closed
 
 (defvar embla-recently-closed-buffers-ring nil
   "List of recently closed buffers.")

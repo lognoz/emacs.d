@@ -1,6 +1,6 @@
 ;;; lisp/files.el --- Extensions to files -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
@@ -33,7 +33,8 @@
 ;;;###autoload
 (embla-autoload "files" after-find-file dired-initial-position-hook)
 
-;;; Unique buffer names
+
+;;; --- Unique buffer names
 
 (embla-builtin-package 'uniquify
   (setq uniquify-buffer-name-style 'forward)
@@ -41,7 +42,7 @@
   (setq uniquify-after-kill-buffer-p t))
 
 
-;;; Recentf support
+;;; --- Recentf support
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
@@ -56,7 +57,7 @@
   (recentf-mode t))
 
 
-;;; Savehist support
+;;; --- Savehist support
 
 (embla-builtin-package 'savehist
   (setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
@@ -71,7 +72,7 @@
   (savehist-mode t))
 
 
-;;; Backup support
+;;; --- Backup support
 
 (defconst embla-backup-session-directory (expand-file-name "backup/session" embla-temporary-directory)
   "The directory of backup files per session.")
@@ -111,7 +112,7 @@ This function is used as hook for `before-save-hook'."
     (backup-buffer)))
 
 
-;;; Trashed support
+;;; --- Trashed support
 
 (embla-elpa-package 'trashed
   (setq trashed-action-confirmer 'y-or-n-p)
@@ -120,7 +121,7 @@ This function is used as hook for `before-save-hook'."
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
 
-;;; Contextual finder
+;;; --- Contextual finder
 
 (autoload 'find-file-at-point "ffap")
 (autoload 'ffap-file-at-point "ffap")

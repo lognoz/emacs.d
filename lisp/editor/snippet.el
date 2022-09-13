@@ -35,7 +35,8 @@
   (yas-global-mode t)
   (setq yas-verbosity 1)
   (setq yas-wrap-around-region t)
-  (setq yas-snippet-dirs '(embla-snippet-directory)))
+  (when (file-directory-p embla-snippet-directory)
+    (setq yas-snippet-dirs '(embla-snippet-directory))))
 
 ;;;###autoload
 (defun embla-company-yasnippet-backend (backends)

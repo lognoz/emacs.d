@@ -1,10 +1,11 @@
 ;;; lisp/textmodes/spell-checker.el --- Spell checker configurations -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
-;; Keywords: grammar style spell checker
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -31,7 +32,8 @@
 ;;;###autoload
 (embla-autoload "textmodes/spell-checker" after-find-file dired-initial-position-hook)
 
-;;;; Correcting mode
+
+;;; --- Correcting mode
 
 (defvar embla-correcting-mode-map
   (let ((map (make-sparse-keymap)))
@@ -58,7 +60,8 @@
 (define-key ctl-x-map "c" #'ctl-x-c-prefix)
 (define-key ctl-x-c-map "m" #'embla-correcting-mode)
 
-;;;; Flyspell support
+
+;;; --- Flyspell support
 
 (defcustom embla-enable-flyspell t
   "Non-nil if Embla need to enable flyspell."
@@ -76,7 +79,8 @@
       (flyspell-mode 1))
     (message "")))
 
-;;;; Languagetool support
+
+;;; --- Languagetool support
 
 ;; Use this emacs langtool version instead of the one in melpa
 ;; because we can use the program in `prog-mode' and `org-mode'.

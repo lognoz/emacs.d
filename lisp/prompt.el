@@ -1,10 +1,11 @@
 ;;; lisp/prompt.el --- Prompt utilities -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
-;; Keywords: prompt
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -22,8 +23,6 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
-;;; Commentary:
-
 ;;; Code:
 
 (require 'project)
@@ -32,7 +31,7 @@
 (embla-autoload "prompt" vterm-mode-hook)
 
 
-;;; Prompt configurations
+;;; --- Prompt configurations
 
 (embla-elpa-package 'vterm
   (setq vterm-kill-buffer-on-exit t)

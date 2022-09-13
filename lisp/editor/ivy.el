@@ -34,7 +34,7 @@
 ;;;###autoload
 (embla-autoload "editor/ivy" pre-command-hook)
 
-;;;; Ivy configurations
+;;;; --- Ivy configurations
 
 (embla-elpa-package 'counsel
   (setq counsel-find-file-ignore-regexp
@@ -86,7 +86,7 @@
   (define-key map (kbd "M-.") #'embla-counsel-goto-project-root)
   (define-key map (kbd "C-.") #'embla-counsel-goto-project-root))
 
-;;;; Minibuffer
+;;;; --- Minibuffer
 
 (with-eval-after-load 'ivy
   (setf (alist-get 't ivy-format-functions-alist) #'embla-ivy-format-function)
@@ -112,7 +112,7 @@
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
-;;;; Jump function support in `find-file'
+;;;; --- Jump function support in `find-file'
 
 (defconst embla-counsel-files-symbols-alist
   '(counsel-find-file
