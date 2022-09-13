@@ -1,11 +1,9 @@
-;;; spell-checker.el --- Spell checker configurations -*- lexical-binding: t -*-
+;;; lisp/textmodes/spell-checker.el --- Spell checker configurations -*- lexical-binding: t -*-
 
 ;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "28.0"))
 ;; Keywords: grammar style spell checker
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,7 +29,7 @@
 ;;; Code:
 
 ;;;###autoload
-(embla-autoload "text-modes/spell-checker" after-find-file dired-initial-position-hook)
+(embla-autoload "textmodes/spell-checker" after-find-file dired-initial-position-hook)
 
 ;;;; Correcting mode
 
@@ -48,7 +46,7 @@
 (define-minor-mode embla-correcting-mode
   "Minor mode that make documentation correction."
   :global nil
-  :keymap 'embla-correcting-mode-map
+  :keymap embla-correcting-mode-map
   (if embla-correcting-mode
       (progn
         (langtool-check)

@@ -1,4 +1,4 @@
-;;; files.el --- Extensions to files -*- lexical-binding: t -*-
+;;; lisp/files.el --- Extensions to files -*- lexical-binding: t -*-
 
 ;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -33,14 +33,15 @@
 ;;;###autoload
 (embla-autoload "files" after-find-file dired-initial-position-hook)
 
-;;;; Unique buffer names
+;;; Unique buffer names
 
 (embla-builtin-package 'uniquify
   (setq uniquify-buffer-name-style 'forward)
   (setq uniquify-strip-common-suffix t)
   (setq uniquify-after-kill-buffer-p t))
 
-;;;; Recentf support
+
+;;; Recentf support
 
 (defconst embla-recentf-file (expand-file-name "recentf" embla-temporary-directory)
   "The recentf file.")
@@ -54,7 +55,8 @@
   (setq recentf-exclude '(".gz" ".xz" ".zip" "/elpa/" "/ssh:" "/sudo:"))
   (recentf-mode t))
 
-;;;; Savehist support
+
+;;; Savehist support
 
 (embla-builtin-package 'savehist
   (setq savehist-file (expand-file-name "savehist" embla-temporary-directory))
@@ -68,7 +70,8 @@
           extended-command-history))
   (savehist-mode t))
 
-;;;; Backup support
+
+;;; Backup support
 
 (defconst embla-backup-session-directory (expand-file-name "backup/session" embla-temporary-directory)
   "The directory of backup files per session.")
@@ -107,7 +110,8 @@ This function is used as hook for `before-save-hook'."
   (let ((buffer-backed-up nil))
     (backup-buffer)))
 
-;;;; Trashed support
+
+;;; Trashed support
 
 (embla-elpa-package 'trashed
   (setq trashed-action-confirmer 'y-or-n-p)
@@ -115,13 +119,14 @@ This function is used as hook for `before-save-hook'."
   (setq trashed-sort-key '("Date deleted" . t))
   (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
-;;;; Contextual finder
+
+;;; Contextual finder
 
 (autoload 'find-file-at-point "ffap")
 (autoload 'ffap-file-at-point "ffap")
 (autoload 'ffap-string-at-point "ffap")
 
-;;;###autoload (define-key global-map (kbd "C-x f") #'embla-find-contextual-file)
+;;;###autoload (define-key embla-mode-map (kbd "C-x f") #'embla-find-contextual-file)
 ;;;###autoload
 (defun embla-find-contextual-file ()
   "Find file under cursor.

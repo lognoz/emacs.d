@@ -1,6 +1,6 @@
-;;; ivy.el --- Extensions to ivy -*- lexical-binding: t -*-
+;;; list/editor/ivy.el --- Extensions to ivy -*- lexical-binding: t -*-
 
-;; Copyright (C)  Marc-Antoine Loignon <developer@lognoz.org>
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
 ;; URL: https://github.com/lognoz/embla
@@ -29,9 +29,10 @@
 
 ;;; Code:
 
+(require 'project)
+
 ;;;###autoload
 (embla-autoload "editor/ivy" pre-command-hook)
-
 
 ;;;; Ivy configurations
 
@@ -50,19 +51,24 @@
   (setq ivy-wrap nil)
   (setq ivy-on-del-error-function nil)
   (setq ivy-initial-inputs-alist nil)
+  (setq ivy-use-virtual-buffers t)
   (setq ivy-use-selectable-prompt t)
   (setq ivy-fixed-height-minibuffer nil)
   (setq ivy-display-style nil)
   (setq ivy-virtual-abbreviate 'full)
-  (setq ivy-extra-directories nil)
+  (setq ivy-extra-directories '("./"))
+
+  ;; Enable ivy mode.
+  (ivy-mode t)
 
   ;; Setup ivy with `magit'.
   (with-eval-after-load 'magit
     (setq magit-completing-read-function 'ivy-completing-read)))
 
 ;;;###autoload
-(let ((map global-map))
+(let ((map embla-mode-map))
   (define-key map (kbd "M-x") #'counsel-M-x)
+  (define-key map (kbd "C-x b") #'counsel-switch-buffer)
   (define-key map (kbd "C-c g") #'counsel-git)
   (define-key map (kbd "C-c j") #'counsel-git-grep)
   (define-key map (kbd "C-c a") #'counsel-ag)
@@ -79,7 +85,6 @@
   (define-key map (kbd "C-j") #'embla-counsel-switch-to-jump)
   (define-key map (kbd "M-.") #'embla-counsel-goto-project-root)
   (define-key map (kbd "C-.") #'embla-counsel-goto-project-root))
-
 
 ;;;; Minibuffer
 
@@ -107,7 +112,6 @@
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
 
-
 ;;;; Jump function support in `find-file'
 
 (defconst embla-counsel-files-symbols-alist
@@ -134,9 +138,7 @@ If there is a DIR, the function use it as default prompt value."
 (defun embla-counsel-project-find-file ()
   "Open `find-file' on project root."
   (interactive)
-  (unless (bound-and-true-p projectile-mode)
-    (projectile-mode t))
-  (let ((root (projectile-project-root default-directory)))
+  (let ((root (project-root (project-current t))))
     (counsel-find-file
      (if root root default-directory))))
 
@@ -158,17 +160,12 @@ If there is a DIR, the function use it as default prompt value."
               (concat func "-jump"))))
         dir))))
 
-
-;;;; Go back to project root
-
 (defun embla-counsel-goto-project-root ()
   "Change the current location to project root on ivy minibuffer."
   (interactive)
-  (unless (bound-and-true-p projectile-mode)
-    (projectile-mode t))
   (let* ((func (ivy-state-caller ivy-last))
          (dir (counsel-directory-in-minibuffer))
-         (root (projectile-project-root dir)))
+         (root (project-root (project-current t))))
     (when (and root (member func embla-counsel-files-symbols-alist))
       (embla--counsel-run-file-prompt func root))))
 
