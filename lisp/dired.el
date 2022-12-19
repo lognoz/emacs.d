@@ -26,9 +26,6 @@
 ;;; Code:
 
 ;;;###autoload
-(embla-autoload "dired" dired-mode-hook)
-
-;;;###autoload
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;;;###autoload
@@ -44,6 +41,25 @@
 (embla-elpa-package 'dired-subtree)
 
 (embla-builtin-package 'dired
+  (add-hook 'dired-mode-hook #'embla-set-dired-mode))
+
+;;;###autoload
+(embla-elpa-package 'dired-sidebar
+  (add-hook 'dired-sidebar-mode-hook #'embla-set-dired-sidebar-mode))
+
+;;;###autoload
+(defun embla-set-dired-sidebar-mode ()
+  "Setup dired sidebar component configurations."
+  (unless (file-remote-p default-directory)
+    (auto-revert-mode))
+
+  (evil-collection-define-key 'normal 'dired-sidebar-mode-map
+    (kbd "RET") #'embla-dired-subtree-or-find-alternate
+    (kbd "<return>") #'embla-dired-subtree-or-find-alternate
+    (kbd "<mouse-2>") #'embla-dired-subtree-or-find-alternate))
+
+(defun embla-set-dired-mode ()
+  "Setup dired component configurations."
   (put 'dired-find-alternate-file 'disabled nil)
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -51,21 +67,28 @@
   (setq dired-dwim-target t)
   (dired-hide-details-mode t)
 
-  (let ((map dired-mode-map))
-    (define-key map (kbd "RET") #'dired-find-alternate-file)
-    (define-key map (kbd "<mouse-2>") #'dired-find-alternate-file)
-    (define-key map (kbd "<s-tab>") #'dired-hide-details-mode)
-    (define-key map (kbd "<M-tab>") #'dired-switch-dotfile)
-    (define-key map (kbd "<tab>") #'dired-subtree-toggle)
-    (define-key map (kbd "C-_") #'dired-undo)
-    (define-key map (kbd "S") #'embla-dired-do-slugify)
-    (define-key map (kbd "F") #'embla-dired-open-marked)
-    (define-key map (kbd "o") #'dired-find-file-other-window)
-    (define-key map (kbd "/f") #'embla-dired-grep-file-name)
-    (define-key map (kbd "/g") #'embla-dired-grep-file-name-by-pattern)))
+  (evil-collection-define-key 'normal 'dired-mode-map
+    (kbd "RET") #'dired-find-alternate-file
+    (kbd "<mouse-2>") #'dired-find-alternate-file
+    (kbd "<s-tab>") #'dired-hide-details-mode
+    (kbd "<M-tab>") #'dired-switch-dotfile
+    (kbd "<tab>") #'dired-subtree-toggle
+    (kbd "C-_") #'dired-undo
+    (kbd "S") #'embla-dired-do-slugify
+    (kbd "F") #'embla-dired-open-marked
+    (kbd "o") #'dired-find-file-other-window
+    (kbd "/f") #'embla-dired-grep-file-name
+    (kbd "/g") #'embla-dired-grep-file-name-by-pattern))
 
 
 ;;;; --- Dired utilities
+
+(defun embla-dired-subtree-or-find-alternate ()
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (file-directory-p file)
+        (dired-subtree-toggle)
+      (dired-sidebar-find-file))))
 
 (defun embla-dired-switch-dotfile ()
   "Switch visibility of dotfiles lines."

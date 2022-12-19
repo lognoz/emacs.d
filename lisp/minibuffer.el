@@ -1,4 +1,4 @@
-;;; list/editor/ivy.el --- Extensions to ivy -*- lexical-binding: t -*-
+;;; lisp/minibuffer.el --- Extensions to minibuffer -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -32,7 +32,8 @@
 (require 'project)
 
 ;;;###autoload
-(embla-autoload "editor/ivy" pre-command-hook)
+(embla-autoload "minibuffer" pre-command-hook)
+
 
 ;;;; --- Ivy configurations
 
@@ -68,7 +69,6 @@
 ;;;###autoload
 (let ((map embla-mode-map))
   (define-key map (kbd "M-x") #'counsel-M-x)
-  (define-key map (kbd "C-x b") #'counsel-switch-buffer)
   (define-key map (kbd "C-c g") #'counsel-git)
   (define-key map (kbd "C-c j") #'counsel-git-grep)
   (define-key map (kbd "C-c a") #'counsel-ag)
@@ -86,12 +86,23 @@
   (define-key map (kbd "M-.") #'embla-counsel-goto-project-root)
   (define-key map (kbd "C-.") #'embla-counsel-goto-project-root))
 
+
+;;;; --- Hide some buffers based on their modes
+
+(defun embla-ivy-ignore-dired-buffers (str)
+  "Return non-nil if STR names a Dired buffer.
+This function is intended for use with `ivy-ignore-buffers'."
+  (let ((buf (get-buffer str)))
+    (and buf (eq (buffer-local-value 'major-mode buf) 'dired-sidebar-mode))))
+
+
 ;;;; --- Minibuffer
 
 (with-eval-after-load 'ivy
   (setf (alist-get 't ivy-format-functions-alist) #'embla-ivy-format-function)
   (setq ivy-height-alist '((t lambda (_caller) (/ (window-height) 3))))
-  (add-hook 'minibuffer-setup-hook #'embla-ivy-resize-minibuffer-setup-hook))
+  (add-hook 'minibuffer-setup-hook #'embla-ivy-resize-minibuffer-setup-hook)
+  (add-to-list 'ivy-ignore-buffers #'embla-ivy-ignore-dired-buffers))
 
 (defun embla-ivy-format-function (cands)
   "Transform CANDS into a string for minibuffer."
@@ -111,6 +122,7 @@
   "Resize the minibuffer on `post-command-hook'."
   (when ivy-mode
     (shrink-window (1+ ivy-height))))
+
 
 ;;;; --- Jump function support in `find-file'
 
@@ -164,9 +176,9 @@ If there is a DIR, the function use it as default prompt value."
   "Change the current location to project root on ivy minibuffer."
   (interactive)
   (let* ((func (ivy-state-caller ivy-last))
-         (dir (counsel-directory-in-minibuffer))
+         (dir (embla--counsel-directory-in-minibuffer))
          (root (project-root (project-current t))))
     (when (and root (member func embla-counsel-files-symbols-alist))
       (embla--counsel-run-file-prompt func root))))
 
-;;; ivy.el ends here
+;;; minibuffer.el ends here

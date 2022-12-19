@@ -23,6 +23,10 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
+;; This is an extension winner-mode configuration.
+
 ;;; Code:
 
 ;;;###autoload

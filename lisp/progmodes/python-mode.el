@@ -1,4 +1,4 @@
-;;; lisp/net/tramp.el --- Extensions to tramp -*- lexical-binding: t -*-
+;;; lisp/progmodes/python-mode.el --- Extensions to python mode -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -25,25 +25,22 @@
 
 ;;; Code:
 
-(defun embla-su (program)
-  "Use root on the current buffer."
-  (unless (executable-find program)
-    (user-error "Required program \"%s\" not found in your path" program))
-  (when buffer-file-name
-    (find-alternate-file
-     (concat "/" program ":root@localhost:"
-             buffer-file-name))))
+;;;###autoload
+(embla-builtin-package 'python
+  (add-hook 'python-mode-hook #'embla-set-python-mode))
+
+(embla-elpa-package 'company)
+(embla-elpa-package 'company-jedi)
+
+(embla-eval-on-install
+  (jedi:install-server))
 
 ;;;###autoload
-(defun sudo ()
-  "Use TRAMP to `sudo' the current buffer."
-  (interactive)
-  (embla-tramp-su "sudo"))
+(defun embla-set-python-mode ()
+  "Setup python component configurations."
+  (modify-syntax-entry ?_ "w")
+  (set (make-local-variable 'company-backends)
+       '(company-jedi))
+  (define-key python-mode-map (kbd "C-c C-j") #'counsel-imenu))
 
-;;;###autoload
-(defun doas ()
-  "Use TRAMP to `doas' the current buffer."
-  (interactive)
-  (embla-tramp-su "doas"))
-
-;;; tramp.el ends here
+;;; python-mode.el ends here

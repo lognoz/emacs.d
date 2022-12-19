@@ -25,13 +25,18 @@
 
 ;;; Code:
 
-;;;###autoload
-(embla-autoload "editor/snippet" text-mode-hook prog-mode-hook conf-mode-hook)
-
 (defconst embla-snippet-directory (expand-file-name "snippet" embla-private-directory)
   "The directory of snippet files.")
 
+;;;###autoload
 (embla-elpa-package 'yasnippet
+  (add-hook 'text-mode-hook #'embla-set-snippet)
+  (add-hook 'prog-mode-hook #'embla-set-snippet)
+  (add-hook 'conf-mode-hook #'embla-set-snippet))
+
+;;;###autoload
+(defun embla-set-snippet ()
+  "Setup snippet component configurations."
   (yas-global-mode t)
   (setq yas-verbosity 1)
   (setq yas-wrap-around-region t)
@@ -46,4 +51,4 @@
     (append (if (consp backends) backends (list backends))
             '(:with company-yasnippet))))
 
-;;; snippet.el ends here
+;; ;;; snippet.el ends here

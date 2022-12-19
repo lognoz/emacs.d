@@ -23,6 +23,11 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
+;; This code provide a minibuffer to copy passwords define under
+;; `pass' program.
+
 ;;; Code:
 
 (setq epa-pinentry-mode 'loopback)
@@ -44,10 +49,11 @@ Return a list of gpg file located into `embla-password-directory'."
 ;;;###autoload (define-key embla-mode-map (kbd "M-c") #'embla-password)
 ;;;###autoload
 (defun embla-password ()
+  "Provide minibuffer to copy passwords define under `pass' program."
   (interactive)
   (let ((reference (completing-read "Copy password: " (embla-password--candidates) nil t)))
     (with-temp-buffer
-      (insert-file-contents (format "~/.password-store/%s.gpg" reference))
+      (insert-file-contents (format "%s/%s.gpg" embla-password-directory reference))
       (call-process-shell-command (format "pass -c %s &" reference) nil 0)
       (message (format "Copied %s to clipboard. Will clear in 45 seconds." reference)))))
 

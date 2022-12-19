@@ -1,4 +1,4 @@
-;;; lisp/net/tramp.el --- Extensions to tramp -*- lexical-binding: t -*-
+;;; lisp/progmodes/prog-mode.el --- Extensions to prog mode -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -25,25 +25,17 @@
 
 ;;; Code:
 
-(defun embla-su (program)
-  "Use root on the current buffer."
-  (unless (executable-find program)
-    (user-error "Required program \"%s\" not found in your path" program))
-  (when buffer-file-name
-    (find-alternate-file
-     (concat "/" program ":root@localhost:"
-             buffer-file-name))))
+(embla-elpa-package 'linum-relative)
 
 ;;;###autoload
-(defun sudo ()
-  "Use TRAMP to `sudo' the current buffer."
-  (interactive)
-  (embla-tramp-su "sudo"))
+(embla-builtin-package 'prog-mode
+  (add-hook 'prog-mode-hook #'embla-set-prog-mode))
 
 ;;;###autoload
-(defun doas ()
-  "Use TRAMP to `doas' the current buffer."
-  (interactive)
-  (embla-tramp-su "doas"))
+(defun embla-set-prog-mode ()
+  "Setup prog component configurations."
+  (setq linum-relative-backend 'display-line-numbers-mode)
+  (display-line-numbers-mode t)
+  (linum-relative-mode t))
 
-;;; tramp.el ends here
+;;; prog-mode.el ends here

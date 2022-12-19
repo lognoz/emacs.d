@@ -23,6 +23,11 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
+;; This is an extension for company.  This module enable Emacs
+;; auto-completion.
+
 ;;; Code:
 
 ;;;###autoload
@@ -37,7 +42,7 @@
   (global-company-mode t)
 
   (let ((map company-active-map))
-    (define-key map (kbd "<tab>") #'company-confirm-selection)
+    (define-key map (kbd "<tab>") #'company-complete-selection)
     (define-key map (kbd "C-n") #'company-select-next)
     (define-key map (kbd "C-p") #'company-select-previous)))
 

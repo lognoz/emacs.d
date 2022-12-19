@@ -1,4 +1,4 @@
-;;; lisp/net/tramp.el --- Extensions to tramp -*- lexical-binding: t -*-
+;;; list/editor/vc.el --- Extensions to version-control -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -23,27 +23,31 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
+;; This is an extension for better version-control configuration.
+
 ;;; Code:
 
-(defun embla-su (program)
-  "Use root on the current buffer."
-  (unless (executable-find program)
-    (user-error "Required program \"%s\" not found in your path" program))
-  (when buffer-file-name
-    (find-alternate-file
-     (concat "/" program ":root@localhost:"
-             buffer-file-name))))
+(embla-elpa-package 'magit)
+
+(embla-elpa-package 'git-gutter+)
 
 ;;;###autoload
-(defun sudo ()
-  "Use TRAMP to `sudo' the current buffer."
-  (interactive)
-  (embla-tramp-su "sudo"))
+(let ((map embla-mode-map))
+  (define-key map (kbd "<s-up>") #'git-gutter:previous-hunk)
+  (define-key map (kbd "<s-down>") #'git-gutter:next-hunk)
+  (define-key map (kbd "C-x g") #'magit))
 
 ;;;###autoload
-(defun doas ()
-  "Use TRAMP to `doas' the current buffer."
-  (interactive)
-  (embla-tramp-su "doas"))
+(embla-elpa-package 'git-gutter
+  (global-git-gutter-mode t)
+  (setq git-gutter:update-interval 2)
+  (setq git-gutter:modified-sign "~")
+  (setq git-gutter:added-sign "+")
+  (setq git-gutter:deleted-sign "-")
+  (setq git-gutter:hide-gutter t)
+  (setq git-gutter:ask-p nil)
+  (setq git-gutter:hide-gutter t))
 
-;;; tramp.el ends here
+;;; vc.el ends here

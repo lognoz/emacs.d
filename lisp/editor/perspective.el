@@ -1,4 +1,4 @@
-;;; lisp/net/tramp.el --- Extensions to tramp -*- lexical-binding: t -*-
+;;; list/editor/perspective.el --- Extensions to perspective -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -23,27 +23,15 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
 ;;; Code:
 
-(defun embla-su (program)
-  "Use root on the current buffer."
-  (unless (executable-find program)
-    (user-error "Required program \"%s\" not found in your path" program))
-  (when buffer-file-name
-    (find-alternate-file
-     (concat "/" program ":root@localhost:"
-             buffer-file-name))))
-
 ;;;###autoload
-(defun sudo ()
-  "Use TRAMP to `sudo' the current buffer."
-  (interactive)
-  (embla-tramp-su "sudo"))
+(embla-elpa-package 'perspective
+  (setq persp-initial-frame-name "0")
+  (setq persp-mode-prefix-key (kbd "C-b"))
+  (persp-mode))
 
-;;;###autoload
-(defun doas ()
-  "Use TRAMP to `doas' the current buffer."
-  (interactive)
-  (embla-tramp-su "doas"))
 
-;;; tramp.el ends here
+;;; perspective.el ends here

@@ -32,6 +32,9 @@
 (defconst embla-site-lisp-directory (expand-file-name "site-lisp/" user-emacs-directory)
   "The directory of site lisp files.")
 
+(defconst embla-bin-directory (expand-file-name "bin/" user-emacs-directory)
+  "The directory of bin files.")
+
 (defconst embla-temporary-directory (expand-file-name "temporary/" user-emacs-directory)
   "The directory of temporary files.")
 
@@ -52,7 +55,7 @@
   :group 'convenience
   :link '(url-link :tag "Homepage" "https://github.com/lognoz/embla"))
 
-(defconst embla-version "0.1.1"
+(defconst embla-version "0.1.0"
   "The current version of Embla.")
 
 (define-minor-mode embla-mode
@@ -63,6 +66,23 @@
   :keymap (make-sparse-keymap))
 
 
+;;; --- Command line
+
+(defvar embla-command-line-p nil
+  "Non-nil if it's the command line environment.")
+
+(defmacro embla-eval-on-install (&rest body)
+  "Require elpa PACKAGE while executing BODY."
+  `(when embla-command-line-p
+     ,@body))
+
+(defun embla-install-or-reinstall ()
+  (interactive)
+  (let ((default-directory user-emacs-directory))
+    (async-shell-command
+     (concat embla-bin-directory "embla install"))))
+
+
 ;;; --- Packages extension
 
 (defvar embla-package-initialize-p nil
@@ -71,7 +91,6 @@
 (defcustom embla-package-archives
   (let ((protocol (if gnutls-verify-error "https" "http")))
     (list (cons "melpa"  (concat protocol "://melpa.org/packages/"))
-          (cons "stable" (concat protocol "://stable.melpa.org/packages/"))
           (cons "org"    (concat protocol "://orgmode.org/elpa/"))
           (cons "gnu"    (concat protocol "://elpa.gnu.org/packages/"))))
   "The alist of package archives used as repository."
@@ -85,7 +104,8 @@
     (setq package-enable-at-startup nil)
     (setq embla-package-initialize-p t)
     (package-initialize)
-    (package-refresh-contents)))
+    (let ((inhibit-message nil))
+      (package-refresh-contents))))
 
 (defmacro embla-builtin-package (package &rest body)
   "Require builtin PACKAGE while executing BODY."
@@ -100,11 +120,14 @@
   (declare (indent 1))
   `(progn
      (when (not (package-installed-p ,package))
+       (let ((inhibit-message nil))
+         (message (format "> Install %s" ,package)))
        (setq package-archives embla-package-archives)
        (embla-package-bootstrap)
        (package-install ,package))
      (if (require ,package nil 'noerror)
-         (progn ,@body)
+         (unless embla-command-line-p
+           (progn ,@body))
        (display-warning 'embla-emacs (format "Loading `%s' failed" ,package) :warning))))
 
 (defmacro embla-site-lisp-package (remote-path &rest body)
@@ -115,7 +138,8 @@
        (unless (file-directory-p dest)
          (let ((default-directory embla-site-lisp-directory))
            (shell-command (format "git clone %s" ,remote-path)))))
-      ,@body))
+     (unless embla-command-line-p
+       ,@body)))
 
 
 ;;; --- Modules autoload
@@ -138,12 +162,14 @@
 (defun embla-compile (dir outfile)
   "Update the autoloads for DIR.
 Make sure to give an absolute path as OUTFILE."
-  (let ((inhibit-message t))
-    (require 'cl-lib)
-    (delete-file outfile)
-    (dolist (file (directory-files-recursively dir ""))
-      (when (string-match "\\.el\\'" file)
-        (update-file-autoloads file t outfile)))))
+  (require 'cl-lib)
+  (delete-file outfile)
+  (let ((dirs))
+    (push dir dirs)
+    (dolist (file (file-name-all-completions "" dir))
+      (when (and (directory-name-p file) (not (member file '("./" "../"))))
+        (push (expand-file-name file dir) dirs)))
+    (loaddefs-generate dirs outfile)))
 
 (defun embla-reload ()
   "Reloads your private config and core."
@@ -159,15 +185,6 @@ Make sure to give an absolute path as OUTFILE."
 
 (push embla-temporary-directory load-path)
 (push embla-site-lisp-directory load-path)
-
-;; (unless (require 'embla-lisp-autoloads nil 'noerror)
-;;   (embla-reload))
-
-;; (unless (require 'embla-site-lisp-autoloads nil 'noerror)
-;;   (embla-reload-site-lisp))
-
-(embla-reload)
-(embla-reload-site-lisp)
 
 
 ;; Local Variables:

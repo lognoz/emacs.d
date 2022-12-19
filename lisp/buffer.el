@@ -92,6 +92,23 @@ The default FILENAME is the `buffer-file-name'."
   (kill-buffer (buffer-name)))
 
 
+;;; --- Ibuffer configurations
+
+(embla-elpa-package 'ibuffer-project)
+
+;;;###autoload
+(add-hook 'ibuffer-mode-hook #'embla-set-ibuffer-mode)
+
+;;;###autoload
+(defun embla-set-ibuffer-mode ()
+  "Setup ibuffer component configurations."
+  (ibuffer-do-sort-by-alphabetic)
+  (ibuffer-projectile-set-filter-groups)
+  (setq ibuffer-filter-groups (ibuffer-project-generate-filter-groups))
+  (unless (eq ibuffer-sorting-mode 'project-file-relative)
+    (ibuffer-do-sort-by-project-file-relative)))
+
+
 ;;; --- Manages buffers recently closed
 
 (defvar embla-recently-closed-buffers-ring nil

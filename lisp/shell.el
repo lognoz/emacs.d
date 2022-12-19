@@ -1,4 +1,4 @@
-;;; lisp/prompt.el --- Prompt utilities -*- lexical-binding: t -*-
+;;; lisp/shell.el --- Shell utilities -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -23,47 +23,63 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+
+;; This code provide useful shell abstraction.
+
 ;;; Code:
 
 (require 'project)
 
+(embla-eval-on-install
+  (setq vterm-always-compile-module t)
+  (embla-elpa-package 'vterm))
+
+
+;;; --- Shell configurations
+
 ;;;###autoload
-(embla-autoload "prompt" vterm-mode-hook)
+(add-hook 'vterm-mode-hook #'embla-set-vterm-mode)
 
-
-;;; --- Prompt configurations
-
-(embla-elpa-package 'vterm
+;;;###autoload
+(defun embla-set-vterm-mode ()
+  "Setup vterm component configurations."
   (setq vterm-kill-buffer-on-exit t)
-  (setq vterm-max-scrollback 5000))
-
-(let ((map vterm-mode-map))
-  (define-key map (kbd "C-z") #'embla-project-prompt)
-  (define-key map (kbd "C-.") #'embla-prompt-goto-project-root)
-  (define-key map (kbd "M-.") #'embla-prompt-goto-project-root)
-  (define-key map (kbd "`") #'embla-prompt-execute-previous))
+  (setq vterm-max-scrollback 5000)
+  (let ((map vterm-mode-map))
+    (define-key map (kbd "C-v") #'vterm-yank)
+    (define-key map (kbd "C-z") #'embla-project-shell)
+    (define-key map (kbd "C-.") #'embla-shell-goto-project-root)
+    (define-key map (kbd "M-.") #'embla-shell-goto-project-root)
+    (define-key map (kbd "C-s") #'embla-shell-execute-as-root)
+    (define-key map (kbd "`") #'embla-shell-execute-previous)))
 
 ;;;###autoload
-(defun embla-prompt-execute-previous ()
-  "Execute previous prompt command."
+(defun embla-shell-execute-previous ()
+  "Execute previous shell command."
   (interactive)
   (vterm-send-C-p)
   (vterm-send-return))
 
-(defun embla-prompt-goto-project-root ()
+(defun embla-shell-execute-as-root ()
+  "Execute last command executed as root."
+  (interactive)
+  (vterm-insert "doas !!")
+  (vterm-send-return))
+
+(defun embla-shell-goto-project-root ()
   "Change the current location to project root on vterm."
   (interactive)
-  (let* ((root (project-root (project-current t))))
+  (let ((root (project-root (project-current t))))
     (when root
       (vterm-insert (concat "cd " root))
       (vterm-send-return))))
 
-(defvar embla-prompt-commands '(("/usr/bin/" . nil))
-  "List of lambda function added in
-`embla-project-shell-command-after-hook' function.")
+(defvar embla-shell-commands nil
+  "List of commands executor based on working directory.")
 
 ;;;###autoload
-(defun embla-prompt-execute-command-after-save ()
+(defun embla-shell-execute-command-after-save ()
   "Run shell command in `after-save-hook'."
   (interactive)
   (let* ((command (read-string "Shell command: "))
@@ -73,28 +89,28 @@
                  (when (and buffer-file-name
                          (string-match (concat "^" ,default-directory) buffer-file-name))
                    (shell-command ,command)))))
-    (setq embla-prompt-commands
-      (cons `(,default-directory . ,func) embla-prompt-commands))
+    (setq embla-shell-commands
+      (cons `(,default-directory . ,func) embla-shell-commands))
     (message "Command '%s' is added into `after-save-hook'." command)
     (add-hook 'after-save-hook func)))
 
 ;;;###autoload
-(defun embla-prompt-clear-command-after-save ()
+(defun embla-shell-clear-command-after-save ()
   "Clear shell command in `after-save-hook'."
   (interactive)
-  (let ((candidates (embla-prompt-clear-command-after-save--candidates)))
+  (let ((candidates (embla-shell-clear-command-after-save--candidates)))
     (if candidates
-        (setq embla-prompt-commands
+        (setq embla-shell-commands
           (assoc-delete-all (completing-read "Clear shell commands located in... " candidates nil t)
-                            embla-prompt-commands))
-      (message "No prompt command defined."))))
+                            embla-shell-commands))
+      (message "No shell command defined."))))
 
-(defun embla-prompt-clear-command-after-save--candidates ()
-  "Provide candidates to `embla-prompt-clear-command-after-save' prompt."
+(defun embla-shell-clear-command-after-save--candidates ()
+  "Provide candidates to `embla-shell-clear-command-after-save' shell."
   (let ((candidates))
-    (dolist (parameters embla-prompt-commands)
+    (dolist (parameters embla-shell-commands)
       (unless (member (car parameters) candidates)
         (push (car parameters) candidates)))
     candidates))
 
-;;; prompt.el ends here
+;;; shell.el ends here

@@ -45,36 +45,45 @@
   :keymap embla-project-focus-mode-map)
 
 
-;;; --- Execute last command prompt
+;;; --- Execute last command shell
 
-;;;###autoload (define-key embla-mode-map (kbd "M-`") #'embla-project-execute-last-prompt-command)
+;;;###autoload (define-key embla-mode-map (kbd "M-`") #'embla-project-execute-last-shell-command)
 ;;;###autoload
-(defun embla-project-execute-last-prompt-command ()
+(defun embla-project-execute-last-shell-command ()
   (interactive)
   (save-window-excursion
     (let* ((shell-window)
-          (default-directory (project-root (project-current t)))
-          (default-project-shell-name (concat "vterm " default-directory)))
+           (default-directory (project-root (project-current t)))
+           (default-project-shell-name (concat "vterm " default-directory)))
       (dolist (window (window-list))
-        (message default-project-shell-name)
-        (message (buffer-name (window-buffer window)))
         (when (equal default-project-shell-name (buffer-name (window-buffer window)))
           (setq shell-window window)))
       (if (not shell-window)
-          (message "No prompt window is opened.")
+          (message "No shell window is opened.")
         (select-window shell-window)
-        (embla-prompt-execute-previous)))))
+        (embla-shell-execute-previous)))))
 
 
+;;; --- Toggle dired
 
-;;; --- Prompt in foreground
+;;;###autoload (define-key embla-mode-map (kbd "s-t") #'embla-project-toggle-dired-sidebar)
+;;;###autoload
+(defun embla-project-toggle-dired-sidebar ()
+  (interactive)
+  (let* ((root (project-root (project-current t))))
+    (when root
+      (message root)
+      (dired-sidebar-toggle-sidebar root))))
+
+
+;;; --- Shell in foreground
 
 (defvar embla-foreground-buffer nil
-  "The active buffer before to execute `embla-project-prompt'.")
+  "The active buffer before to execute `embla-project-shell'.")
 
-;;;###autoload (define-key embla-mode-map (kbd "C-z") #'embla-project-prompt)
+;;;###autoload (define-key embla-mode-map (kbd "C-z") #'embla-project-shell)
 ;;;###autoload
-(defun embla-project-prompt ()
+(defun embla-project-shell ()
   "Start an inferior shell in the current project's root directory.
 If a buffer already exists for running a shell in the project's root,
 switch to it."
