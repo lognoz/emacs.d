@@ -40,6 +40,7 @@
 (defvar embla-command-line-help "Usage: ./embla [arguments]
 
 Arguments:
+  checkdoc     Validate lisp files for style errors
   install      Install packages and compile system
   help         Print help (this message) and exit
   version      Print version information and exit")
@@ -47,15 +48,16 @@ Arguments:
 (defun embla-install ()
   "Install packages and compile system."
   (setq package-user-dir (expand-file-name "elpa/" user-emacs-directory))
-  (setq embla-command-line-p t)
   (package-initialize)
   (let ((inhibit-message t))
     (load (expand-file-name "lisp/load-up" user-emacs-directory) nil 'nomessage)
+    (setq embla-command-line-p t)
     (embla-reload)
     (let ((dir (file-name-directory load-file-name)))
       (dolist (file (directory-files-recursively dir ""))
-        (load file nil 'nomessage)))
-    (embla-reload-site-lisp)))
+        (load file nil 'nomessage))))
+  (embla-reload)
+  (embla-reload-site-lisp))
 
 (defun embla-print-version ()
   "Print version information"
@@ -63,8 +65,16 @@ Arguments:
   (message (format "Embla %s" embla-version))
   (message (emacs-version)))
 
+(defun embla-checkdoc ()
+  "Validate lisp files for style errors."
+  (let ((dir (file-name-directory load-file-name)))
+    (dolist (file (directory-files-recursively dir ""))
+      (checkdoc-file file))))
+
 (cond ((equal embla-command-line-arg "install")
         (embla-install))
+      ((equal embla-command-line-arg "checkdoc")
+        (embla-checkdoc))
       ((equal embla-command-line-arg "version")
         (embla-print-version))
       (t (message embla-command-line-help)))
