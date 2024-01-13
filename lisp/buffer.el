@@ -37,7 +37,39 @@
   (define-key map (kbd "s-`") #'embla-clone-buffer)
   (define-key map (kbd "s-k") #'embla-kill-current-buffer)
   (define-key map (kbd "s-f") #'embla-recently-closed-buffers-pop)
-  (define-key map (kbd "s-<backspace>") #'embla-recently-closed-buffers-reopen))
+  (define-key map (kbd "s-<backspace>") #'embla-recently-closed-buffers-reopen)
+  (define-key map (kbd "C-x `") #'embla-cloned-buffer-layout)
+  (define-key map (kbd "C-x z") #'embla-project-shell-layout))
+
+;; (defun embla-windows-context ()
+;;   (let ((windows) (selected-window))
+;;     (dolist (buffer (buffer-list))
+;;       (when (get-buffer-window buffer 'visible)
+;;         (push buffer windows)
+;;         (when (eq buffer (window-buffer (selected-window)))
+;;           (setq selected-window buffer))))
+;;     (let ((context '()))
+;;       (setq context (plist-put context :windows windows))
+;;       (setq context (plist-put context :selected-window selected-window)))))
+
+;;;###autoload
+(defun embla-project-shell-layout ()
+  "Close other window and open project shell on the right."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1)
+  (embla-project-shell))
+
+;;;###autoload
+(defun embla-cloned-buffer-layout ()
+  "Clone active buffer and switch to the right buffer."
+  (interactive)
+  (delete-other-windows)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
 
 ;;;###autoload
 (defun embla-rename-current-buffer-file ()

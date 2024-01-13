@@ -34,6 +34,7 @@
 (embla-elpa-package 'ob-async)
 (embla-elpa-package 'ob-http)
 (embla-elpa-package 'toc-org)
+(embla-elpa-package 'org-roam)
 
 ;;;###autoload
 (defun embla-set-org-mode ()
@@ -50,12 +51,16 @@
   (setq org-catch-invisible-edits 'show-and-error)
   (setq org-cycle-separator-lines 0)
 
+  (require 'org-id)
+
   (evil-org-mode)
 
   (org-babel-do-load-languages 'org-babel-load-languages
     '((shell . t)
       (http . t)
+      (sql . t)
       (emacs-lisp . t)
-      (python . t))))
+      (python . t)
+      (clojure . t))))
 
 ;;; org-mode.el ends here

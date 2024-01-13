@@ -119,12 +119,16 @@
   "Require elpa PACKAGE while executing BODY."
   (declare (indent 1))
   `(progn
-     (when (not (package-installed-p ,package))
-       (let ((inhibit-message nil))
-         (message (format "> Install %s" ,package)))
-       (setq package-archives embla-package-archives)
+     (when embla-command-line-p
        (embla-package-bootstrap)
-       (package-install ,package))
+       (let ((inhibit-message nil))
+         (message (format "Install %s..." ,package)))
+       (when (not (package-installed-p ,package))
+         (package-install ,package)))
+         ;;(unless
+           ;; (ignore-errors
+           ;; (package-reinstall ,package))
+           ;; (display-warning 'embla-emacs (format "Package `%s' failed to reinstall" ,package) :warning)
      (if (require ,package nil 'noerror)
          (unless embla-command-line-p
            (progn ,@body))
@@ -134,10 +138,11 @@
   "Retrieve REMOTE-PATH in site lisp directory while executing BODY."
   (declare (indent 1))
   `(progn
-     (let ((dest (expand-file-name (file-name-nondirectory ,remote-path) embla-site-lisp-directory)))
+     (let* ((package-name (string-trim-right (file-name-nondirectory ,remote-path) ".el"))
+            (dest (expand-file-name package-name embla-site-lisp-directory)))
        (unless (file-directory-p dest)
          (let ((default-directory embla-site-lisp-directory))
-           (shell-command (format "git clone %s" ,remote-path)))))
+           (shell-command (format "git clone %s %s" ,remote-path package-name)))))
      (unless embla-command-line-p
        ,@body)))
 
@@ -166,8 +171,8 @@ Make sure to give an absolute path as OUTFILE."
   (delete-file outfile)
   (let ((dirs))
     (push dir dirs)
-    (dolist (file (file-name-all-completions "" dir))
-      (when (and (directory-name-p file) (not (member file '("./" "../"))))
+    (dolist (file (directory-files-recursively dir "" 't))
+      (when (file-directory-p file)
         (push (expand-file-name file dir) dirs)))
     (loaddefs-generate dirs outfile)))
 

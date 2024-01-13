@@ -27,15 +27,24 @@
 
 (embla-elpa-package 'linum-relative)
 
+(embla-elpa-package 'lsp-mode)
+
 ;;;###autoload
-(embla-builtin-package 'prog-mode
-  (add-hook 'prog-mode-hook #'embla-set-prog-mode))
+(defun embla-lsp ()
+  "Setup lsp component configurations."
+  (interactive)
+  (let ((system-type 'gnu/linux))
+    (lsp)))
+
+;;;###autoload
+;; (embla-builtin-package 'prog-mode
+;;   (add-hook 'prog-mode-hook #'embla-set-prog-mode))
 
 ;;;###autoload
 (defun embla-set-prog-mode ()
   "Setup prog component configurations."
   (setq linum-relative-backend 'display-line-numbers-mode)
-  (display-line-numbers-mode t)
-  (linum-relative-mode t))
+  (linum-relative-mode t)
+  (display-line-numbers-mode t))
 
 ;;; prog-mode.el ends here

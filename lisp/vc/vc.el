@@ -31,7 +31,7 @@
 
 (embla-elpa-package 'magit)
 
-(embla-elpa-package 'git-gutter+)
+;; (embla-elpa-package 'git-gutter+)
 
 ;;;###autoload
 (let ((map embla-mode-map))
@@ -39,15 +39,15 @@
   (define-key map (kbd "<s-down>") #'git-gutter:next-hunk)
   (define-key map (kbd "C-x g") #'magit))
 
-;;;###autoload
-(embla-elpa-package 'git-gutter
-  (global-git-gutter-mode t)
-  (setq git-gutter:update-interval 2)
-  (setq git-gutter:modified-sign "~")
-  (setq git-gutter:added-sign "+")
-  (setq git-gutter:deleted-sign "-")
-  (setq git-gutter:hide-gutter t)
-  (setq git-gutter:ask-p nil)
-  (setq git-gutter:hide-gutter t))
+;; ;;;###autoload
+;; (embla-elpa-package 'git-gutter
+;;   (global-git-gutter-mode t)
+;;   (setq git-gutter:update-interval 2)
+;;   (setq git-gutter:modified-sign "~")
+;;   (setq git-gutter:added-sign "+")
+;;   (setq git-gutter:deleted-sign "-")
+;;   (setq git-gutter:hide-gutter t)
+;;   (setq git-gutter:ask-p nil)
+;;   (setq git-gutter:hide-gutter t))
 
 ;;; vc.el ends here

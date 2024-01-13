@@ -31,6 +31,7 @@
 (embla-autoload "editor/evil" emacs-startup-hook)
 
 
+
 ;;;; --- Evil configurations
 
 (defvar embla-evil-collection-mode-list

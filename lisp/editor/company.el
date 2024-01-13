@@ -1,4 +1,4 @@
-;;; lisp/editor/company.el --- Extensions to company -*- lexical-binding: t -*-
+G;;; lisp/editor/company.el --- Extensions to company -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -35,8 +35,9 @@
 
 (embla-elpa-package 'company
   (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0.1)
+  (setq company-idle-delay 0.5)
   (setq company-tooltip-align-annotations t)
+  (setq company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend))
 
   ;; Enable company mode.
   (global-company-mode t)
@@ -45,6 +46,30 @@
     (define-key map (kbd "<tab>") #'company-complete-selection)
     (define-key map (kbd "C-n") #'company-select-next)
     (define-key map (kbd "C-p") #'company-select-previous)))
+
+;; (embla-site-lisp-package "https://github.com/Exafunction/codeium.el"
+;;   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+
+(embla-elpa-package 'compat)
+
+(embla-site-lisp-package "https://gitlab.com/daanturo/starhugger.el"
+  (keymap-global-set "M-<tab>" #'starhugger-trigger-suggestion)
+
+  (with-eval-after-load 'starhugger
+    (starhugger-auto-mode t)
+
+    (keymap-set starhugger-inlining-mode-map "TAB" (starhugger-inline-menu-item #'starhugger-accept-suggestion))
+    (keymap-set starhugger-inlining-mode-map "M-[" (starhugger-inline-menu-item #'starhugger-show-prev-suggestion))
+    (keymap-set starhugger-inlining-mode-map "M-]" (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
+    (keymap-set starhugger-inlining-mode-map "M-<tab>" (starhugger-inline-menu-item #'starhugger-show-next-suggestion))
+    (keymap-set starhugger-inlining-mode-map "M-f" (starhugger-inline-menu-item #'starhugger-accept-suggestion-by-word))
+
+    (defvar embla-evil-force-normal-state-hook '())
+    (defun embla-evil-run-force-normal-state-hook-after-a (&rest _)
+      (run-hooks 'embla-evil-force-normal-state-hook))
+
+    (advice-add #'evil-force-normal-state
+      :after #'embla-evil-run-force-normal-state-hook-after-a)))
 
 (embla-elpa-package 'company-box
   (when (display-graphic-p)

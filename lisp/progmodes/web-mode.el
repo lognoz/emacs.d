@@ -30,12 +30,11 @@
   (add-hook 'web-mode-hook #'embla-set-web-mode))
 
 ;;;###autoload
-(embla-elpa-package 'scss-mode
-  (add-hook 'scss-mode-hook #'embla-set-scss-mode))
+;; (embla-elpa-package 'scss-mode
+;;  (add-hook 'scss-mode-hook #'embla-set-scss-mode))
 
 (embla-elpa-package 'emmet-mode
-  (define-key web-mode-map (kbd "C-<return>") #'emmet-expand-line)
-  (define-key scss-mode-map (kbd "C-<return>") #'emmet-expand-line))
+  (define-key web-mode-map (kbd "C-<return>") #'emmet-expand-line))
 
 (embla-elpa-package 'smartparens)
 (embla-elpa-package 'paredit)
@@ -62,7 +61,6 @@
   (modify-syntax-entry ?- "w")
   (auto-rename-tag-mode t)
   (smartparens-mode t)
-  (lsp)
 
   (defun sp-web-mode-is-code-context (id action context)
     (and (eq action 'insert)

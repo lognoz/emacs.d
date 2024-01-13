@@ -32,8 +32,8 @@
 (require 'project)
 
 (embla-eval-on-install
-  (setq vterm-always-compile-module t)
-  (embla-elpa-package 'vterm))
+  (embla-elpa-package 'vterm)
+  (vterm-module-compile))
 
 
 ;;; --- Shell configurations

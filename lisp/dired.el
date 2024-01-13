@@ -40,6 +40,7 @@
 
 (embla-elpa-package 'dired-subtree)
 
+;;;###autoload
 (embla-builtin-package 'dired
   (add-hook 'dired-mode-hook #'embla-set-dired-mode))
 
@@ -58,6 +59,7 @@
     (kbd "<return>") #'embla-dired-subtree-or-find-alternate
     (kbd "<mouse-2>") #'embla-dired-subtree-or-find-alternate))
 
+;;;###autoload
 (defun embla-set-dired-mode ()
   "Setup dired component configurations."
   (put 'dired-find-alternate-file 'disabled nil)

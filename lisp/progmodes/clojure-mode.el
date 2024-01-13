@@ -1,4 +1,4 @@
-;;; lisp/editor/lsp.el --- Extensions to lsp -*- lexical-binding: t -*-
+;;; lisp/progmodes/clojure-mode.el --- Extensions to clojure mode -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -23,12 +23,14 @@
 ;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
-;;; Commentary:
-
 ;;; Code:
 
-(embla-elpa-package 'lsp-mode)
+(embla-elpa-package 'clojure-mode)
 
-(embla-elpa-package 'company)
+(embla-elpa-package 'cider)
 
-;;; lsp.el ends here
+(embla-elpa-package 'kibit-helper)
+
+(embla-elpa-package 'clj-refactor)
+
+;;; clojure-mode.el ends here

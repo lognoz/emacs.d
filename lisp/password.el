@@ -54,7 +54,11 @@ Return a list of gpg file located into `embla-password-directory'."
   (let ((reference (completing-read "Copy password: " (embla-password--candidates) nil t)))
     (with-temp-buffer
       (insert-file-contents (format "%s/%s.gpg" embla-password-directory reference))
-      (call-process-shell-command (format "pass -c %s &" reference) nil 0)
+      (call-process-shell-command
+        (format (if (string-prefix-p "otp." reference)
+                  "pass otp %s -c &"
+                  "pass -c %s &")
+          reference) nil 0)
       (message (format "Copied %s to clipboard. Will clear in 45 seconds." reference)))))
 
 ;;; password.el ends here

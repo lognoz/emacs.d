@@ -38,12 +38,12 @@
 (defun sudo ()
   "Use TRAMP to `sudo' the current buffer."
   (interactive)
-  (embla-tramp-su "sudo"))
+  (embla-su "sudo"))
 
 ;;;###autoload
 (defun doas ()
   "Use TRAMP to `doas' the current buffer."
   (interactive)
-  (embla-tramp-su "doas"))
+  (embla-su "doas"))
 
 ;;; tramp.el ends here
