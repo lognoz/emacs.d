@@ -1,46 +1,39 @@
-;;; lisp/isearch.el --- isearch configurations -*- lexical-binding: t; -*-
+;;; lisp/isearch.el --- Extensions to isearch -*- lexical-binding: t -*-
 
-;; Copyright (c) Marc-Antoine Loignon
+;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
 ;; Author: Marc-Antoine Loignon <developer@lognoz.org>
-;; Homepage: https://github.com/lognoz/embla
-;; Keywords: isearch
+;; URL: https://github.com/lognoz/embla
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.0"))
 
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
 ;; This file is not part of GNU Emacs.
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program. If not, see <https://www.gnu.org/licenses/>.
+;;; Commentary:
 
 ;;; Code:
 
 ;;;###autoload
-(eval-before-init
-  (require-package 'visual-regexp))
+(embla-autoload "isearch" emacs-startup-hook)
 
-;;;###autoload
-(define-component isearch-dired ()
-  "Setup isearch component configurations."
-  (setup-isearch)
-  (setup-visual-regexp))
 
-;;;###autoload
-(bind-keys embla-mode-map
-  ("M-s r"   . vr/query-replace)
-  ("M-s M-r" . vr/replace))
+;;;; --- Isearch configurations
 
-;;;###autoload
-(defun setup-isearch ()
-  "Setup isearch configurations."
+(embla-builtin-package 'isearch
   (setq search-highlight t)
   (setq search-whitespace-regexp ".*?")
   (setq isearch-lax-whitespace t)
@@ -52,16 +45,16 @@
   (setq isearch-yank-on-move 'shif)
   (setq isearch-allow-scroll 'unlimited)
 
-  (bind-keys isearch-mode-map
-    ("M-s r" . isearch-query-replace))
+  (define-key isearch-mode-map (kbd "M-s r") #'isearch-query-replace)
 
   (defadvice isearch-exit (after my-goto-match-beginning activate)
     (when (and isearch-forward isearch-other-end)
       (goto-char isearch-other-end))))
 
-;;;###autoload
-(defun setup-visual-regexp ()
-  "Setup visual-regexp configurations."
-  (setq vr/auto-show-help nil))
+(embla-elpa-package 'visual-regexp
+  (setq vr/auto-show-help nil)
+  (let ((map embla-mode-map))
+    (define-key map (kbd "M-s r") #'vr/query-replace)
+    (define-key map (kbd "M-s M-r") #'vr/replace)))
 
 ;;; isearch.el ends here

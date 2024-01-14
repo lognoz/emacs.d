@@ -1,4 +1,4 @@
-;;; lisp/editor/snippet.el --- Extensions to snippet -*- lexical-binding: t -*-
+;;; lisp/progmodes/prog-mode.el --- Extensions to prog mode -*- lexical-binding: t -*-
 
 ;; Copyright (c) Marc-Antoine Loignon <developer@lognoz.org>
 
@@ -25,30 +25,26 @@
 
 ;;; Code:
 
-(defconst embla-snippet-directory (expand-file-name "snippet" embla-private-directory)
-  "The directory of snippet files.")
+(embla-elpa-package 'linum-relative)
+
+(embla-elpa-package 'lsp-mode)
 
 ;;;###autoload
-(embla-elpa-package 'yasnippet
-  (add-hook 'text-mode-hook #'embla-set-snippet)
-  (add-hook 'prog-mode-hook #'embla-set-snippet)
-  (add-hook 'conf-mode-hook #'embla-set-snippet))
+(defun embla-lsp ()
+  "Setup lsp component configurations."
+  (interactive)
+  (let ((system-type 'gnu/linux))
+    (lsp)))
 
 ;;;###autoload
-(defun embla-set-snippet ()
-  "Setup snippet component configurations."
-  (yas-global-mode t)
-  (setq yas-verbosity 1)
-  (setq yas-wrap-around-region t)
-  (when (file-directory-p embla-snippet-directory)
-    (setq yas-snippet-dirs '(embla-snippet-directory))))
+;; (embla-builtin-package 'prog-mode
+;;   (add-hook 'prog-mode-hook #'embla-set-prog-mode))
 
 ;;;###autoload
-(defun embla-company-yasnippet-backend (backends)
-  "Append yasnippet to company BACKENDS if it's not part of it."
-  (if (and (listp backends) (member 'company-yasnippet backends))
-      backends
-    (append (if (consp backends) backends (list backends))
-            '(:with company-yasnippet))))
+(defun embla-set-prog-mode ()
+  "Setup prog component configurations."
+  (setq linum-relative-backend 'display-line-numbers-mode)
+  (linum-relative-mode t)
+  (display-line-numbers-mode t))
 
-;; ;;; snippet.el ends here
+;;; prog-mode.el ends here
